@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts"> //Composition API 방식 :
 // setup() 내부에서는 this 가 없음, getCurrentInstance() 로 호출해야 글로벌변수 사용가능
 import Comments from "@/components/shared/Comments.vue";
@@ -39,4 +40,4 @@ const props = withDefaults(defineProps<{
 
 <style scoped lang="scss">
 
-</style>
+</style>-->

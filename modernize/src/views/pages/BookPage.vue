@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 import BookCard from "@/components/shared/BookCard.vue";
 import RegisterComment from "@/components/dashboard/RegisterComment.vue";
@@ -40,4 +41,4 @@ watch(() => bookId.value, async (newData) => {
           <RegisterComment :book-id="bookId" @insert:comment="(commentData : any) => handleSaveComment(commentUrl, commentData)"></RegisterComment>
         </v-col>
     </v-row>
-</template>
+</template>-->

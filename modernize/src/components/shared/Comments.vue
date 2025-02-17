@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 import {onMounted, computed, ref} from "vue";
 import {useRouter} from "vue-router";
@@ -171,14 +172,14 @@ const reset =() => {
                         </v-col>
                         <v-col cols="7" sm="8" class="pt-0">
                             <div @click="handleClick(item)" style="cursor: pointer" class="mb-2">
-                              <!-- 편집 중 -->
+                              &lt;!&ndash; 편집 중 &ndash;&gt;
                               <template v-if="editingItemId === item.commentId">
                                 <v-row>
                                   <v-text-field v-model="editableDetail" class="mx-2" variant="outlined" density="compact" max-width="10" hide-details color="primary"></v-text-field>
-                                  <v-btn class="v-btn bg-primary v-btn--variant-tonal mx-2" small @click.stop="saveDetail(item)">저장</v-btn>
+                                  <v-btn class="v-btn bg-primary v-btn&#45;&#45;variant-tonal mx-2" small @click.stop="saveDetail(item)">저장</v-btn>
                                 </v-row>
                               </template>
-                              <!-- 텍스트 표시 -->
+                              &lt;!&ndash; 텍스트 표시 &ndash;&gt;
                               <template v-else>
                                 <h6 class="text-body-1 font-weight-bold">{{ item.detail }}</h6>
                               </template>
@@ -212,3 +213,4 @@ const reset =() => {
     }
 }
 </style>
+-->

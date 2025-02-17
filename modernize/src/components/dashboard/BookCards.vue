@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useBook } from "@/data/Book";
@@ -22,3 +23,4 @@ onMounted(async ()=> {
         </v-col>
     </v-row>
 </template>
+-->

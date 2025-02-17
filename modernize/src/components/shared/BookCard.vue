@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
   card?: {
@@ -46,3 +47,4 @@ const searchUrl = 'https://search.naver.com/search.naver?query=';
         </v-card-item>
     </v-card>
 </template>
+-->

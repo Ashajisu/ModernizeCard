@@ -14,4 +14,9 @@ public class VueController {
 	public String showLoginSuccessPage() {
 		return "/index.html";
 	}
+
+	@GetMapping("/auth/login")
+	public String showLoginPage() {
+		return "/index.html";
+	}
 }
