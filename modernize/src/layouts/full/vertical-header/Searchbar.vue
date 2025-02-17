@@ -1,6 +1,16 @@
 <script setup>
 import { SearchIcon } from 'vue-tabler-icons';
 import { searchSugg } from '@/_mockApis/headerData';
+import { ref, computed } from 'vue';
+
+// 검색어 searchQuery 를 기준으로 searchSugg 필터링한 filteredSugg 출력
+const searchQuery = ref('');
+const filteredSugg = computed(() => {
+  return searchSugg.filter(item =>
+      item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 </script>
 
 <template>
@@ -15,7 +25,8 @@ import { searchSugg } from '@/_mockApis/headerData';
         </template>
         <v-sheet width="360" elevation="10" rounded="md">
             <div class="d-flex align-center justify-space-between pa-5">
-                <v-text-field placeholder="Search" color="primary" density="compact" variant="outlined" hide-details></v-text-field>
+                <v-text-field v-model="searchQuery"
+                    placeholder="Search" color="primary" density="compact" variant="outlined" hide-details></v-text-field>
             </div>
             <v-divider></v-divider>
             <h5 class="text-h5 mt-4 px-5 pb-4">Quick Page Links</h5>
@@ -23,7 +34,7 @@ import { searchSugg } from '@/_mockApis/headerData';
                 <v-list class="pt-0 pb-5" lines="two">
                     <v-list-item
                         :value="item"
-                        v-for="(item, index) in searchSugg"
+                        v-for="(item, index) in filteredSugg"
                         :key="index"
                         :to="item.href"
                         color="primary"

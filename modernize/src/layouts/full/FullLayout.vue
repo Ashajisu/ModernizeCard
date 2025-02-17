@@ -5,9 +5,8 @@ import VerticalHeaderVue from './vertical-header/VerticalHeader.vue';
 import HorizontalHeader from './horizontal-header/HorizontalHeader.vue';
 import HorizontalSidebar from './horizontal-sidebar/HorizontalSidebar.vue';
 import Customizer from './customizer/Customizer.vue';
-import { useCustomizerStore } from '@/stores/customizer';
 import CustomTabs from "@/components/ui-components/tabs/CustomTabs.vue";
-
+import { useCustomizerStore } from '@/stores/customizer';
 const customizer = useCustomizerStore();
 
 import { useTabStore } from '@/stores/tabStore';
@@ -36,21 +35,27 @@ const tabStore = useTabStore();
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>
-                <v-container fluid class="page-wrapper pb-sm-15 pb-10">
-                    <div :class="customizer.boxed ? 'maxWidth' : ''">
-                        <RouterView />
-                        <v-btn
-                            class="customizer-btn"
-                            size="large"
-                            icon
-                            variant="flat"
-                            color="primary"
-                            @click.stop="customizer.SET_CUSTOMIZER_DRAWER(!customizer.Customizer_drawer)"
-                        >
-                            <SettingsIcon />
-                        </v-btn>
-                    </div>
-                </v-container>
+                <CustomTabs>
+                    <v-container fluid class="page-wrapper pb-sm-15 pb-10">
+                        <div :class="customizer.boxed ? 'maxWidth' : ''">
+                            <RouterView v-slot="{ Component }">
+                              <keep-alive :include="tabStore.cachedTabs" :max="tabStore.maxTabs">
+                                <component :is="Component" :key="tabStore.activeTab" />
+                              </keep-alive>
+                            </RouterView>
+                            <v-btn
+                                class="customizer-btn"
+                                size="large"
+                                icon
+                                variant="flat"
+                                color="primary"
+                                @click.stop="customizer.SET_CUSTOMIZER_DRAWER(!customizer.Customizer_drawer)"
+                            >
+                                <SettingsIcon />
+                            </v-btn>
+                        </div>
+                    </v-container>
+                </CustomTabs>
             </v-main>
         </v-app>
     </v-locale-provider>
@@ -76,11 +81,11 @@ const tabStore = useTabStore();
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>
+                <CustomTabs>
                 <v-container fluid class="page-wrapper pb-sm-15 pb-10">
-                  <CustomTabs>
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
                           <RouterView v-slot="{ Component }">
-                            <keep-alive>
+                            <keep-alive :include="tabStore.cachedTabs" :max="tabStore.maxTabs">
                                 <component :is="Component" :key="tabStore.activeTab" />
                             </keep-alive>
                           </RouterView>
@@ -95,8 +100,8 @@ const tabStore = useTabStore();
                             <SettingsIcon />
                         </v-btn>
                     </div>
-                  </CustomTabs>
                 </v-container>
+                </CustomTabs>
             </v-main>
         </v-app>
     </v-locale-provider>
