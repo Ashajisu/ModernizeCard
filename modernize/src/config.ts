@@ -9,6 +9,7 @@ export type ConfigProps = {
     setBorderCard: boolean;
 
     maxTabs : number;
+    siteName : string;
 };
 
 const config: ConfigProps = {
@@ -21,7 +22,8 @@ const config: ConfigProps = {
     boxed: true,
     setBorderCard: false,
 
-    maxTabs : 8
+    maxTabs : 8,
+    siteName : 'arisys'
 };
 
 export default config;

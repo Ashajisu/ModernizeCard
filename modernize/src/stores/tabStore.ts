@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import config from "@/config";
-import {computed, nextTick, toRaw} from "vue";
 
 export const useTabStore = defineStore({
   id: "tab",
