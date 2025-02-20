@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 
 /*Call Components*/
+import HeaderCards from "../../dashboard/dashboardComponents/modern/HeaderCards.vue";
 import Topcards from "../../dashboard/dashboardComponents/modern/TopCards.vue";
 import PaymentGateways from "../../dashboard/dashboardComponents/ecommerce/PaymentGateways.vue";
 import RecentTransactions from "../../dashboard/dashboardComponents/ecommerce/RecentTransactions.vue";
@@ -35,6 +36,10 @@ const breadcrumbs = ref([
 <template>
     <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>        
     <v-row>
+        <!-- Header cards -->
+        <v-col cols="12">
+          <HeaderCards/>
+        </v-col>
         <!-- Top cards -->
         <v-col cols="12">
             <Topcards/>

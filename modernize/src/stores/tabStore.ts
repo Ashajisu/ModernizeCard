@@ -31,7 +31,7 @@ export const useTabStore = defineStore({
       }
     },
     removeTab(tabTo: string) {
-      console.log(this.tabs.length);
+      // console.log(this.tabs.length);
       if(this.tabs.length == 1){
         alert(`최소 1개의 탭은 열려있어야 합니다.`);
         return;
@@ -56,7 +56,7 @@ export const useTabStore = defineStore({
 
       setTimeout(()=>{
       this.addTab(tab);
-      console.log("done", tab);
+      // console.log("done", tab);
       });
 
       setTimeout(()=>{

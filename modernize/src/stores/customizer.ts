@@ -12,7 +12,11 @@ export const useCustomizerStore = defineStore({
     setRTLLayout:config.setRTLLayout, // RTL layout
     actTheme: config.actTheme,
     boxed: config.boxed,
-    setBorderCard: config.setBorderCard
+    setBorderCard: config.setBorderCard,
+
+    setSearchbar: config.setSearchbar,
+    setDashboard: config.setDashboard,
+    setThemeToggle: config.setThemeToggle
   }),
 
   getters: {},

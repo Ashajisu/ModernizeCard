@@ -10,6 +10,9 @@ export type ConfigProps = {
 
     maxTabs : number;
     siteName : string;
+    setSearchbar : boolean;
+    setThemeToggle : boolean;
+    setDashboard : boolean;
 };
 
 const config: ConfigProps = {
@@ -23,7 +26,11 @@ const config: ConfigProps = {
     setBorderCard: false,
 
     maxTabs : 8,
-    siteName : 'arisys'
+    siteName : 'arisys',
+    setSearchbar : true,
+    setThemeToggle : false,
+    setDashboard : true,
+
 };
 
 export default config;

@@ -53,11 +53,15 @@ const DarkthemeColors = ref([
     { name: 'DARK_CYAN_THEME', bg: 'themeDarkCyan' },
     { name: 'DARK_ORANGE_THEME', bg: 'themeDarkOrange' }
 ]);
-</script>
 
+// config iframe
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
+</script>
 <!------------------------------------->
 <!-- Customizer -->
 <!------------------------------------->
+<!-- 요약 dashboard, iframe ,theme toggle, searchbar 사용여부 사용자 설정-->
 <template>
         <div class="pa-6">
             <h5 class="text-h5">Settings</h5>
@@ -65,6 +69,33 @@ const DarkthemeColors = ref([
         <v-divider></v-divider>
         <perfect-scrollbar style="height: calc(100vh - 90px)">
             <div class="pa-6">
+                <!--custom header option-->
+                <h6 class="text-h6 mb-2"> Searchbar </h6>
+                <v-btn-toggle v-model="customizer.setSearchbar" color="primary" class="my-2 btn-group-custom  gap-3" rounded="0" group>
+                  <v-btn :value="true" variant="text" elevation="9" class="rounded-md">
+                    <LayoutNavbarIcon stroke-width="1.5" size="21" class="mr-2 icon" /> On
+                  </v-btn>
+                </v-btn-toggle>
+                <h6 class="text-h6 mb-2"> iframe </h6>
+                <v-btn-toggle v-model="authStore.config.iframe" color="primary" class="my-2 btn-group-custom  gap-3" rounded="0" group>
+                  <v-btn :value="true" variant="text" elevation="9" class="rounded-md">
+                    <LayoutNavbarIcon stroke-width="1.5" size="21" class="mr-2 icon" /> On
+                  </v-btn>
+                </v-btn-toggle>
+                <h6 class="text-h6 mb-2"> Theme </h6>
+                <v-btn-toggle v-model="customizer.setThemeToggle" color="primary" class="my-2 btn-group-custom  gap-3" rounded="0" group>
+                  <v-btn :value="true" variant="text" elevation="9" class="rounded-md">
+                    <LayoutNavbarIcon stroke-width="1.5" size="21" class="mr-2 icon" /> On
+                  </v-btn>
+                </v-btn-toggle>
+                <h6 class="text-h6 mb-2"> Dashboard </h6>
+                <v-btn-toggle v-model="customizer.setDashboard" color="primary" class="my-2 btn-group-custom  gap-3" rounded="0" group>
+                  <v-btn :value="true" variant="text" elevation="9" class="rounded-md">
+                    <LayoutNavbarIcon stroke-width="1.5" size="21" class="mr-2 icon" /> On
+                  </v-btn>
+                </v-btn-toggle>
+
+
                 <h6 class="text-h6 mb-2">Sidebar Layout</h6>
                 <v-btn-toggle v-model="customizer.setHorizontalLayout" color="primary" class="my-2 btn-group-custom  gap-3" rounded="0" group>
                     <v-btn :value="false" variant="text" elevation="9" class="rounded-md">

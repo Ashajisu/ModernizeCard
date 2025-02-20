@@ -12,7 +12,8 @@ export const useAuthStore = defineStore({
         // initialize state from local storage to enable user to stay logged in
         // @ts-ignore
         user: JSON.parse(localStorage.getItem('user')),
-        returnUrl: null
+        returnUrl: null,
+        config : { iframe : false }
     }),
     actions: {
         async login(username: string, password: string) {
@@ -29,6 +30,16 @@ export const useAuthStore = defineStore({
             this.user = null;
             localStorage.removeItem('user');
             router.push('/');
-        }
+        },
+        async fetchUserConfig() {
+            try {
+                //시스템 관리자가 개인별/부서별/본부별 부여한 기능버튼영역 config 정보 호출 : 미구현
+                // const data = await axios.get('/api/config/user');
+                // this.config = data.data;
+            } catch (error) {
+                alert(error);
+                console.log(error);
+            }
+        },
     }
 });

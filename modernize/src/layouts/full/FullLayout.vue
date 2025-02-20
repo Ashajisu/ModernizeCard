@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import VerticalSidebarVue from './vertical-sidebar/VerticalSidebar.vue';
-import VerticalHeaderVue from './vertical-header/VerticalHeader.vue';
+import CustomVerticalHeader from './vertical-header/CustomVerticalHeader.vue';
+import CustomHorizontalHeader from './horizontal-header/CustomHorizontalHeader.vue';
 import HorizontalHeader from './horizontal-header/HorizontalHeader.vue';
 import HorizontalSidebar from './horizontal-sidebar/HorizontalSidebar.vue';
 import Customizer from './customizer/Customizer.vue';
@@ -12,7 +13,7 @@ const customizer = useCustomizerStore();
 import { useTabStore } from '@/stores/tabStore';
 const tabStore = useTabStore();
 </script>
-
+<!-- CustomVerticalHeader 확인받고, CustomHorizontalHeader 작성하기 2.21-->
 <template>
     <!-----RTL LAYOUT------->
     <v-locale-provider  v-if="customizer.setRTLLayout"  rtl >
@@ -30,8 +31,8 @@ const tabStore = useTabStore();
             <Customizer />
             </v-navigation-drawer>
             <VerticalSidebarVue v-if="!customizer.setHorizontalLayout" />
-            <VerticalHeaderVue v-if="!customizer.setHorizontalLayout" />
-            <HorizontalHeader v-if="customizer.setHorizontalLayout" />
+            <CustomVerticalHeader v-if="!customizer.setHorizontalLayout" />
+            <CustomHorizontalHeader v-if="customizer.setHorizontalLayout" />
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>
@@ -76,8 +77,8 @@ const tabStore = useTabStore();
                 <Customizer />
             </v-navigation-drawer>
             <VerticalSidebarVue v-if="!customizer.setHorizontalLayout" />
-            <VerticalHeaderVue v-if="!customizer.setHorizontalLayout" />
-            <HorizontalHeader v-if="customizer.setHorizontalLayout" />
+            <CustomVerticalHeader v-if="!customizer.setHorizontalLayout" />
+            <CustomHorizontalHeader v-if="customizer.setHorizontalLayout" />
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>

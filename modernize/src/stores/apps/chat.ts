@@ -20,6 +20,9 @@ export const useChatStore = defineStore({
         // getChats(state) {
         //     return state.chats;
         // }
+        countRecentChats(state) {
+            return state.chats.filter((chat: any) => chat.recent);
+        }
     },
     actions: {
         // Fetch Chat from action

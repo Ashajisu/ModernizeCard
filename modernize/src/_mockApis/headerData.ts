@@ -55,20 +55,32 @@ const profileDD: profileType[] = [
         avatar: proUser1,
         title: 'My Profile',
         subtitle: 'Account settings',
-        href: '/apps/user/profile'
+        href: '/pages/account-settings'
     },
     {
         avatar: proUser2,
-        title: 'My Notes',
-        subtitle: 'My Daily Notes',
-        href: '/apps/notes'
+        title: 'FAQ',
+        subtitle: 'Frequently asked questions',
+        href: '/pages/faq'
     },
-    {
-        avatar: proUser3,
-        title: 'My Tasks',
-        subtitle: 'To-do and Daily tasks',
-        href: '/apps/kanban'
-    }
+    // {
+    //     avatar: proUser1,
+    //     title: 'My Profile',
+    //     subtitle: 'Account settings',
+    //     href: '/apps/user/profile'
+    // },
+    // {
+    //     avatar: proUser2,
+    //     title: 'My Notes',
+    //     subtitle: 'My Daily Notes',
+    //     href: '/apps/notes'
+    // },
+    // {
+    //     avatar: proUser3,
+    //     title: 'My Tasks',
+    //     subtitle: 'To-do and Daily tasks',
+    //     href: '/apps/kanban'
+    // }
 ];
 
 // 
