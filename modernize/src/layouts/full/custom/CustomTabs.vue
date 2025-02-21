@@ -22,10 +22,9 @@ watch(() => tabStore.activeTab,(newTab) => {
 
 </script>
 <template>
-<!--         //style="max-width: 1160px; margin: auto; padding: 0 24px;"-->
     <div :class="customizer.boxed ? 'boxed-customTab' : ''">
-      <v-tabs color="primary" v-model="tabStore.activeTab">
-          <v-tab v-for="(tab, index) in tabStore.tabs" :key="tab.to" :value="tab.to">
+      <v-tabs color="primary" v-model="tabStore.activeTab" class="customTab">
+          <v-tab v-for="(tab) in tabStore.tabs" :key="tab.to" :value="tab.to">
             {{ tab.title}}
             <v-btn @click.stop="tabStore.removeTab(tab.to)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
               <XIcon stroke-width="1.5" width="12" />

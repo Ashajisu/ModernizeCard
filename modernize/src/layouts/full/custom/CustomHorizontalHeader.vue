@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useCustomizerStore } from '../../../stores/customizer';
-import { useEcomStore } from '@/stores/apps/eCommerce';
+import { ref, watch } from 'vue';
+import { useCustomizerStore } from '@/stores/customizer';
 // Icon Imports
 import { SearchIcon, Menu2Icon } from 'vue-tabler-icons';
 import Logo from '../logo/Logo.vue';
 import RtlLogo from '../logo/RtlLogo.vue';
 
 // dropdown imports
-import CustomProfileDD from '../vertical-header/CustomProfileDD.vue';
+import CustomProfileDD from './CustomProfileDD.vue';
 import Searchbar from '../vertical-header/Searchbar.vue';
 import RightMobileSidebar from '../vertical-header/RightMobileSidebar.vue';
 import ThemeToggler from '../vertical-header/ThemeToggler.vue';

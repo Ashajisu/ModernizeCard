@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useCustomizerStore } from '../../../stores/customizer';
+import { useCustomizerStore } from '@/stores/customizer';
 import { Menu2Icon } from 'vue-tabler-icons';
 import CustomProfileDD from './CustomProfileDD.vue';
-import Searchbar from './Searchbar.vue';
-import RightMobileSidebar from './RightMobileSidebar.vue';
-import ThemeToggler from './ThemeToggler.vue';
+import Searchbar from '../vertical-header/Searchbar.vue';
+import RightMobileSidebar from '../vertical-header/RightMobileSidebar.vue';
+import ThemeToggler from '../vertical-header/ThemeToggler.vue';
 import HeaderCards from "@/views/dashboard/dashboardComponents/modern/HeaderCards.vue";
 import {useChatStore} from "@/stores/apps/chat";
 

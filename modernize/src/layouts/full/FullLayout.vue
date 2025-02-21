@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import VerticalSidebarVue from './vertical-sidebar/VerticalSidebar.vue';
-import CustomVerticalHeader from './vertical-header/CustomVerticalHeader.vue';
-import CustomHorizontalHeader from './horizontal-header/CustomHorizontalHeader.vue';
-import HorizontalHeader from './horizontal-header/HorizontalHeader.vue';
+import CustomVerticalHeader from './custom/CustomVerticalHeader.vue';
+import CustomHorizontalHeader from './custom/CustomHorizontalHeader.vue';
 import HorizontalSidebar from './horizontal-sidebar/HorizontalSidebar.vue';
 import Customizer from './customizer/Customizer.vue';
-import CustomTabs from "@/components/ui-components/tabs/CustomTabs.vue";
+import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
 import { useCustomizerStore } from '@/stores/customizer';
 const customizer = useCustomizerStore();
 
