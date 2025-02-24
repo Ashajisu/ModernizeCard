@@ -10,6 +10,7 @@ import { useCustomizerStore } from '@/stores/customizer';
 const customizer = useCustomizerStore();
 
 import { useTabStore } from '@/stores/tabStore';
+import CustomFooter from "@/layouts/full/custom/CustomFooter.vue";
 const tabStore = useTabStore();
 </script>
 <!-- CustomVerticalHeader 확인받고, CustomHorizontalHeader 작성하기 2.21-->
@@ -102,6 +103,7 @@ const tabStore = useTabStore();
                     </div>
                 </v-container>
                 </CustomTabs>
+                <CustomFooter/>
             </v-main>
         </v-app>
     </v-locale-provider>
