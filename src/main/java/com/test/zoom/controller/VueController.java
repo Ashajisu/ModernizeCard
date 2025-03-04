@@ -9,14 +9,4 @@ public class VueController {
 	public String showVuePage() {
 		return "/index.html";
 	}
-
-	@GetMapping("/main/rootPage")
-	public String showLoginSuccessPage() {
-		return "/index.html";
-	}
-
-	@GetMapping("/auth/login")
-	public String showLoginPage() {
-		return "/index.html";
-	}
 }

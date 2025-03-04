@@ -1,11 +1,8 @@
 package com.test.zoom.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.zoom.data.Db;
-import com.test.zoom.entity.Auth;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,40 +35,39 @@ import java.util.List;
 public class SecurityConfig {
 
     /** B. formLogin 미사용시, Controller 에서 AuthenticationProvider 를 사용하기위해 빈 등록함. **/
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(d);
+//        provider.setPasswordEncoder(passwordEncoder());
+//        return provider;
+//    }
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager() {
+//        return new ProviderManager(authenticationProvider());
+//    }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
     //------------------------------------------------------------------------------------------------------- 빈 등록.
 
     //서버메모리에 임의의 사용자를 등록함
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername(Db.user.getUserName())
-//                .password("{noop}"+Db.user.getAuthName()) // {noop} -> 암호화 안 함 (테스트용)
-                .password(passwordEncoder().encode(Db.user.getAuthName().toString())) // BCrypt로 암호화
-                .roles(Db.user.getAuthName().name())
-                .build();
-        UserDetails me = User.withUsername(Db.me.getUserName())
-                .password(passwordEncoder().encode(Db.me.getAuthName().toString()))
-                .roles(Db.me.getAuthName().name())
-                .build();
-
-        return new InMemoryUserDetailsManager(user, me);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user = User.withUsername(Db.user.getUserName())
+//                .password(passwordEncoder().encode(Db.user.getAuthName().toString())) // BCrypt로 암호화
+//                .roles(Db.user.getAuthName().name())
+//                .build();
+//        UserDetails me = User.withUsername(Db.me.getUserName())
+//                .password(passwordEncoder().encode(Db.me.getAuthName().toString()))
+//                .roles(Db.me.getAuthName().name())
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, me);
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -91,10 +87,11 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // 브라우저에서 사용하는 DB인 h2에 콘솔로 접근할 때 인증 불필요 (기본 경로는 /h2-console)
                         .requestMatchers("/resources/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll() // 페이지를 대표하는 아이콘
-//                        .requestMatchers("/db/read").hasRole("USER")// 권한 인증이 필요
-                        .requestMatchers("/auth/login").permitAll()// 지정 엔드포인트 인증 불필요
-                        .requestMatchers("/check/login").permitAll()// 지정 엔드포인트 인증 불필요
-                        .anyRequest().authenticated() // 그외 모든 엔드포인트 인증필요
+                        .requestMatchers("/zoom/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/check/login").permitAll()
+//                        .anyRequest().authenticated() // 그외 모든 엔드포인트 인증필요
+                        .anyRequest().permitAll() // 그외 모든 엔드포인트 인증불필요
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 유지 (STATELESS가 아님)
@@ -103,9 +100,9 @@ public class SecurityConfig {
         //A. formLogin 사용 : 시큐리티에서 사용자 확인하도록 구성. x-www-form-urlencoded 타입의 requestParam 이 있어야 검증 가능
                 .formLogin(login -> login
                         .loginPage("/")
-                        .loginProcessingUrl("/login")
-                        .successHandler((request, response, authentication)
-                                -> onAuthenticationSuccess(response,authentication)).permitAll()
+//                        .loginProcessingUrl("/login")
+//                        .successHandler((request, response, authentication)
+//                                -> onAuthenticationSuccess(response,authentication)).permitAll()
                 );
 
         return http.build();
@@ -128,24 +125,24 @@ public class SecurityConfig {
 
     /** A. formLogin 사용시, 성공 후 리다이렉트 없이 JSON 데이터를 전달하기 위해 성공핸들러를 재 정의함.
      * 주의 - 리다이렉트 하지 않기! **/
-    public void onAuthenticationSuccess(HttpServletResponse response, Authentication authentication) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json;charset=UTF-8");
-        System.out.println("onAuthenticationSuccess: " + authentication);
-
-        // 인증된 사용자 정보을 User 엔티티로 변환한 뒤 JSON 으로 반환함.
-        User securityUser = (User) authentication.getPrincipal();
-        String securityAuth = securityUser.getAuthorities().toArray()[0].toString().replace("ROLE_","");
-
-        com.test.zoom.entity.User user = new com.test.zoom.entity.User();
-        user.setUserName(securityUser.getUsername());
-        user.setPassword(securityUser.getPassword());
-        user.setAuthName(Auth.valueOf(securityAuth));
-
-        String jsonResponse = new ObjectMapper().writeValueAsString(user);
-        System.out.println("onAuthenticationSuccess: " + jsonResponse);
-        response.getWriter().write(jsonResponse);
-        response.getWriter().flush();
-    }
+//    public void onAuthenticationSuccess(HttpServletResponse response, Authentication authentication) throws IOException {
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.setContentType("application/json;charset=UTF-8");
+//        System.out.println("onAuthenticationSuccess: " + authentication);
+//
+//        // 인증된 사용자 정보을 User 엔티티로 변환한 뒤 JSON 으로 반환함.
+//        User securityUser = (User) authentication.getPrincipal();
+//        String securityAuth = securityUser.getAuthorities().toArray()[0].toString().replace("ROLE_","");
+//
+//        com.test.zoom.entity.User user = new com.test.zoom.entity.User();
+//        user.setUserName(securityUser.getUsername());
+//        user.setPassword(securityUser.getPassword());
+//        user.setAuthName(Auth.valueOf(securityAuth));
+//
+//        String jsonResponse = new ObjectMapper().writeValueAsString(user);
+//        System.out.println("onAuthenticationSuccess: " + jsonResponse);
+//        response.getWriter().write(jsonResponse);
+//        response.getWriter().flush();
+//    }
     //-------------------------------------------------------------------------------------- 로그인 성공후 리다이렉트 안함.
 }

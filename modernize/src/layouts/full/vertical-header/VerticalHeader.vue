@@ -12,21 +12,18 @@ import Navigations from './Navigations.vue';
 import ThemeToggler from './ThemeToggler.vue';
 
 const customizer = useCustomizerStore();
-const showSearch = ref(false);
 const appsdrawer = ref(false);
 const priority = ref(customizer.setHorizontalLayout ? 0 : 0);
-function searchbox() {
-    showSearch.value = !showSearch.value;
-}
+
 watch(priority, (newPriority) => {
     priority.value = newPriority;
 });
 
 // count items
-const store = useEcomStore();
-const getCart = computed(() => {
-    return store.content;
-});
+// const store = useEcomStore();
+// const getCart = computed(() => {
+//     return store.content;
+// });
 </script>
 
 <template>
@@ -75,13 +72,13 @@ const getCart = computed(() => {
         <!-- ---------------------------------------------- -->
         <!-- ShoppingCart -->
         <!-- ---------------------------------------------- -->
-        <div class="me-2">
-            <v-btn icon variant="text" color="primary" to="/ecommerce/checkout" class="custom-hover-primary" size="small">
-                <v-badge color="error" :content="getCart?.length">
-                    <ShoppingCartIcon stroke-width="1.5" size="22" />
-                </v-badge>
-            </v-btn>
-        </div>
+<!--        <div class="me-2">-->
+<!--            <v-btn icon variant="text" color="primary" to="/ecommerce/checkout" class="custom-hover-primary" size="small">-->
+<!--                <v-badge color="error" :content="getCart?.length">-->
+<!--                    <ShoppingCartIcon stroke-width="1.5" size="22" />-->
+<!--                </v-badge>-->
+<!--            </v-btn>-->
+<!--        </div>-->
 
         <!-- ---------------------------------------------- -->
         <!-- Notification -->

@@ -81,8 +81,64 @@ export interface menu {
     type?: string;
     subCaption?: string;
 }
-
 const sidebarItem: menu[] = [
+    { header: 'Home' },
+    {
+        title: 'Dashboard',
+        icon: ApertureIcon,
+        chipColor: 'surface',
+        chipBgColor: 'secondary',
+        to: '/dashboards/modern'
+    },
+    {
+        title: '사용자 관리',
+        icon: UserCircleIcon,
+        to: '/',
+        children: [
+            {
+                title: '사용자 추가',
+                icon: PointIcon,
+                to: '/apps/user/profile/add'
+            },
+            {
+                title: '사용자 변경',
+                icon: PointIcon,
+                to: '/apps/user/profile/followers'
+            },
+            {
+                title: '사용자 삭제',
+                icon: PointIcon,
+                to: '/apps/user/profile/friends'
+            }
+        ]
+    },
+    {
+        title: '조직관리',
+        icon: BoxIcon,
+        to: '/apps/contacts',
+    },
+    {
+        title: '통계관리',
+        icon: AppWindowIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '녹취관리',
+        icon: Message2Icon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '시스템 설정',
+        icon: FileCheckIcon,
+        to: '/apps/zoom/token'
+    },
+    {
+        title: '메뉴 설정',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+]
+const sidebarItem_basic: menu[] = [
     { header: 'Home' },
     {
         title: 'Modern',
@@ -298,7 +354,7 @@ const sidebarItem: menu[] = [
     {
         title: 'Account Setting',
         icon: UserCircleIcon,
-        to: '/pages/account-settings'
+        to: '/apps/zoom/token'
     },
     {
         title: 'FAQ',

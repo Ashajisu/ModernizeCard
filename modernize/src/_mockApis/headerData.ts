@@ -237,6 +237,358 @@ const searchSugg: searchType[] = [
         title: 'Account Setting',
         href: '/pages/account-settings'
     },
+    {
+        title: 'Modern',
+        href: '/dashboards/modern',
+    },
+    {
+        title: 'eCommerce',
+        href: '/dashboards/ecommerce',
+    },
+
+    {
+        title: 'Chats',
+        href: '/apps/chats',
+    },
+    {
+        title: 'Email',
+        href: '/apps/email',
+    },
+    {
+        title: 'Invoice',
+        href: '/apps/invoice',
+    },
+    {
+        title: 'Invoice Create',
+        href: '/apps/invoice/create',
+    },
+    {
+        title: 'Invoice Edit',
+        href: '/apps/invoice/edit/:id',
+    },
+    {
+        title: 'Invoice Details',
+        href: '/apps/invoice/details/:id',
+    },
+    {
+        title: 'Ticket',
+        href: '/apps/tickets',
+    },
+    {
+        title: 'ecom Products',
+        href: '/ecommerce/products',
+    },
+    {
+        title: 'Add Product',
+        href: '/ecommerce/add-product',
+    },
+    {
+        title: 'Edit Product',
+        href: '/ecommerce/edit-product',
+    },
+    {
+        title: 'Product detail',
+        href: '/ecommerce/product/detail/:id',
+    },
+    {
+        title: 'Product Checkout',
+        href: '/ecommerce/checkout',
+    },
+    {
+        title: 'Product Listing',
+        href: '/ecommerce/productlist',
+    },
+    {
+        title: 'Posts',
+        href: '/apps/blog/posts',
+    },
+    {
+        title: 'Detail',
+        href: '/apps/blog/:id',
+    },
+
+    {
+        title: 'UserProfile',
+        href: '/apps/user/profile',
+    },
+    {
+        title: 'UserFollowers',
+        href: '/apps/user/profile/followers',
+    },
+    {
+        title: 'UserFriends',
+        href: '/apps/user/profile/friends',
+    },
+    {
+        title: 'UserGallery',
+        href: '/apps/user/profile/gallery',
+    },
+    {
+        title: 'Notes',
+        href: '/apps/notes',
+    },
+    {
+        title: 'Contact-App',
+        href: '/apps/contacts',
+    },
+    {
+        title: 'Calendar',
+        href: '/apps/calendar',
+    },
+    {
+        title: 'Kanban',
+        href: '/apps/kanban',
+    },
+    {
+        title: 'Autocomplete',
+        href: '/forms/form-elements/autocomplete',
+    },
+    {
+        title: 'Combobox',
+        href: '/forms/form-elements/combobox',
+    },
+    {
+        title: 'File Inputs',
+        href: '/forms/form-elements/fileinputs',
+    },
+    {
+        title: 'Custom Inputs',
+        href: '/forms/form-elements/custominputs',
+    },
+    {
+        title: 'Select',
+        href: '/forms/form-elements/select',
+    },
+    {
+        title: 'Button',
+        href: '/forms/form-elements/button',
+    },
+    {
+        title: 'Checkbox',
+        href: '/forms/form-elements/checkbox',
+    },
+    {
+        title: 'Radio',
+        href: '/forms/form-elements/radio',
+    },
+    {
+        title: 'Date Time',
+        href: '/forms/form-elements/date-time',
+    },
+    {
+        title: 'Slider',
+        href: '/forms/form-elements/slider',
+    },
+    {
+        title: 'Switch',
+        href: '/forms/form-elements/switch',
+    },
+    {
+        title: 'Time Picker',
+        href: '/forms/form-elements/time-picker',
+    },
+
+    {
+        title: 'Stepper',
+        href: '/forms/form-elements/stepper',
+    },
+    {
+        title: 'Form Layout',
+        href: '/forms/form-layouts',
+    },
+    {
+        title: 'Form Horizontal',
+        href: '/forms/form-horizontal',
+    },
+    {
+        title: 'Form Vertical',
+        href: '/forms/form-vertical',
+    },
+    {
+        title: 'Form Custom',
+        href: '/forms/form-custom',
+    },
+    {
+        title: 'Form Validation',
+        href: '/forms/form-validation',
+    },
+    {
+        title: 'Editor',
+        href: '/forms/editor',
+    },
+    {
+        title: 'Basic Table',
+        href: '/tables/basic',
+    },
+    {
+        title: 'Dark Table',
+        href: '/tables/dark',
+    },
+    {
+        title: 'Density Table',
+        href: '/tables/density',
+    },
+    {
+        title: 'Fixed Header Table',
+        href: '/tables/fixed-header',
+    },
+    {
+        title: 'Height Table',
+        href: '/tables/height',
+    },
+    {
+        title: 'Editable Table',
+        href: '/tables/editable',
+    },
+    {
+        title: 'Basic Data Table',
+        href: '/tables/datatables/basic',
+    },
+    {
+        title: 'Header Data Table',
+        href: '/tables/datatables/header',
+    },
+    {
+        title: 'Selection Data Table',
+        href: '/tables/datatables/selection',
+    },
+    {
+        title: 'Sorting Data Table',
+        href: '/tables/datatables/sorting',
+    },
+    {
+        title: 'Pagination Data Table',
+        href: '/tables/datatables/pagination',
+    },
+    {
+        title: 'Filtering Data Table',
+        href: '/tables/datatables/filtering',
+    },
+    {
+        title: 'Grouping Data Table',
+        href: '/tables/datatables/grouping',
+    },
+    {
+        title: 'Slots Data Table',
+        href: '/tables/datatables/slots',
+    },
+    {
+        title: 'CRUD Table',
+        href: '/tables/datatables/crudtable',
+    },
+    {
+        title: 'Alert',
+        href: '/ui-components/alert',
+    },
+    {
+        title: 'Accordion',
+        href: '/ui-components/accordion',
+    },
+    {
+        title: 'Avtar',
+        href: '/ui-components/avatar',
+    },
+    {
+        title: 'Chip',
+        href: '/ui-components/chip',
+    },
+    {
+        title: 'Dialog',
+        href: '/ui-components/dialogs',
+    },
+    {
+        title: 'List',
+        href: '/ui-components/list',
+    },
+    {
+        title: 'Menus',
+        href: '/ui-components/menus',
+    },
+    {
+        title: 'Rating',
+        href: '/ui-components/rating',
+    },
+    {
+        title: 'Tabs',
+        href: '/ui-components/tabs',
+    },
+    {
+        title: 'Tooltip',
+        href: '/ui-components/tooltip',
+    },
+    {
+        title: 'Typography',
+        href: '/ui-components/typography',
+    },
+    {
+        title: 'Pricing',
+        href: '/pages/pricing',
+    },
+    {
+        title: 'Account Setting',
+        href: '/pages/account-settings',
+    },
+
+    {
+        title: 'FAQ',
+        href: '/pages/faq',
+    },
+    {
+        title: 'Gallery Lightbox',
+        href: '/pages/gallery-lightbox',
+    },
+    {
+        title: 'Treeview',
+        href: '/pages/treeview',
+    },
+    {
+        title: 'Search Results',
+        href: '/pages/search-results',
+    },
+    {
+        title: 'Social Media Contacts',
+        href: '/pages/social-media-contacts',
+    },
+    {
+        title: 'Line',
+        href: '/charts/line-chart',
+    },
+    {
+        title: 'Area',
+        href: '/charts/area-chart',
+    },
+    {
+        title: 'Gredient',
+        href: '/charts/gredient-chart',
+    },
+    {
+        title: 'Column',
+        href: '/charts/column-chart',
+    },
+    {
+        title: 'Candlestick',
+        href: '/charts/candlestick-chart',
+    },
+    {
+        title: 'Donut & Pie',
+        href: '/charts/doughnut-pie-chart',
+    },
+    {
+        title: 'Radialbar & Radar',
+        href: '/charts/radialbar-chart',
+    },
+    {
+        title: 'Banners',
+        href: '/widgets/banners',
+    },
+    {
+        title: 'Cards',
+        href: '/widgets/cards',
+    },
+    {
+        title: 'Charts',
+        href: '/widgets/charts',
+    }
 ];
 
 export { notifications, profileDD, languageDD, appsLink, quickLink, searchSugg };
