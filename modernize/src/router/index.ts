@@ -16,6 +16,10 @@ export const router = createRouter({
         {
             path: '/monitoring/daily-call-stats',
             component: () => import('@/views/monitoring/DailyCallStats.vue')
+        },
+        {
+            path: '/monitoring/active-call-stats',
+            component: () => import('@/views/monitoring/ActiveCallStats.vue')
         }
     ]
 });
