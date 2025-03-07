@@ -39,6 +39,7 @@ const clickChat = (()=>{
 
 // config iframe
 import { useAuthStore } from "@/stores/auth";
+import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
 const authStore = useAuthStore();
 </script>
 <!--chat.ts 에서 최근 메세지 개수를 가져와 배지에 띄움-->
@@ -118,6 +119,9 @@ const authStore = useAuthStore();
         <div class="ml-2">
             <CustomProfileDD />
         </div>
+    </v-app-bar>
+    <v-app-bar elevation="0" :priority="priority" height="50" id="top" tag="div">
+        <CustomTabs/>
     </v-app-bar>
 
     <!-- ---------------------------------------------- -->

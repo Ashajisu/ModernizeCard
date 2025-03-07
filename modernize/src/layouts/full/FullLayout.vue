@@ -5,7 +5,6 @@ import CustomVerticalHeader from './custom/CustomVerticalHeader.vue';
 import CustomHorizontalHeader from './custom/CustomHorizontalHeader.vue';
 import HorizontalSidebar from './horizontal-sidebar/HorizontalSidebar.vue';
 import Customizer from './customizer/Customizer.vue';
-import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
 import { useCustomizerStore } from '@/stores/customizer';
 const customizer = useCustomizerStore();
 
@@ -13,7 +12,6 @@ import { useTabStore } from '@/stores/tabStore';
 import CustomFooter from "@/layouts/full/custom/CustomFooter.vue";
 const tabStore = useTabStore();
 </script>
-<!-- CustomVerticalHeader 확인받고, CustomHorizontalHeader 작성하기 2.21-->
 <template>
     <!-----RTL LAYOUT------->
     <v-locale-provider  v-if="customizer.setRTLLayout"  rtl >
@@ -36,7 +34,6 @@ const tabStore = useTabStore();
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>
-                <CustomTabs>
                     <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                         <div :class="customizer.boxed ? 'maxWidth' : ''">
                             <RouterView v-slot="{ Component }">
@@ -56,7 +53,6 @@ const tabStore = useTabStore();
                             </v-btn>
                         </div>
                     </v-container>
-                </CustomTabs>
             </v-main>
         </v-app>
     </v-locale-provider>
@@ -82,7 +78,6 @@ const tabStore = useTabStore();
             <HorizontalSidebar v-if="customizer.setHorizontalLayout" />
 
             <v-main>
-                <CustomTabs>
                 <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
                           <RouterView v-slot="{ Component }">
@@ -102,7 +97,6 @@ const tabStore = useTabStore();
                         </v-btn>
                     </div>
                 </v-container>
-                </CustomTabs>
                 <CustomFooter/>
             </v-main>
         </v-app>

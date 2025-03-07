@@ -27,6 +27,7 @@ watch(priority, (newPriority) => {
 
 // config iframe
 import { useAuthStore } from "@/stores/auth";
+import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
 const authStore = useAuthStore();
 </script>
 
@@ -108,6 +109,11 @@ const authStore = useAuthStore();
             <div class="ml-3 mr-sm-0 mr-3">
                 <CustomProfileDD />
             </div>
+        </div>
+    </v-app-bar>
+    <v-app-bar elevation="10" :priority="priority" height="50" class="horizontal-tabs">
+        <div :class="customizer.boxed ? 'maxWidth' : 'px-6'">
+            <CustomTabs/>
         </div>
     </v-app-bar>
 

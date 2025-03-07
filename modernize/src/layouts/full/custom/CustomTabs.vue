@@ -38,3 +38,13 @@ watch(() => tabStore.activeTab,(newTab) => {
       <slot/>
     </div>
 </template>
+<style scoped lang="scss">
+:deep(.v-tab__slider) {
+  color: rgb(var(--v-theme-primary)) !important;
+}
+button.v-tab--selected {
+  :deep(.v-btn__content) {
+    color: rgb(var(--v-theme-primary)) !important;
+  }
+}
+</style>

@@ -7,6 +7,25 @@
     }
 
 }
+
+//
+// custom tabs
+//
+
+.customTab {
+    .v-btn {
+        color: unset;
+        &.v-tab-item--selected {
+            background-color: rgb(var(--v-theme-lightprimary)) !important;
+            border-radius: 12px 12px 0 0;
+
+            .icon {
+                background-color: rgb(var(--v-theme-primary)) !important;
+                color: #fff !important;
+            }
+        }
+    }
+}
 //
 // mega menu
 //

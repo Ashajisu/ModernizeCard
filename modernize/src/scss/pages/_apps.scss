@@ -158,21 +158,6 @@
 	}
 }
 
-
-.customTab {
-	.v-btn {
-		&.v-tab-item--selected {
-			background-color: rgb(var(--v-theme-lightprimary)) !important;
-			border-radius: 12px 12px 0 0;
-
-			.icon {
-				background-color: rgb(var(--v-theme-primary)) !important;
-				color: #fff !important;
-			}
-		}
-	}
-}
-
 .email-items {
 	padding: 0px 24px 12px;
 
