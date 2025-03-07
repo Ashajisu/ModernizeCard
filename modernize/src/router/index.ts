@@ -11,7 +11,12 @@ export const router = createRouter({
             component: () => import('@/views/authentication/Error.vue')
         },
         MainRoutes,
-        AuthRoutes
+        AuthRoutes,
+        //승빈추가
+        {
+            path: '/monitoring/daily-call-stats',
+            component: () => import('@/views/monitoring/DailyCallStats.vue')
+        }
     ]
 });
 
