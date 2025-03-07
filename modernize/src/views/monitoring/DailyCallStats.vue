@@ -4,20 +4,25 @@
         <v-card-title class="text-h4 font-weight-bold"> 일일 누적 통화 건수 </v-card-title>
         <v-card-title class="text-h6 font-weight-bold"> 💡줌 폰 시스템의 실시간 전화 사용량을 모니터링 할 수 있습니다. </v-card-title>
 
+        <v-row class="mt-5">
+            <v-col cols="6">
+                <v-card-title class="text-body-1 font-weight-bold text-medium-emphasis"> 최종 업데이트 시간 : {{ lastUpdatedTime }} </v-card-title>
+            </v-col>
+            <v-col cols="6" class="d-flex align-center justify-end">
+                <v-text-field
+                    type="date"
+                    v-model="selectedDate"
+                    density="compact"
+                    variant="outlined"
+                    hide-details
+                    class="date-picker"
+                    style="max-width: 200px"
+                />
+                <v-btn color="primary" class="ml-2" @click="fetchData"> 조회 </v-btn>
+            </v-col>
+        </v-row>
+        
         <!-- 날짜 선택 -->
-        <div class="d-flex justify-end mb-4">
-            <v-text-field
-                type="date"
-                v-model="selectedDate"
-                density="compact"
-                variant="outlined"
-                hide-details
-                class="date-picker"
-                style="max-width: 200px"
-            />
-            <v-btn color="primary" class="ml-2" @click="fetchData"> 조회 </v-btn>
-        </div>
-
         <v-row>
             <v-col cols="12" align="center">
                 <div class="text-h6">일일 누적 통화 건수</div>
@@ -30,7 +35,7 @@
                 <v-card elevation="10" class="pa-4">
                     <div class="d-flex justify-space-between">
                         <div>
-                            <div class="text-subtitle-1 text-grey">전체 통화 콜 수</div>
+                            <div class="text-subtitle-1">전체 통화 콜 수</div>
                             <div class="text-h3 font-weight-bold">{{ totalCalls }}</div>
                         </div>
                         <v-avatar color="primary" size="56" class="elevation-6">
@@ -45,15 +50,15 @@
                 <v-card elevation="10" class="pa-4">
                     <div class="d-flex justify-space-between">
                         <div>
-                            <div class="text-subtitle-1 text-grey">외부 통화</div>
+                            <div class="text-subtitle-1">외부 통화</div>
                             <div class="text-h3 font-weight-bold">{{ outboundCalls }}</div>
                             <div class="d-flex mt-2">
                                 <div class="mr-4">
-                                    <div class="text-caption text-grey">아웃바운드</div>
+                                    <div class="text-caption ">아웃바운드</div>
                                     <div class="text-subtitle-1 font-weight-bold">163</div>
                                 </div>
                                 <div>
-                                    <div class="text-caption text-grey">인바운드</div>
+                                    <div class="text-caption">인바운드</div>
                                     <div class="text-subtitle-1 font-weight-bold">308</div>
                                 </div>
                             </div>
@@ -70,7 +75,7 @@
                 <v-card elevation="10" class="pa-4">
                     <div class="d-flex justify-space-between">
                         <div>
-                            <div class="text-subtitle-1 text-grey">내선 통화</div>
+                            <div class="text-subtitle-1 ">내선 통화</div>
                             <div class="text-h3 font-weight-bold">{{ inboundCalls }}</div>
                         </div>
                         <v-avatar color="success" size="56" class="elevation-6">
@@ -142,6 +147,7 @@ const selectedTypes = ref(['outbound', 'inbound', 'internal']);
 const totalCalls = ref(684);
 const outboundCalls = ref(471);
 const inboundCalls = ref(213);
+const lastUpdatedTime = ref('2025-03-06 10:00:00');
 
 // 바 차트 데이터
 const timeLabels = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
