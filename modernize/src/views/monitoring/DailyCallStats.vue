@@ -197,7 +197,7 @@ const donutchartOptions = computed(() => {
         },
         labels: ['아웃바운드', '인바운드', '내선통화'],
         dataLabels: {
-            enabled: false
+            enabled: true
         },
         plotOptions: {
             pie: {
