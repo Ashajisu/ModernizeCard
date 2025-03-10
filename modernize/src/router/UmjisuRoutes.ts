@@ -1,4 +1,4 @@
-const CustomRoutes = {
+const UmjisuRoutes = {
     path: '/main',
     meta: {
         requiresAuth: true
@@ -19,8 +19,13 @@ const CustomRoutes = {
             name: '시스템 설정',
             path: '/apps/zoom/token',
             component: () => import('@/views/custom/ZoomToken.vue')
+        },
+        {
+            name: '조직 관리',
+            path: '/apps/organization/manage',
+            component: () => import('@/views/custom/OrganizationM.vue')
         }
     ]
 };
 
-export default CustomRoutes;
+export default UmjisuRoutes;
