@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
-import UmjisuRoutes from "@/router/UmjisuRoutes";
+import NameRoutes from "@/router/NameRoutes";
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,9 +13,8 @@ export const router = createRouter({
         },
         MainRoutes,
         AuthRoutes,
-    // 아래에 각자의 route 파일을 추가하시면 됩니다.
-        UmjisuRoutes,
-
+    // 아래에 각자의 route 파일을 생성해 추가하시면 됩니다.
+        NameRoutes,
 
 
 
