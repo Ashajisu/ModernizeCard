@@ -90,54 +90,140 @@ const sidebarItem: menu[] = [
         chipBgColor: 'secondary',
         to: '/dashboards/modern'
     },
+
+    { header: '사용자 및 조직' },
     {
-        title: '사용자 관리',
+        title: '사용자',
         icon: UserCircleIcon,
-        to: '/',
-        children: [
-            {
-                title: '사용자 추가',
-                icon: PointIcon,
-                to: '/apps/user/profile/add'
-            },
-            {
-                title: '사용자 변경',
-                icon: PointIcon,
-                to: '/apps/user/profile/followers'
-            },
-            {
-                title: '사용자 삭제',
-                icon: PointIcon,
-                to: '/apps/user/profile/friends'
-            }
-        ]
+        to: '/apps/user/profile/add'
     },
     {
-        title: '조직관리',
+        title: '조직',
         icon: BoxIcon,
-        to: '/apps/contacts',
+        to: '/apps/organization/manage',
     },
     {
-        title: '통계관리',
+        title: '폰 사용자',
         icon: AppWindowIcon,
         to: '/pages/account-settings'
     },
+
+    { header: '폰' },
     {
-        title: '녹취관리',
+        title: '디바이스',
         icon: Message2Icon,
         to: '/pages/account-settings'
     },
     {
-        title: '시스템 설정',
+        title: '내선번호',
         icon: FileCheckIcon,
         to: '/apps/zoom/token'
     },
     {
-        title: '메뉴 설정',
+        title: 'PSTN',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '당겨받기 그룹',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '과금',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '녹취',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+
+    { header: '모니터링' },
+    {
+        title: '일일 누적 통화',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '활성통화',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '일일 누적 녹취',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '활성 녹취',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+
+    { header: '통계'},
+    {
+        title: '부서별 과금 통계',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: ' 부서별 유형 통계',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '일자별 수발신 통계',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '일자별 수발신 유형별 통계',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '사용량 통계',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '전화 통화 이력',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '전화 최대 사용 이력',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+
+    { header: '디바이스 현황'},
+    {
+        title: '폰 디바이스 현황',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: 'SBC 현황',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+
+    { header: '라이선스'},
+    {
+        title: '사용 현황',
+        icon: FilesIcon,
+        to: '/pages/account-settings'
+    },
+    {
+        title: '사용 내역',
         icon: FilesIcon,
         to: '/pages/account-settings'
     },
 ]
+
 const sidebarItem_basic: menu[] = [
     { header: 'Home' },
     {
