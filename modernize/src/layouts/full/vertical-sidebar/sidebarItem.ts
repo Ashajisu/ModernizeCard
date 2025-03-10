@@ -95,12 +95,12 @@ const sidebarItem: menu[] = [
     {
         title: '사용자',
         icon: UserCircleIcon,
-        to: '/apps/blog/posts'
+        to: '/apps/user/profile/add'
     },
     {
         title: '조직',
         icon: BoxIcon,
-        to: '/apps/blog/early-black-friday-amazon-deals-cheap-tvs-headphones',
+        to: '/apps/organization/manage',
     },
     {
         title: '폰 사용자',
