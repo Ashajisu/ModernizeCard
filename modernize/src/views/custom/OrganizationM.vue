@@ -1,14 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import TwoColsForm from "@/views/custom/TwoColsForm.vue";
 import UiChildCard from "@/components/shared/UiChildCard.vue";
 import Searchbar from "@/layouts/full/vertical-header/Searchbar.vue";
 import SearchTree from "@/components/forms/form-elements/treeview/SearchTree.vue";
 import AppBaseCard from "@/components/shared/AppBaseCard.vue";
+import CustomPlainForm from "@/views/custom/CustomPlainForm.vue";
 
 // 입력 필드 목록 정의
-const formFields = ref<FormField[]>([
+const groupFields = ref<FormField[]>([
+  { label: '조직명', name: 'dept1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '상위조직명', name: 'dept2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '조직코드', name: 'deptcode1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '상위조직코드', name: 'deptcode2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '조직레벨', name: 'deptlevel', type: 'text', value: '', placeholder: '', required: true, disabled: false },
+  { label: '정렬순서', name: 'asc', type: 'number', value: '', placeholder: '', required: true, disabled: false },
+  { label: '사용여부', name: 'activeStatus', type: 'check', value: false, required: true, disabled: false },
+]);
+const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '땡땡땡', placeholder: '이름 입력', required: true, disabled: true },
   { label: '사원번호', name: 'employeeId', type: 'password', value: '1348684', placeholder: '사원번호 입력', required: true, disabled: true },
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: true, disabled: false },
@@ -24,10 +33,40 @@ const formFields = ref<FormField[]>([
   { label: '사용유무', name: 'activeStatus', type: 'select', value: '', options: ['Y', 'N'], required: true, disabled: false }
 ]);
 
-const onSave = (formData : any)=>{
-  console.log('save', formData);
+const personFields = ref<FormField[]>([
+  { label: '조직명', name: 'dept1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '상위조직명', name: 'dept2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '조직코드', name: 'deptcode1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '상위조직코드', name: 'deptcode2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '조직레벨', name: 'deptlevel', type: 'text', value: '', placeholder: '', required: true, disabled: false },
+  { label: '정렬순서', name: 'asc', type: 'number', value: '', placeholder: '', required: true, disabled: false }
+]);
+
+const formData = computed(()=> {
+  const data: Record<string, any> = {};
+  groupFields.value.forEach(field => {
+    data[field.name] = field.value;
+  });
+  return data;
+});
+
+const onSave = ()=>{
+  // 읽기모드로 전환
+  handleEdit(false);
+  console.log('Form Data:', formData); // formData.value 값 확인
+  console.log('save OrganizationM', formData);
 }
 
+const selectedId = ref({ id: 0, type: 'person'});
+// const selectedId = ref({ id: 0, type: 'group'});
+
+//조직 상세정보 편집
+const edit = ref<boolean>(false);
+const handleEdit = (bool : boolean) => {
+  // 수정 / 읽기 화면으로 변경
+  edit.value = bool;
+  console.log('handleEdit', edit.value);
+};
 </script>
 
 <template>
@@ -37,18 +76,57 @@ const onSave = (formData : any)=>{
         <SearchTree/>
       </template>
       <template v-slot:rightpart>
-        <UiChildCard title="조직 상세 정보">
-          <TwoColsForm :formFields="formFields" :onSave="onSave"/>
+<!--        조직 상세-->
+        <UiChildCard title="조직 상세 정보" v-if="selectedId.type === 'group'">
+          <CustomPlainForm :formFields="groupFields" :colsPerRow="2" :edit="false"/>
+          <v-row>
+            <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
+              <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
+            </v-col>
+            <v-col cols="12" sm="9" offset-sm="10" v-else>
+              <v-btn color="primary" flat @click="onSave()">저장</v-btn>
+              <v-btn color="primary" flat @click="handleEdit(false)">취소</v-btn>
+            </v-col>
+          </v-row>
         </UiChildCard>
+<!--        사용자 상세-->
+        <div v-else>
+          <UiChildCard title="사용자 조직 정보">
+            <CustomPlainForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
+          </UiChildCard>
+          <UiChildCard title="사용자 상세 정보">
+            <CustomPlainForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
+          </UiChildCard>
+        </div>
       </template>
       <template v-slot:mobileLeftContent>
+<!--        검색 목록 -->
         <v-sheet>
           <Searchbar />
         </v-sheet>
         <SearchTree/>
-        <UiChildCard title="조직 상세 정보">
-          <TwoColsForm :formFields="formFields" :onSave="onSave"/>
+        <!--        조직 상세-->
+        <UiChildCard title="조직 상세 정보" v-if="selectedId.type === 'group'">
+          <CustomPlainForm :formFields="groupFields" :colsPerRow="2" :edit="edit"/>
+          <v-row>
+            <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
+              <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
+            </v-col>
+            <v-col cols="12" sm="9" offset-sm="10" v-else>
+              <v-btn color="primary" flat @click="onSave()">저장</v-btn>
+              <v-btn color="primary" flat @click="handleEdit(false)">취소</v-btn>
+            </v-col>
+          </v-row>
         </UiChildCard>
+        <!--        사용자 상세-->
+        <div v-else>
+          <UiChildCard title="사용자 조직 정보">
+            <CustomPlainForm :formFields="personFields" :colsPerRow="2" :edit="false"/>
+          </UiChildCard>
+          <UiChildCard title="사용자 상세 정보">
+            <CustomPlainForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
+          </UiChildCard>
+        </div>
       </template>
     </AppBaseCard>
   </v-card>

@@ -73,7 +73,11 @@
 // ];
 import Searchbar from "@/layouts/full/vertical-header/Searchbar.vue";
 import UiChildCard from "@/components/shared/UiChildCard.vue";
+import {UserIcon} from "vue-tabler-icons";
+import {ref} from "vue";
 
+const search = ref('');
+const selectedIds = ref(3);  // 선택된 항목들의 id를 저장할 배열
 const files : Record<string, string> ={
   html: 'mdi-language-html5',
   js: 'mdi-nodejs',
@@ -90,61 +94,95 @@ const files : Record<string, string> ={
 
 const items = [
   {
+    id: 1,
     title: '최상위 조직정보',
     children: [
       {
+        id: 2,
         title: '2단계 조직정보',
-        children: [{
-          title: '3단계 조직정보',
-          children: [{
-            title: '최하위 조직정보',
-            children: [{
-              title: '사용자 A',
-              file: 'user'
-            },{
-              title: '사용자 B',
-              file: 'user'
-            },{
-              title: '사용자 C',
-              file: 'user'
-            },{
-              title: '사용자 D',
-              file: 'user'
-            }],
-            file:'menu'}
-          ],
-          file:'open'
-        }],
-        file:'open'
-      },{
+        children: [
+          {
+            id: 3,
+            title: '3단계 조직정보',
+            children: [
+              {
+                id: 4,
+                title: '최하위 조직정보',
+                children: [
+                  {
+                    id: 5,
+                    title: '사용자 A',
+                    file: 'user',
+                  },
+                  {
+                    id: 6,
+                    title: '사용자 B',
+                    file: 'user',
+                  },
+                  {
+                    id: 7,
+                    title: '사용자 C',
+                    file: 'user',
+                  },
+                  {
+                    id: 8,
+                    title: '사용자 D',
+                    file: 'user',
+                  },
+                ],
+                file: 'menu',
+              },
+            ],
+            file: 'open',
+          },
+        ],
+        file: 'open',
+      },
+      {
+        id: 9,
         title: '2단계 조직정보',
-        children: [{
-          title: '3단계 조직정보',
-          children: [{
-            title: '최하위 조직정보',
-            children: [{
-              title: '사용자 A',
-              file: 'user'
-            },{
-              title: '사용자 B',
-              file: 'user'
-            },{
-              title: '사용자 C',
-              file: 'user'
-            },{
-              title: '사용자 D',
-              file: 'user'
-            }],
-            file:'menu'}
-          ],
-          file:'open'
-        }],
-        file:'open'
-      }
+        children: [
+          {
+            id: 10,
+            title: '3단계 조직정보',
+            children: [
+              {
+                id: 11,
+                title: '최하위 조직정보',
+                children: [
+                  {
+                    id: 12,
+                    title: '사용자 A',
+                    file: 'user',
+                  },
+                  {
+                    id: 13,
+                    title: '사용자 B',
+                    file: 'user',
+                  },
+                  {
+                    id: 14,
+                    title: '사용자 C',
+                    file: 'user',
+                  },
+                  {
+                    id: 15,
+                    title: '사용자 D',
+                    file: 'user',
+                  },
+                ],
+                file: 'menu',
+              },
+            ],
+            file: 'open',
+          },
+        ],
+        file: 'open',
+      },
     ],
-    file: 'open'
-  }
-]
+    file: 'open',
+  },
+];
 </script>
 <template>
     <UiChildCard title="조직 정보">
@@ -154,10 +192,19 @@ const items = [
         <v-btn color="primary"><v-icon icon="mdi-refresh"></v-icon></v-btn>
       </v-row>
       <v-row>
-        <Searchbar />
+        <v-col cols="12">
+          <v-text-field density="compact" v-model="search" label="부서명, 사용자를 검색하세요." hide-details variant="outlined" append-outer-icon="mdi-account-search">
+            <template v-slot:append-inner>
+              <v-icon icon="mdi-account-search" class="text-right"></v-icon>
+            </template>
+          </v-text-field>
+        </v-col>
       </v-row>
     </UiChildCard>
-    <v-treeview :items="items" item-value="id" density="compact" color="primary" activatable>
+
+<!--    <div>선택된 ID: {{ selectedIds }}</div>-->
+    <v-treeview :items="items" item-value="id" density="compact" color="primary" activatable
+                v-model:active="selectedIds">
       <template v-slot:prepend="{ item, isOpen }">
         <v-icon v-if="!item.file" :icon="isOpen ? 'mdi-folder-open' : 'mdi-folder'"></v-icon>
 
