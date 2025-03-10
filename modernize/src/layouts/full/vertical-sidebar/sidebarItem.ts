@@ -95,135 +95,136 @@ const sidebarItem: menu[] = [
     {
         title: '사용자',
         icon: UserCircleIcon,
-        to: '/apps/user/profile/add'
+        to: '/apps/blog/posts'
     },
     {
         title: '조직',
         icon: BoxIcon,
-        to: '/apps/organization/manage',
+        to: '/apps/blog/early-black-friday-amazon-deals-cheap-tvs-headphones',
     },
     {
         title: '폰 사용자',
         icon: AppWindowIcon,
-        to: '/pages/account-settings'
+        to: '/ecommerce/products'
     },
 
     { header: '폰' },
     {
         title: '디바이스',
         icon: Message2Icon,
-        to: '/pages/account-settings'
+        to: '/ecommerce/product/detail/1'
     },
     {
         title: '내선번호',
         icon: FileCheckIcon,
-        to: '/apps/zoom/token'
+        to: '/ecommerce/productlist'
     },
     {
         title: 'PSTN',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/ecommerce/checkout'
     },
     {
         title: '당겨받기 그룹',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/ecommerce/add-product'
     },
     {
         title: '과금',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/ecommerce/edit-product'
     },
     {
         title: '녹취',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/chats'
     },
 
     { header: '모니터링' },
     {
         title: '일일 누적 통화',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/user/profile'
     },
     {
         title: '활성통화',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/user/profile/friends'
     },
     {
         title: '일일 누적 녹취',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/user/profile/gallery'
     },
     {
         title: '활성 녹취',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/invoice'
     },
 
     { header: '통계'},
     {
         title: '부서별 과금 통계',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/invoice/details/102'
     },
     {
         title: ' 부서별 유형 통계',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/invoice/create'
     },
     {
         title: '일자별 수발신 통계',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/invoice/edit/102'
     },
     {
         title: '일자별 수발신 유형별 통계',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/notes'
     },
     {
         title: '사용량 통계',
         icon: FilesIcon,
-        to: '/pages/account-settings'
+        to: '/apps/calendar'
     },
     {
         title: '전화 통화 이력',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: MailIcon,
+        to: '/apps/email'
     },
     {
         title: '전화 최대 사용 이력',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: TicketIcon,
+        to: '/apps/tickets'
     },
 
     { header: '디바이스 현황'},
     {
         title: '폰 디바이스 현황',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: LayoutKanbanIcon,
+        to: '/apps/kanban'
     },
     {
         title: 'SBC 현황',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: CurrencyDollarIcon,
+        to: '/pages/pricing'
     },
 
     { header: '라이선스'},
     {
         title: '사용 현황',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: UserCircleIcon,
+        to: '/pages/gallery-lightbox'
     },
     {
         title: '사용 내역',
-        icon: FilesIcon,
-        to: '/pages/account-settings'
+        icon: HelpIcon,
+        to: '/pages/faq'
     },
 ]
 
+// 아이콘 변경시 참고하세요.
 const sidebarItem_basic: menu[] = [
     { header: 'Home' },
     {
