@@ -22,7 +22,7 @@ watch(() => tabStore.activeTab,(newTab) => {
 
 </script>
 <template>
-    <div :class="customizer.boxed ? 'boxed-customTab' : ''">
+    <div>
       <v-tabs color="primary" v-model="tabStore.activeTab" class="customTab">
           <v-tab v-for="(tab) in tabStore.tabs" :key="tab.to" :value="tab.to">
             {{ tab.title}}
