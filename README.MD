@@ -97,7 +97,7 @@ git push --force-with-lease
 <br>
 <br>
 
-## 📌route 관리 가이드드
+## 📌route 관리 가이드
 > 💡[ Zoom 프로젝트 vue route 관리에 대해 공유드립니다. ]
 [ 페이지 라우트 관련 공지 ]
 * 경로 : 프로젝트명\modernize\src\router
@@ -111,7 +111,7 @@ git push --force-with-lease
 <br>
 <br>
 
-## 📌sidebarItem 관리 가이드드
+## 📌sidebarItem 관리 가이드
 > 💡[ Zoom 프로젝트 sidebarItem 관리에 대해 공유드립니다. ]
 1. route 에 추가된 경로만
 2. route.ts 파일의 path 값을 sidebarItem.ts 의 to 값에 매칭합니다.
