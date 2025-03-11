@@ -2,7 +2,7 @@
 <template>
     <v-card class="pa-5">
         <v-card-title class="text-h4 font-weight-bold"> 일일 누적 녹취 건수 </v-card-title>
-        <v-card-title class="text-h6 font-weight-bold"> 💡줌 폰 시스템의 실시간 전화 사용량을 모니터링 할 수 있습니다. </v-card-title>
+        <v-card-title class="text-h6 font-weight-bold"> 💡줌 폰 시스템의 실시간 녹취 사용량을 모니터링 할 수 있습니다. </v-card-title>
 
         <v-row class="mt-5">
             <v-col cols="6">
