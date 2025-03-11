@@ -159,7 +159,7 @@ const donutchartOptions = computed(() => {
         plotOptions: {
             pie: {
                 donut: {
-                    size: '70px'
+                    size: '50px',
                 }
             }
         },
