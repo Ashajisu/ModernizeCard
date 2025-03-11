@@ -25,7 +25,7 @@ const config: ConfigProps = {
     boxed: false,
     setBorderCard: false,
 
-    maxTabs : 8,
+    maxTabs : 20,
     siteName : 'arisys',
     setSearchbar : true,
     setThemeToggle : false,
