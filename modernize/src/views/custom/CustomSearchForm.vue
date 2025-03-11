@@ -4,7 +4,7 @@ import type { FormField } from '@/types/custom/InputTypes';
 
 const props = defineProps<{
   formFields: FormField[];
-  onSave: (formData : any) => void;
+  onSearch: (formData : any) => void;
 }>();
 
 const formData = computed(()=> {
@@ -18,7 +18,7 @@ const formData = computed(()=> {
 const handleSave = () => {
   // 부모 컴포넌트로 computed 된 formData 를 전달
   console.log('Form Data:', formData.value); // formData.value 값 확인
-  props.onSave(formData.value);
+  props.onSearch(formData.value);
 };
 </script>
 <!--formFields 배열을 사용해 동적으로 입력 필드 정보를 관리 : 1줄에 4개-->
@@ -27,12 +27,7 @@ const handleSave = () => {
 <template>
     <v-container>
         <v-row>
-            <v-col cols="12" sm="9" offset-sm="11">
-                <v-btn color="primary" flat @click="handleSave()">저장</v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" sm="3" v-for="(field, index) in formFields" :key="index">
+            <v-col cols="10" sm="2" v-for="(field, index) in formFields" :key="index">
                 <v-row class="align-center mb-3">
 <!--                  라벨-->
                     <v-col cols="12" sm="3" class="pb-sm-3 pb-0">
@@ -47,10 +42,15 @@ const handleSave = () => {
                                       :items="field.options"
                                       :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                                       :readonly="field.disabled"></v-select>
-                      <v-input v-else-if="field.type === 'search'"
+                      <v-text-field v-else-if="field.type === 'search'"
                                v-model="field.value"
                                :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                               :readonly="field.disabled"></v-input>
+                               :readonly="field.disabled"
+                               @click="">
+                        <template v-slot:append-inner>
+                          <v-icon icon="mdi-account-search" class="text-right"></v-icon>
+                        </template>
+                      </v-text-field>
                       <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                     v-model="field.value"
                                     :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
@@ -66,6 +66,10 @@ const handleSave = () => {
                                     :readonly="field.disabled"></v-text-field>
                     </v-col>
                 </v-row>
+            </v-col>
+<!--          버튼-->
+            <v-col cols="12" sm="2">
+              <v-btn color="primary" flat @click="handleSave()">조회</v-btn>
             </v-col>
       </v-row>
     </v-container>

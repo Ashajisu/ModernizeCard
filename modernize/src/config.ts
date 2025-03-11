@@ -22,7 +22,7 @@ const config: ConfigProps = {
     setHorizontalLayout: false, // Horizontal layout
     setRTLLayout: false, // RTL layout
     actTheme: 'BLUE_THEME',
-    boxed: true,
+    boxed: false,
     setBorderCard: false,
 
     maxTabs : 8,
