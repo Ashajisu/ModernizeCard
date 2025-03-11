@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
+import MonitoringRoutes from './MonitoringRoutes';
 import { useAuthStore } from '@/stores/auth';
 
 export const router = createRouter({
@@ -12,15 +13,8 @@ export const router = createRouter({
         },
         MainRoutes,
         AuthRoutes,
-        //승빈추가
-        {
-            path: '/monitoring/daily-call-stats',
-            component: () => import('@/views/monitoring/DailyCallStats.vue')
-        },
-        {
-            path: '/monitoring/active-call-stats',
-            component: () => import('@/views/monitoring/ActiveCallStats.vue')
-        }
+        MonitoringRoutes,
+
     ]
 });
 
