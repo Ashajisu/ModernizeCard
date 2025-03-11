@@ -22,8 +22,8 @@ watch(() => tabStore.activeTab,(newTab) => {
 
 </script>
 <template>
-    <div>
-      <v-tabs color="primary" v-model="tabStore.activeTab" class="customTab">
+  <div :class="customizer.boxed ? 'maxWidth v-toolbar__content' : 'px-6 v-toolbar__content'">
+      <v-tabs show-arrows color="primary" v-model="tabStore.activeTab" class="custom-tabs" >
           <v-tab v-for="(tab) in tabStore.tabs" :key="tab.to" :value="tab.to">
             {{ tab.title}}
             <v-btn @click.stop="tabStore.removeTab(tab.to)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
@@ -34,9 +34,8 @@ watch(() => tabStore.activeTab,(newTab) => {
             <v-btn class="px-0 py-0 align-center text-center" @click.stop="tabStore.refreshTab()"><v-icon>mdi-refresh</v-icon></v-btn>
           </v-tab>
       </v-tabs>
-      <v-divider></v-divider>
       <slot/>
-    </div>
+  </div>
 </template>
 <style scoped lang="scss">
 :deep(.v-tab__slider) {
@@ -46,5 +45,8 @@ button.v-tab--selected {
   :deep(.v-btn__content) {
     color: rgb(var(--v-theme-primary)) !important;
   }
+}
+.custom-tabs .v-tabs-bar {
+  justify-content: flex-start !important; /* 탭을 왼쪽 정렬 */
 }
 </style>

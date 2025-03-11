@@ -112,9 +112,7 @@ const authStore = useAuthStore();
         </div>
     </v-app-bar>
     <v-app-bar elevation="10" :priority="priority" height="50" class="horizontal-tabs">
-        <div :class="customizer.boxed ? 'maxWidth' : 'px-6'">
-            <CustomTabs/>
-        </div>
+        <CustomTabs/>
     </v-app-bar>
 
     <v-navigation-drawer v-model="appsdrawer" location="right" temporary>
