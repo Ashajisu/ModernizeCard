@@ -16,6 +16,10 @@ const MonitoringRoutes = {
         {
             path: 'daily-recording-stats',
             component: () => import('@/views/monitoring/DailyRecordingStats.vue')
+        },
+        {
+            path: 'active-recording-stats',
+            component: () => import('@/views/monitoring/ActiveRecordingStats.vue')
         }
     ]
 };
