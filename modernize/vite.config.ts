@@ -35,6 +35,13 @@ export default defineConfig({
   build: {
     outDir : '../src/main/resources/static',
     chunkSizeWarningLimit: 5000,
+    rollupOptions: {
+      output: {
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
   },
   css: {
     preprocessorOptions: {
