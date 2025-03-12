@@ -17,17 +17,17 @@ const isEditable = computed(() => props.edit);
 <!--"text" 타입이면 <v-text-field>을 사용하여 일반 입력 필드 표시-->
 <template>
     <v-container>
-        <v-row>
+        <v-row class="mb-1">
             <v-col :cols="12 / colsPerRow" v-for="(field, index) in formFields" :key="index">
-                <v-row class="align-center mb-3">
+                <v-row class="align-center">
 <!--                  라벨-->
-                    <v-col cols="3" sm="3" class="pb-sm-3 pb-0">
+                    <v-col cols="3" sm="3" class="pb-sm-1 pb-0">
                         <v-label class="font-weight-medium">{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
                         </v-label>
                     </v-col>
 <!--                  입력란-->
-                  <v-col cols="9" sm="9" class="pb-sm-3 pb-0 custom-height">
+                  <v-col cols="9" sm="9" class="pb-sm-1 pb-0 custom-height">
                     <v-select v-if="field.type === 'select'" return-object single-line variant="outlined"
                               v-model="field.value as string"
                               :items="field.options"

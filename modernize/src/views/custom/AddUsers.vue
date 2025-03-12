@@ -3,7 +3,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import CustomPlainForm from "@/views/custom/CustomPlainForm.vue";
+import CustomPlainForm from "@/components/custom/CustomPlainForm.vue";
 import type {Datatables} from "@/types/components/datatables";
 
 const formFields = ref<FormField[]>([
@@ -149,7 +149,7 @@ const onDelete = () => {
   console.log(formData.value)
   if(confirm('줌 폰 사용자도 함께 삭제 됩니다.\n\n선택한 사용자를 삭제 하시겠습니까?')){
     alert('삭제 되었습니다.');
-  };
+  }
 }
 </script>
 <!-- 각 버튼의 기능 구현 전 -->
