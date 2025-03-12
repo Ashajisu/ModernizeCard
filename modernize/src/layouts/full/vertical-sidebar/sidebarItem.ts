@@ -222,6 +222,17 @@ const sidebarItem: menu[] = [
         icon: HelpIcon,
         to: '/pages/faq'
     },
+    { header: '환경설정'},
+    {
+        title: '메뉴 관리',
+        icon: LayoutIcon,
+        to: '/widget-card',
+    },
+    {
+        title: '코드관리',
+        icon: HelpIcon,
+        to: '/pages/faq'
+    },
 ]
 
 // 아이콘 변경시 참고하세요.
@@ -401,9 +412,9 @@ const sidebarItem_basic: menu[] = [
             },
             {
                 title: 'Edit',
-                icon: PointIcon,
-                to: '/apps/invoice/edit/102'
-            }
+                icon: BrandTidalIcon,
+                to: '/pages/treeview'
+            },
         ]
     },
     {
