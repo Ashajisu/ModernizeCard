@@ -33,15 +33,6 @@ const isEditable = computed(() => props.edit);
                               :items="field.options"
                               :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                               :readonly="!isEditable || field.disabled"></v-select>
-                    <v-text-field v-else-if="field.type === 'search'"
-                                  v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="field.disabled"
-                                  @click="">
-                      <template v-slot:append-inner>
-                        <v-icon icon="mdi-account-search" class="text-right"></v-icon>
-                      </template>
-                    </v-text-field>
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                   v-model="field.value"
                                   :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
