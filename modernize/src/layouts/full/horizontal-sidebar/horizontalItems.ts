@@ -118,22 +118,22 @@ const horizontalItems: menu[] = [
             {
                 title: '일일 누적 통화',
                 icon: CircleIcon,
-                to: '/apps/user/profile'
+                to: '/monitoring/daily-call-stats'
             },
             {
                 title: '활성통화',
                 icon: CircleIcon,
-                to: '/apps/user/profile/friends'
+                to: '/monitoring/active-call-stats'
             },
             {
                 title: '일일 누적 녹취',
                 icon: CircleIcon,
-                to: '/apps/user/profile/gallery'
+                to: '/monitoring/daily-recording-stats'
             },
             {
                 title: '활성 녹취',
                 icon: CircleIcon,
-                to: '/apps/invoice'
+                to: '/monitoring/active-recording-stats'
             }
         ]
     },
