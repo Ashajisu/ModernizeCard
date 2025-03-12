@@ -3,15 +3,16 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import CustomPlainForm from "@/components/custom/CustomPlainForm.vue";
+import CustomSearchForm from "@/components/custom/CustomSearchForm.vue";
 import type {Datatables} from "@/types/components/datatables";
+import {searchSugg} from "@/_mockApis/headerData";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId', type: 'search', value: '1348684', placeholder: '사원번호 입력', required: false, disabled: false },
-  { label: '사용자명', name: 'username', type: 'search', value: '땡땡땡', placeholder: '이름 입력', required: false, disabled: false }
+  { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '사용자명', name: 'username',  type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false }
 ]);
 const headers = ref<any[]>([
   { title: '부서명', align: 'start', key: 'post' },
@@ -26,8 +27,8 @@ const headers = ref<any[]>([
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: true, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
-  { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: true, disabled: false },
-  { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: true, disabled: false },
+  { label: '부서명', name: 'department',  type: 'search', value: '', searchObj:searchSugg, view:false, required: true, disabled: false },
+  { label: '팀명', name: 'team',  type: 'search', value: '', searchObj:searchSugg, view:false, required: true, disabled: false },
   { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
   { label: '메일주소', name: 'email', type: 'text', value: 'example@domain.com', placeholder: 'example@domain.com', required: true, disabled: false },
   { label: '전화번호', name: 'phone', type: 'text', value: '', placeholder: '02-0000-0000', required: true, disabled: false },
@@ -159,9 +160,9 @@ const onDelete = () => {
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
               <v-row>
-                <CustomPlainForm :formFields="formFields" :colsPerRow="5" :edit="true">
+                <CustomSearchForm :formFields="formFields" :colsPerRow="5" :edit="true">
                   <v-btn color="primary" flat @click="onSearch">조회</v-btn>
-                </CustomPlainForm>
+                </CustomSearchForm>
               </v-row>
               <v-row>
                 <v-col>
@@ -202,10 +203,10 @@ const onDelete = () => {
                 </v-col>
               </v-row>
               <v-row>
-                <CustomPlainForm :formFields="userFields" :colsPerRow="4" :edit="edit"></CustomPlainForm>
+                <CustomSearchForm :formFields="userFields" :colsPerRow="4" :edit="edit"></CustomSearchForm>
               </v-row>
               <v-row>
-                <CustomPlainForm :formFields="zoomFields" :colsPerRow="2" :edit="edit"></CustomPlainForm>
+                <CustomSearchForm :formFields="zoomFields" :colsPerRow="2" :edit="edit"></CustomSearchForm>
               </v-row>
             </UiParentCard>
         </v-col>

@@ -11,10 +11,10 @@ import CustomSearchForm from "@/components/custom/CustomSearchForm.vue";
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
-  { label: '사용자명', name: 'username', type: 'search', value: '', placeholder: '이름 입력', required: false, disabled: false },
+  { label: '사용자명', name: 'username', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
   { label: '내선번호', name: 'phone', type: 'text', value: '', required: false, disabled: false },
-  { label: 'PSTN 번호', name: 'pstnN', type: 'search', value: '', placeholder: '사원번호 입력', required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId', type: 'search', value: '', placeholder: '사원번호 입력', required: false, disabled: false },
+  { label: 'PSTN 번호', name: 'pstnN', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
 ]);
 const headers = ref<any[]>([
   { title: '부서명', align: 'start', key: 'post' },
@@ -170,9 +170,9 @@ const handleDialog = () => {
         <v-col cols="12" md="12">
             <UiParentCard title="줌 폰 사용자 관리">
               <v-row>
-                <CustomPlainForm :formFields="formFields" :colsPerRow="5" :edit="true">
+                <CustomSearchForm :formFields="formFields" :colsPerRow="5" :edit="true">
                   <v-btn color="primary" flat @click="onSearch">조회</v-btn>
-                </CustomPlainForm>
+                </CustomSearchForm>
               </v-row>
               <v-row>
                 <v-col>
