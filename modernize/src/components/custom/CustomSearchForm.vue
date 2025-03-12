@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
 import {computed, ref} from "vue";
-import CustomDialog from "@/components/custom/CustomDialog.vue";
+import CustomDialog from "@/components/custom/CustomSearchDialog.vue";
 
 const props = defineProps<{
   formFields: FormField[];
