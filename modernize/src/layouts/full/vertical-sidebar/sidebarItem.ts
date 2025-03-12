@@ -222,6 +222,18 @@ const sidebarItem: menu[] = [
         icon: HelpIcon,
         to: '/pages/faq'
     },
+
+    { header: '환경설정'},
+    {
+        title: '메뉴 관리',
+        icon: LayoutIcon,
+        to: '/widget-card',
+    },
+    {
+        title: '코드관리',
+        icon: HelpIcon,
+        to: '/pages/faq'
+    },
 ]
 
 // 아이콘 변경시 참고하세요.

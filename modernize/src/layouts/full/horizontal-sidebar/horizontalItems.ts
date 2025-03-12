@@ -33,8 +33,206 @@ export interface menu {
     extraclass?: string;
     type?: string;
 }
-
 const horizontalItems: menu[] = [
+    {
+        title: 'Dashboard',
+        icon: HomeIcon,
+        to: '#',
+        children: [
+            {
+                title: 'Modern',
+                icon: CircleIcon,
+                to: '/dashboards/modern'
+            },
+            {
+                title: 'Ecommerce',
+                icon: CircleIcon,
+                to: '/dashboards/ecommerce'
+            }
+        ]
+    },
+    {
+        title: '사용자 및 조직',
+        icon: UserPlusIcon,
+        to: '#',
+        children: [
+            {
+                title: '사용자',
+                icon: CircleIcon,
+                to: '/apps/user/profile/add'
+            },
+            {
+                title: '조직',
+                icon: CircleIcon,
+                to: '/apps/organization/manage'
+            },
+            {
+                title: '폰 사용자',
+                icon: CircleIcon,
+                to: '/ecommerce/products'
+            }
+        ]
+    },
+    {
+        title: '폰',
+        icon: ZoomCodeIcon,
+        to: '#',
+        children: [
+            {
+                title: '디바이스',
+                icon: CircleIcon,
+                to: '/ecommerce/product/detail/1'
+            },
+            {
+                title: '내선번호',
+                icon: CircleIcon,
+                to: '/ecommerce/productlist'
+            },
+            {
+                title: 'PSTN',
+                icon: CircleIcon,
+                to: '/ecommerce/checkout'
+            },
+            {
+                title: '당겨받기 그룹',
+                icon: CircleIcon,
+                to: '/ecommerce/add-product'
+            },
+            {
+                title: '과금',
+                icon: CircleIcon,
+                to: '/ecommerce/edit-product'
+            },
+            {
+                title: '녹취',
+                icon: CircleIcon,
+                to: '/apps/chats'
+            }
+        ]
+    },
+    {
+        title: '모니터링',
+        icon: BorderAllIcon,
+        to: '#',
+        children: [
+            {
+                title: '일일 누적 통화',
+                icon: CircleIcon,
+                to: '/apps/user/profile'
+            },
+            {
+                title: '활성통화',
+                icon: CircleIcon,
+                to: '/apps/user/profile/friends'
+            },
+            {
+                title: '일일 누적 녹취',
+                icon: CircleIcon,
+                to: '/apps/user/profile/gallery'
+            },
+            {
+                title: '활성 녹취',
+                icon: CircleIcon,
+                to: '/apps/invoice'
+            }
+        ]
+    },
+    {
+        title: '통계',
+        icon: BrandAirtableIcon,
+        to: '#',
+        children: [
+            {
+                title: '부서별 과금 통계',
+                icon: CircleIcon,
+                to: '/apps/invoice/details/102'
+            },
+            {
+                title: '부서별 유형 통계',
+                icon: CircleIcon,
+                to: '/apps/invoice/create'
+            },
+            {
+                title: '일자별 수발신 통계',
+                icon: CircleIcon,
+                to: '/apps/invoice/edit/102'
+            },
+            {
+                title: '일자별 수발신 유형별 통계',
+                icon: CircleIcon,
+                to: '/apps/notes'
+            },
+            {
+                title: '사용량 통계',
+                icon: CircleIcon,
+                to: '/apps/calendar'
+            },
+            {
+                title: '전화 통화 이력',
+                icon: CircleIcon,
+                to: '/apps/email'
+            },
+            {
+                title: '전화 최대 사용 이력',
+                icon: CircleIcon,
+                to: '/apps/tickets'
+            }
+        ]
+    },
+    {
+        title: '디바이스 현황',
+        icon: FileDescriptionIcon,
+        to: '#',
+        children: [
+            {
+                title: '폰 디바이스 현황',
+                icon: CircleIcon,
+                to: '/apps/kanban'
+            },
+            {
+                title: 'SBC 현황',
+                icon: CircleIcon,
+                to: '/pages/pricing'
+            }
+        ]
+    },
+    {
+        title: '라이선스',
+        icon: ClipboardIcon,
+        to: '#',
+        children: [
+            {
+                title: '사용 현황',
+                icon: CircleIcon,
+                to: '/pages/gallery-lightbox'
+            },
+            {
+                title: '사용 내역',
+                icon: CircleIcon,
+                to: '/pages/faq'
+            }
+        ]
+    },
+    {
+        title: '환경설정',
+        icon: SettingsIcon,
+        to: '#',
+        children: [
+            {
+                title: '메뉴 관리',
+                icon: CircleIcon,
+                to: '/widget-card'
+            },
+            {
+                title: '코드관리',
+                icon: CircleIcon,
+                to: '/pages/faq'
+            }
+        ]
+    }
+];
+
+const horizontalItems_basic: menu[] = [
     {
         title: 'Dashboard',
         icon: HomeIcon,
