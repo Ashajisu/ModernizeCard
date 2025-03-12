@@ -101,7 +101,7 @@ git push --force-with-lease
 > 💡[ Zoom 프로젝트 vue route 관리에 대해 공유드립니다. ]
 [ 페이지 라우트 관련 공지 ]
 * 경로 : 프로젝트명\modernize\src\router
-* 파일명 : 예시 UmjisuRoutes.ts
+* 파일명 : 예시 UserRoutes.ts
 * 추가할 경로 : 프로젝트명\modernize\src\router\index.ts
 
 1. 해당경로에 각자의 ts 파일을 생성하시고,
