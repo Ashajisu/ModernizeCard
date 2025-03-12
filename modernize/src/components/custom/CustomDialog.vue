@@ -23,6 +23,7 @@ const emit = defineEmits(["update:view", "update:selectedValue"]);
 function close() {
   dialog.value = false;
   emit('update:view', false);
+  console.log('close', dialog.value);
 }
 
 function save() {
@@ -42,9 +43,10 @@ const filteredSugg = computed(() => {
 });
 
 </script>
-
+<!--persistent : 외부를 눌러도 닫히지 않게-->
+<!--@click:outside="close" : 외부를 눌러서 닫혀도 dialog=false 값 유지되게-->
 <template>
-  <v-dialog v-model="dialog" max-width="700">
+  <v-dialog v-model="dialog"  max-width="700"  @click:outside="close">
     <v-card>
       <v-card-title class="pa-4 bg-primary">
         <span class="title text-white">{{ title }}</span>

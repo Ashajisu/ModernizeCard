@@ -13,14 +13,15 @@ const props = defineProps<{
 const isEditable = computed(() => props.edit);
 
 // Dialog 열림 여부
-const viewDialog = ref(false);
-const openSearchDialog = () => {
-  viewDialog.value = true;
+const openSearchDialog = (field : FormField) => {
+  if(isEditable.value){ field.view = true; }
+  // console.log('done', isEditable.value, field.view); //두 값이 항상 같아야 함.
 };
 
 </script>
 <!--formFields 배열을 사용해 동적으로 입력 필드 정보를 관리 : 1줄에 4개-->
 <!--"select" 타입이면 <v-autocomplete>을 사용하여 options 목록을 드롭다운으로 표시, -->
+<!--"search" 타입이면 <CustomDialog>을 사용하여 searchObj 목록을 검색팝업으로 표시, view 값으로 팝업 보이게함 -->
 <!--"text" 타입이면 <v-text-field>을 사용하여 일반 입력 필드 표시-->
 <template>
   <v-container>
@@ -44,11 +45,11 @@ const openSearchDialog = () => {
                           v-model="field.value"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                           :readonly="!isEditable || field.disabled"
-                          @click="openSearchDialog">
+                          @click="openSearchDialog(field)">
               <template v-slot:append-inner>
                 <v-icon icon="mdi-account-search" class="text-right"></v-icon>
               </template>
-              <CustomDialog v-model:view="viewDialog" :title="field.label" :items="field.searchObj"  @update:selectedValue="(selectedValue : string) => { field.value = selectedValue}" />
+              <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :items="field.searchObj"  @update:selectedValue="(selectedValue : string) => { field.value = selectedValue}" />
             </v-text-field>
             <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                           v-model="field.value"

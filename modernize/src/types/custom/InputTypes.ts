@@ -9,5 +9,6 @@ export interface FormField {
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
-    searchObj?: searchType[] | undefined;
+    view?: boolean; //dialog
+    searchObj?: searchType[] | undefined; //dialog
 }
