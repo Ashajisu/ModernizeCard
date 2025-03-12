@@ -63,7 +63,8 @@ import {
     AddressBookIcon,
     BellDollarIcon,
     TicketIcon,
-    FileCheckIcon
+    FileCheckIcon,
+    PhoneIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -233,6 +234,11 @@ const sidebarItem: menu[] = [
         title: '코드관리',
         icon: HelpIcon,
         to: '/pages/faq'
+    },
+    {
+        title: 'Extension 번호 관리',
+        icon: PhoneIcon,
+        to: '/env-management/extension-list'
     },
 ]
 

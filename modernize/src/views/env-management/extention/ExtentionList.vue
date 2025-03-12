@@ -72,11 +72,17 @@
           ></v-select>
         </div>
         <v-spacer></v-spacer>
-        <v-pagination
-          v-model="page"
-          :length="totalPages"
-          :total-visible="7"
-        ></v-pagination>
+        <div class="text-center">
+          <v-pagination
+            v-model="page"
+            :length="totalPages"
+            :total-visible="7"
+          ></v-pagination>
+        </div>
+        <v-spacer></v-spacer>
+        <div class="text-right">
+          전체 ({{ totalItems }}) 건 / {{ page }}/{{ totalPages }}
+        </div>
       </div>
   
  
@@ -106,6 +112,10 @@
     return Math.ceil(extensionList.value.length / itemsPerPage.value);
   });
   
+  const totalItems = computed(() => {
+    return extensionList.value.length;
+  });
+
   // 데이터 조회 함수
   const fetchData = () => {
     // API 호출 로직 구현
