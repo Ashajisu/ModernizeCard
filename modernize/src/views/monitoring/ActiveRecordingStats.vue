@@ -83,10 +83,8 @@
 
             <!-- 도넛 차트 -->
             <v-col cols="12" md="3">
-                <div class="text-center text-h6">활성통화</div>
-                <UiChildCard title="Donut Chart">
+                    <div class="text-center text-h6 mb-2">활성통화</div>
                     <apexchart type="donut" height="300" :options="donutchartOptions" :series="donutChart.series"></apexchart>
-                </UiChildCard>
             </v-col>
         </v-row>
 
@@ -96,7 +94,7 @@
                 <div class="text-h6 ml-5">활성통화 리스트  ( {{ selectedTableTitle }} )</div>
             </v-col>
             <v-col cols="12">
-                <UiParentCard title="External Pagination">
+                <v-card elevation="10">
                     <v-data-table
                         :items-per-page="itemsPerPage"
                         :headers="headers"
@@ -121,7 +119,7 @@
                             </div>
                         </template>
                     </v-data-table>
-                </UiParentCard>
+                </v-card>
             </v-col>
         </v-row>
     </v-card>
