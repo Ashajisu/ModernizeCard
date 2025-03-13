@@ -15,8 +15,8 @@ const formFields = ref<FormField[]>([
   { label: '부서', name: 'department', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
   { label: '팀', name: 'team', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
   { label: '사용자', name: 'username', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '통화시작시간', name: 'startTime', type: 'date', value: '', required: false, disabled: false },
-  { label: '통화종료시간', name: 'endTime', type: 'date', value: '', required: false, disabled: false },
+  { label: '통화시작시간', name: 'startTime', type: 'datetime', value: '', required: false, disabled: false },
+  { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: 'ID', name: 'id', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['전수', '선택'], required: false, disabled: false },
@@ -39,6 +39,12 @@ const headers = ref<any[]>([
   { title: "ID", align: 'start', key: "id"},
 ]);
 
+// 초기화
+const resetSearch = ()=>{
+  formFields.value.forEach(field => {
+    field.value='';
+  });
+};
 //검색기능
 const search = ref();
 const searchData = computed(()=> {
@@ -117,6 +123,7 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                   <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                       <v-btn color="primary" flat @click="onSearch">조회</v-btn>
+                      <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                       <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
                     </div>
                   </CustomSearchCheckForm>

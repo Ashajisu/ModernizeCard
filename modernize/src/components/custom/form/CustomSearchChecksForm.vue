@@ -56,6 +56,10 @@ const openSearchDialog = (field : FormField) => {
                           v-model="field.value"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                           :readonly="!isEditable || field.disabled"></v-text-field>
+            <v-text-field v-else-if="field.type === 'datetime'" color="primary" variant="outlined" type="datetime-local"
+                          v-model="field.value"
+                          :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                          :readonly="!isEditable || field.disabled"></v-text-field>
             <div v-else-if="field.type === 'check'" class="tiny-checkbox-container">
               <v-checkbox v-for="(option, index) in field.options" color="primary" variant="outlined" type="text" density="compact" hide-details
                           :key="index"
