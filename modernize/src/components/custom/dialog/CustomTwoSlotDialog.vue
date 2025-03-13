@@ -5,6 +5,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 const props = defineProps<{
   view: boolean;
   title: string;
+  titleSec: string;
 }>();
 
 const dialog = ref(props.view);
@@ -27,8 +28,19 @@ function close() {
 <template>
     <v-dialog v-model="dialog"  max-width="700"  @click:outside="close">
         <v-card>
-            <slot name="top"/>
-            <slot name="bottom"/>
+          <UiParentCard :title="title">
+            <div>
+              <slot name="top"/>
+            </div>
+          </UiParentCard>
+          <UiParentCard :title="titleSec">
+            <div>
+              <slot name="bottom"/>
+            </div>
+            <v-card-actions class="pa-4">
+              <v-spacer></v-spacer><v-btn color="primary" variant="outlined" @click="close">닫기</v-btn>
+            </v-card-actions>
+          </UiParentCard>
         </v-card>
     </v-dialog>
 </template>

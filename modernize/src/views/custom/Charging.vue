@@ -5,8 +5,8 @@ import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
 import type {Datatables} from "@/types/components/datatables";
 import {searchSugg} from "@/_mockApis/headerData";
-import CustomSearchCheckForm from "@/components/custom/CustomSearchChecksForm.vue";
-import CustomDetailDialog from "@/components/custom/CustomDetailDialog.vue";
+import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
+import CustomDetailDialog from "@/components/custom/dialog/CustomDetailDialog.vue";
 
 const formFields_admin = ref<FormField[]>([
   { label: '발신자 번호', name: 'destAdd', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },

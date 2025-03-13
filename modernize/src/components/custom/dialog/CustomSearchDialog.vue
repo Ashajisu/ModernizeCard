@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {watch, ref, computed} from "vue";
-import DialogBaseCard from "@/components/custom/DialogBaseCard.vue";
+import DialogBaseCard from "@/components/custom/dialog/DialogBaseCard.vue";
 import type {searchType} from "@/types/HeaderTypes";
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 

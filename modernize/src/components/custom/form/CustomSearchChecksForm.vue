@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
-import {computed, ref} from "vue";
-import CustomDialog from "@/components/custom/CustomSearchDialog.vue";
+import {computed} from "vue";
+import CustomDialog from "@/components/custom/dialog/CustomSearchDialog.vue";
 
 const props = defineProps<{
   formFields: FormField[];
@@ -19,13 +19,10 @@ const openSearchDialog = (field : FormField) => {
 };
 
 </script>
-<!--formFields 배열을 사용해 동적으로 입력 필드 정보를 관리 : 1줄에 4개-->
-<!--"select" 타입이면 <v-autocomplete>을 사용하여 options 목록을 드롭다운으로 표시, -->
-<!--"search" 타입이면 <CustomDialog>을 사용하여 searchObj 목록을 검색팝업으로 표시, view 값으로 팝업 보이게함 -->
-<!--"text" 타입이면 <v-text-field>을 사용하여 일반 입력 필드 표시-->
+<!-- 다중 체크박스를 지원 -->
 <template>
   <v-container>
-    <v-row class="mb-1">
+    <v-row class="mb-6">
       <v-col :cols="12 / colsPerRow" v-for="(field, index) in formFields" :key="index">
         <v-row class="align-center">
           <!--                  라벨-->
@@ -59,21 +56,26 @@ const openSearchDialog = (field : FormField) => {
                           v-model="field.value"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                           :readonly="!isEditable || field.disabled"></v-text-field>
-            <v-checkbox v-else-if="field.type === 'check'" color="primary" variant="outlined" type="text"
-                        v-model="field.value as boolean"
-                        :placeholder="field.placeholder"
-                        :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                        :readonly="!isEditable || field.disabled"></v-checkbox>
+            <div v-else-if="field.type === 'check'" class="tiny-checkbox-container">
+              <v-checkbox v-for="(option, index) in field.options" color="primary" variant="outlined" type="text" density="compact" hide-details
+                          :key="index"
+                          v-model="field.value" multiple
+                          :value="option"
+                          :label="option"
+                          :readonly="!isEditable || field.disabled"></v-checkbox>
+            </div>
             <v-switch v-else-if="field.type === 'switch'"  hide-details color="primary" inset
                       :label="field.placeholder"
                       v-model="field.value as boolean"
                       :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                       :readonly="!isEditable || field.disabled"></v-switch>
-            <v-text-field v-else color="primary" variant="outlined" type="text"
+            <v-text-field v-else-if="field.type === 'text'" color="primary" variant="outlined" type="text"
                           v-model="field.value"
                           :placeholder="field.placeholder"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                           :readonly="!isEditable || field.disabled"></v-text-field>
+<!--            공백처리-->
+            <div v-else></div>
           </v-col>
         </v-row>
       </v-col>
@@ -89,5 +91,13 @@ const openSearchDialog = (field : FormField) => {
 .custom-height {
   min-height: 50px !important;
   height: 60px !important;
+}
+
+.tiny-checkbox-container {
+  display: flex; /* 가로로 나열 */
+  flex-wrap: wrap; /* 공간이 부족하면 자동 줄바꿈 */
+  gap: 2px; /* 체크박스 간격 */
+  width: 100%; /* ✅ 부모 <v-col> 내에서만 출력 */
+  height: 100%; /* ✅ 부모 <v-col> 내에서만 출력 */
 }
 </style>

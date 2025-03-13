@@ -5,7 +5,7 @@ import UiChildCard from "@/components/shared/UiChildCard.vue";
 import Searchbar from "@/layouts/full/vertical-header/Searchbar.vue";
 import SearchTree from "@/components/forms/form-elements/treeview/SearchTree.vue";
 import AppBaseCard from "@/components/shared/AppBaseCard.vue";
-import CustomPlainForm from "@/components/custom/CustomPlainForm.vue";
+import CustomPlainForm from "@/components/custom/form/CustomPlainForm.vue";
 
 // 입력 필드 목록 정의
 const groupFields = ref<FormField[]>([
