@@ -3,7 +3,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import CustomSearchForm from "@/components/custom/CustomSearchForm.vue";
+import CustomSearchForm from "@/components/custom/form/CustomSearchForm.vue";
 import type {Datatables} from "@/types/components/datatables";
 import {searchSugg} from "@/_mockApis/headerData";
 

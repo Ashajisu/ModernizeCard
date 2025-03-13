@@ -3,10 +3,10 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import CustomPlainForm from "@/components/custom/CustomPlainForm.vue";
+import CustomPlainForm from "@/components/custom/form/CustomPlainForm.vue";
 import type {Datatables} from "@/types/components/datatables";
 import {searchSugg} from "@/_mockApis/headerData";
-import CustomSearchForm from "@/components/custom/CustomSearchForm.vue";
+import CustomSearchForm from "@/components/custom/form/CustomSearchForm.vue";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },

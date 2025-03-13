@@ -103,12 +103,12 @@ const horizontalItems: menu[] = [
             {
                 title: '과금',
                 icon: CircleIcon,
-                to: '/ecommerce/edit-product'
+                to: '/apps/user/zoom/charging'
             },
             {
                 title: '녹취',
                 icon: CircleIcon,
-                to: '/apps/chats'
+                to: '/apps/user/zoom/Recording'
             }
         ]
     },
