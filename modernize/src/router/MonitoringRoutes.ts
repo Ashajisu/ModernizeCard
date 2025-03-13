@@ -7,22 +7,22 @@ const MonitoringRoutes: RouteRecordRaw = {
         {
             path: 'active-call-stats',
             name: '활성통화',
-            component: () => import('@/views/monitoring/ActiveCallStats.vue')
+            component: () => import('@/views/monitoring/real-time/ActiveCallStats.vue')
         },
         {
             path: 'daily-call-stats',
             name: '일일 누적 통화',
-            component: () => import('@/views/monitoring/DailyCallStats.vue')
+            component: () => import('@/views/monitoring/real-time/DailyCallStats.vue')
         },
         {
             path: 'daily-recording-stats',
             name: '일일 누적 녹취',
-            component: () => import('@/views/monitoring/DailyRecordingStats.vue')
+            component: () => import('@/views/monitoring/real-time/DailyRecordingStats.vue')
         },
         {
             path: 'active-recording-stats',
             name: '활성 녹취',
-            component: () => import('@/views/monitoring/ActiveRecordingStats.vue')
+            component: () => import('@/views/monitoring/real-time/ActiveRecordingStats.vue')
         }
     ]
 };
