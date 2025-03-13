@@ -44,6 +44,7 @@ const resetSearch = ()=>{
   formFields.value.forEach(field => {
     field.value='';
   });
+  onSearch();
 };
 //검색기능
 const search = ref();
@@ -170,22 +171,29 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                     </template>
                 </CustomTwoSlotDialog>
                 <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download">
+                  <template v-slot:inCard>
                     <v-row>
                       <v-col>
                         <span> 파일 다운로드 경로를 지정해 주세요. </span>
                       </v-col>
                     </v-row>
-                    <v-row>
+                    <v-row class="align-center">
                       <v-col cols="2">
                       <v-btn color="primary" variant="outlined">찾기</v-btn>
                       </v-col>
-                      <v-col cols="10">
-                      <v-text-field color="primary" variant="outlined" type="text"></v-text-field>
+                      <v-col cols="8">
+                      <v-text-field color="primary" variant="outlined" hide-details type="text"></v-text-field>
                       </v-col>
                     </v-row>
+                  </template>
+                  <template v-slot:btn>
+                      <v-btn color="primary" variant="flat">저장</v-btn>
+                  </template>
                 </CustomSlotDialog>
                 <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id">
+                  <template v-slot:inCard>
                     <span> {{ JSON.stringify(selectedItem) }} </span>
+                  </template>
                 </CustomSlotDialog>
               </v-row>
             </UiParentCard>

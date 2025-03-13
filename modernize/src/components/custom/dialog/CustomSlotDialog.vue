@@ -29,10 +29,11 @@ function close() {
         <v-card>
             <UiParentCard :title="title" style="height: 100%">
                 <div>
-                  <slot/>
+                  <slot name="inCard"/>
                 </div>
                 <v-card-actions class="pa-4">
                   <v-spacer></v-spacer>
+                  <slot name="btn"/>
                   <v-btn color="primary" variant="outlined" @click="close">닫기</v-btn>
                 </v-card-actions>
             </UiParentCard>
