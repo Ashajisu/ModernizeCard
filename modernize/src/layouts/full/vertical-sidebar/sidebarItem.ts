@@ -134,7 +134,7 @@ const sidebarItem: menu[] = [
     {
         title: '과금',
         icon: FilesIcon,
-        to: '/ecommerce/edit-product'
+        to: '/apps/user/zoom/charging'
     },
     {
         title: '녹취',
