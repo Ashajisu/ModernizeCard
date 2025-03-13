@@ -87,10 +87,8 @@
 
             <!-- 도넛 차트 -->
             <v-col cols="12" md="3">
-                <div class="text-center text-h6">일일 누적 녹취</div>
-                <UiChildCard title="Donut Chart">
+                    <div class="text-center text-h6 mb-2">일일 누적 녹취</div>
                     <apexchart type="donut" height="300" :options="donutchartOptions" :series="donutChart.series"></apexchart>
-                </UiChildCard>
             </v-col>
         </v-row>
 
