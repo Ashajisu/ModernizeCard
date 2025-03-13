@@ -1,0 +1,51 @@
+import type { RecordingItem } from '@/types/custom/DataTableTypes.ts'
+
+const RecordingDataTables : RecordingItem[] = [
+    {
+        type: "전수",
+        direction: "아웃바운드",
+        sender: "308151",
+        receiver: "010-XXXX-XXXX",
+        department: "고객지원본부",
+        team: "기술1팀",
+        username: "박○○",
+        startTime: "2025-03-15T18:01",
+        endTime: "2025-03-15T18:01",
+        duration: "00:02:26",
+        play: "mdi-volume-high",
+        download: "mdi-cloud-download",
+        id: "1",
+    },
+    {
+        type: "선택",
+        direction: "인바운드",
+        sender: "010-XXXX-XXXX",
+        receiver: "308153",
+        department: "고객지원본부",
+        team: "SPM팀",
+        username: "최○○",
+        startTime: "2025-03-15T18:01",
+        endTime: "2025-03-15T18:01",
+        duration: "00:00:25",
+        play: "mdi-volume-high",
+        download: "mdi-cloud-download",
+        id: "2",
+    },
+    {
+        type: "선택",
+        direction: "인바운드",
+        sender: "02-XXXX-XXXX",
+        receiver: "308153",
+        department: "고객지원본부",
+        team: "SPM팀",
+        username: "최○○",
+        startTime: "2024-01-05 10:01:23",
+        endTime: "2024-01-05 10:02:18",
+        duration: "00:00:58",
+        play: "mdi-volume-high",
+        download: "mdi-cloud-download",
+        id: "3",
+    },
+];
+
+export { RecordingDataTables };

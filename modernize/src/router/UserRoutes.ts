@@ -25,6 +25,11 @@ const UserRoutes = {
             name: '과금',
             path: '/apps/user/zoom/charging',
             component: () => import('@/views/custom/Charging.vue')
+        },
+        {
+            name: '녹취',
+            path: '/apps/user/zoom/Recording',
+            component: () => import('@/views/custom/Recording.vue')
         }
     ]
 };

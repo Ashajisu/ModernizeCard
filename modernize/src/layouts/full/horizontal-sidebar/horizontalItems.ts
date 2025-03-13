@@ -108,7 +108,7 @@ const horizontalItems: menu[] = [
             {
                 title: '녹취',
                 icon: CircleIcon,
-                to: '/apps/chats'
+                to: '/apps/user/zoom/Recording'
             }
         ]
     },

@@ -139,7 +139,7 @@ const sidebarItem: menu[] = [
     {
         title: '녹취',
         icon: FilesIcon,
-        to: '/apps/chats'
+        to: '/apps/user/zoom/Recording'
     },
 
     { header: '모니터링' },
