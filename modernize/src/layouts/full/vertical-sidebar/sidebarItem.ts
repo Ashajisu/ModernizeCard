@@ -64,7 +64,8 @@ import {
     BellDollarIcon,
     TicketIcon,
     FileCheckIcon,
-    PhoneIcon
+    PhoneIcon,
+    CloudComputingIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -239,6 +240,11 @@ const sidebarItem: menu[] = [
         title: 'Extension 번호 관리',
         icon: PhoneIcon,
         to: '/env-management/extension-list'
+    },
+    {
+        title: 'PSTN 번호 관리',
+        icon: CloudComputingIcon, 
+        to: '/env-management/pstn-list'
     },
 ]
 

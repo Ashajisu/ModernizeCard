@@ -8,6 +8,11 @@ const EnvManagementRoutes: RouteRecordRaw = {
             name: 'Extension 번호 관리',
             path: '/env-management/extension-list',
             component: () => import('@/views/env-management/extention/ExtentionList.vue')
+        },
+        {
+            name: 'PSTN 번호 관리',
+            path: '/env-management/pstn-list',
+            component: () => import('@/views/env-management/pstn/PstnList.vue')
         }
     ]
 };

@@ -14,6 +14,8 @@ import {
     PointIcon,
     BrandAirtableIcon,
     AppWindowIcon,
+    PhoneIcon,
+    CloudComputingIcon,
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -227,7 +229,17 @@ const horizontalItems: menu[] = [
                 title: '코드관리',
                 icon: CircleIcon,
                 to: '/pages/faq'
-            }
+            },
+            {
+                title: 'Extension 번호 관리',
+                icon: PhoneIcon,
+                to: '/env-management/extension-list'
+            },
+            {
+                title: 'PSTN 번호 관리',
+                icon: CloudComputingIcon, 
+                to: '/env-management/pstn-list'
+            },
         ]
     }
 ];
