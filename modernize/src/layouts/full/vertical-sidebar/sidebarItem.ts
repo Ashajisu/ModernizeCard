@@ -106,7 +106,7 @@ const sidebarItem: menu[] = [
     {
         title: '폰 사용자',
         icon: AppWindowIcon,
-        to: '/ecommerce/products'
+        to: '/apps/user/zoom/phone'
     },
 
     { header: '폰' },
