@@ -1,4 +1,48 @@
-import type { RecordingItem } from '@/types/custom/DataTableTypes.ts'
+import type { RecordingItem, UserItem } from '@/types/custom/DataTableTypes.ts'
+
+// 사용자 데이터 리스트
+const UserDataTables: UserItem[] = [
+    {
+        department: "고객지원본부",
+        team: "기술1팀",
+        username: "박OO",
+        employeeId: "20019133",
+        position: "사원",
+        email: "happy@arisys.co.kr",
+        zoomLicense: "Basic",
+        phoneLicense: "",
+    },
+    {
+        department: "고객지원본부",
+        team: "기술2팀",
+        username: "이OO",
+        employeeId: "20355071",
+        position: "대리",
+        email: "good@arisys.co.kr",
+        zoomLicense: "WorkplaceBiz",
+        phoneLicense: "Phone Pro",
+    },
+    {
+        department: "고객지원본부",
+        team: "SPM팀",
+        username: "최OO",
+        employeeId: "20415072",
+        position: "수석",
+        email: "love@arisys.co.kr",
+        zoomLicense: "WorkplaceBiz",
+        phoneLicense: "Phone Pro",
+    },
+    {
+        department: "고객지원본부",
+        team: "기술1팀",
+        username: "전OO",
+        employeeId: "20680414",
+        position: "과장",
+        email: "joy@arisys.co.kr",
+        zoomLicense: "WorkplaceBiz",
+        phoneLicense: "Phone Pro, Power",
+    },
+];
 
 const RecordingDataTables : RecordingItem[] = [
     {
@@ -48,4 +92,4 @@ const RecordingDataTables : RecordingItem[] = [
     },
 ];
 
-export { RecordingDataTables };
+export { UserDataTables, RecordingDataTables };

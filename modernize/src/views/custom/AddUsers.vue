@@ -2,8 +2,8 @@
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import type {Datatables} from "@/types/components/datatables";
+import {UserDataTables} from "@/_mockApis/custom/RecordingData";
+import type {UserItem} from "@/types/custom/DataTableTypes";
 import {searchSugg} from "@/_mockApis/headerData";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 
@@ -15,15 +15,15 @@ const formFields = ref<FormField[]>([
   { label: '사용자명', name: 'username',  type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false }
 ]);
 const headers = ref<any[]>([
-  { title: '부서명', align: 'start', key: 'post' },
-  { title: '팀명', align: 'start', key: 'project' },
-  { title: '사용자명', align: 'start', key: 'name' },
-  { title: '사원번호', align: 'start', key: 'status' },
-  { title: '직위', align: 'center', key: 'budget' },
-  { title: '메일주소', align: 'center', key: 'budget' },
-  { title: '...', align: 'center', key: 'budget' },
-  { title: '줌폰 라이센스', align: 'end', key: 'budget' },
-])
+  { title: "부서명", align: "start", key: "department" },
+  { title: "팀명", align: "start", key: "team" },
+  { title: "사용자명", align: "start", key: "username" },
+  { title: "사원번호", align: "start", key: "employeeId" },
+  { title: "직위", align: "center", key: "position" },
+  { title: "메일주소", align: "center", key: "email" },
+  { title: "줌 라이센스", align: "end", key: "zoomLicense" },
+  { title: "줌폰 라이센스", align: "end", key: "phoneLicense" },
+]);
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: true, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
@@ -32,16 +32,15 @@ const userFields = ref<FormField[]>([
   { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
   { label: '메일주소', name: 'email', type: 'text', value: 'example@domain.com', placeholder: 'example@domain.com', required: true, disabled: false },
   { label: '전화번호', name: 'phone', type: 'text', value: '', placeholder: '02-0000-0000', required: true, disabled: false },
-  { label: '휴대전화', name: 'mobile', type: 'text', value: '', placeholder: '010-0000-0000', required: false, disabled: false },
+  { label: '내선번호', name: 'mobile', type: 'text', value: '', placeholder: '0000', required: false, disabled: false },
   { label: '입사일자', name: 'hireDate', type: 'date', value: '2018-03-02', placeholder: 'YYYY-MM-DD', required: true, disabled: false },
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: true, disabled: false },
-  { label: '직책', name: 'jobTitle', type: 'select', value: '', options: ['사원', '대리', '과장', '차장', '부장'], required: true, disabled: false },
   { label: '사용자 권한', name: 'userRole', type: 'select', value: '', options: ['사용자', '관리자', '슈퍼 관리자'], required: true, disabled: false },
   { label: '사용유무', name: 'activeStatus', type: 'select', value: '', options: ['Y', 'N'], required: true, disabled: false }
 ]);
 const zoomFields = ref<FormField[]>([
-  { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...'], required: true, disabled: false },
-  { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: 'Phone Pro', options: ['Phone Pro', 'Vip'], required: false, disabled: false },
+  { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', 'Basic', '...'], required: true, disabled: false },
+  { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: 'Phone Pro', options: ['Phone Pro', 'Power', 'Phone Pro, Power'], required: false, disabled: false },
 ]);
 
 // 초기화
@@ -66,7 +65,7 @@ const onSearch = ()=>{
   search.value = searchData.value;
 }
 const filteredList = computed(() => {
-  if (!search.value) return BasicDatatables;
+  if (!search.value) return UserDataTables;
 
   let isAllEmpty = true;
   for (const key in search.value) {
@@ -75,13 +74,13 @@ const filteredList = computed(() => {
       break;
     }
   }
-  if (isAllEmpty) return BasicDatatables;
+  if (isAllEmpty) return UserDataTables;
 
-  return BasicDatatables.filter((user: any) => {
+  return UserDataTables.filter((user: any) => {
     return (
         (!search.value.department || user.post.toLowerCase() === search.value.department.toLowerCase()) &&
         (!search.value.team || user.project.toLowerCase() === search.value.team.toLowerCase()) &&
-        (!search.value.employmentStatus || user.status.toLowerCase() === search.value.employmentStatus.toLowerCase()) &&
+        (!search.value.activeStatus || user.status.toLowerCase() === search.value.activeStatus.toLowerCase()) &&
         (!search.value.employeeId || user.status.toLowerCase().includes(search.value.employeeId.toLowerCase())) &&
         (!search.value.username || user.name.toLowerCase().includes(search.value.username.toLowerCase()))
     );
@@ -97,8 +96,8 @@ const onSelectionChange = () => {
 
 //사용자 상세정보 출력
 const updateUserFields = (selectedName: string) => {
-  const selectedItem: Datatables | undefined = BasicDatatables.find((user) => {
-    return !selectedName || user.name.includes(selectedName);
+  const selectedItem: UserItem | undefined = UserDataTables.find((user) => {
+    return !selectedName || user.username.includes(selectedName);
   });
 
   console.log("선택된 정보:", selectedItem);
@@ -109,22 +108,22 @@ const updateUserFields = (selectedName: string) => {
   userFields.value.forEach(field => {
     switch (field.label) {
       case '사용자명':
-        field.value = selectedItem.name;
+        field.value = selectedItem.username;
         break;
       case '부서명':
-        field.value = selectedItem.post;
+        field.value = selectedItem.department;
         break;
       case '팀명':
-        field.value = selectedItem.project;
+        field.value = selectedItem.team;
         break;
       case '사원번호':
-        field.value = selectedItem.status;
+        field.value = selectedItem.employeeId;
         break;
       case '직위':
-        field.value = selectedItem.budget;
+        field.value = selectedItem.position;
         break;
       case '메일주소':
-        field.value = selectedItem.budget; // budget 키가 중복 사용됨
+        field.value = selectedItem.email;
         break;
       default:
         field.value = ''; // 매칭되지 않는 경우 빈 값 설정
@@ -199,27 +198,29 @@ const onDelete = () => {
                 </v-data-table>
               </v-row>
             </UiParentCard>
+            <br>
             <UiParentCard title="사용자 상세정보" :key="selectedName" v-if="selectedName?.length">
+              <template v-slot:action>
               <v-row>
-                <v-col>
+                <v-col cols="1"/>
+                <v-col cols="4">
                   <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)" >편집</v-btn>
                     <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
                   </div>
                 </v-col>
-                <v-col>
+                <v-col cols="7">
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn color="grey" variant="outlined" @click="">패스워드초기화</v-btn>
                     <v-btn flat color="primary" variant="outlined" @click="onSave">저장</v-btn>
                   </div>
                 </v-col>
               </v-row>
-              <v-row>
+              </template>
+              <template v-slot:default>
                 <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit"></CustomSearchChecksForm>
-              </v-row>
-              <v-row>
                 <CustomSearchChecksForm :formFields="zoomFields" :colsPerRow="2" :edit="edit"></CustomSearchChecksForm>
-              </v-row>
+              </template>
             </UiParentCard>
         </v-col>
     </v-row>
