@@ -3,8 +3,8 @@ import type {searchType} from "@/types/HeaderTypes";
 export interface FormField {
     label: string;
     name: string;
-    type: string; //text, select, search
-    value: string | Date | boolean;
+    type: string; //text, select, search, checks
+    value: string | Date | boolean | string[];
     options?: string[];
     placeholder?: string;
     required?: boolean;
