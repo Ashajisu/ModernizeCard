@@ -3,9 +3,9 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {BasicDatatables} from "@/_mockApis/components/datatable/dataTable";
-import CustomSearchForm from "@/components/custom/form/CustomSearchForm.vue";
 import type {Datatables} from "@/types/components/datatables";
 import {searchSugg} from "@/_mockApis/headerData";
+import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
@@ -43,6 +43,15 @@ const zoomFields = ref<FormField[]>([
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...'], required: true, disabled: false },
   { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: 'Phone Pro', options: ['Phone Pro', 'Vip'], required: false, disabled: false },
 ]);
+
+// 초기화
+const resetSearch = ()=>{
+  formFields.value.forEach(field => {
+    field.value='';
+  });
+  onSearch();
+};
+
 //검색기능
 const search = ref();
 const searchData = computed(()=> {
@@ -160,9 +169,12 @@ const onDelete = () => {
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
               <v-row>
-                <CustomSearchForm :formFields="formFields" :colsPerRow="5" :edit="true">
-                  <v-btn color="primary" flat @click="onSearch">조회</v-btn>
-                </CustomSearchForm>
+                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true">
+                  <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                    <v-btn color="primary" flat @click="onSearch">조회</v-btn>
+                    <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
+                  </div>
+                </CustomSearchChecksForm>
               </v-row>
               <v-row>
                 <v-col>
@@ -203,10 +215,10 @@ const onDelete = () => {
                 </v-col>
               </v-row>
               <v-row>
-                <CustomSearchForm :formFields="userFields" :colsPerRow="4" :edit="edit"></CustomSearchForm>
+                <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit"></CustomSearchChecksForm>
               </v-row>
               <v-row>
-                <CustomSearchForm :formFields="zoomFields" :colsPerRow="2" :edit="edit"></CustomSearchForm>
+                <CustomSearchChecksForm :formFields="zoomFields" :colsPerRow="2" :edit="edit"></CustomSearchChecksForm>
               </v-row>
             </UiParentCard>
         </v-col>
