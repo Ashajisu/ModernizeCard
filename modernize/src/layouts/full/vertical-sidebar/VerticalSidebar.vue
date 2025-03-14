@@ -58,9 +58,9 @@ const tabStore = useTabStore();
                     <!---End Single Item-->
                 </template>
             </v-list>
-            <div class="pa-6 userbottom">
-                <Profile />
-            </div>
+<!--            <div class="pa-6 userbottom">-->
+<!--                <Profile />-->
+<!--            </div>-->
         </perfect-scrollbar>
     </v-navigation-drawer>
 </template>
