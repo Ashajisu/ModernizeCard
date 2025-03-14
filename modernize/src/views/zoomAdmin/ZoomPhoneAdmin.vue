@@ -95,13 +95,17 @@ const selectedItem = ref<{
 <template>
   <!--    <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>-->
   <br>
-  <v-card elevation="10">
+  <v-card elevation="10" class="pa-5">
+    <v-card-title class="text-h4 font-weight-bold"> 줌 폰 디바이스 관리 </v-card-title>
+    <v-card-title class="text-h6 font-weight-bold"> 줌 폰의 디바이스 관리를 할 수 있습니다. </v-card-title>
     <v-card-item>
-      <h5 class="text-20 mb-3">줌 폰 디바이스 관리</h5>
-      <v-row class="align-center" style="width: 100%">
-        <h5 class="text-10 mb-2" style="flex-grow: 1; margin-left: 13px;">줌 폰의 디바이스 관리를 할 수 있습니다.</h5>
-        <v-spacer></v-spacer>
-        <v-btn class="mb-3" color="primary" style="max-width: 100px; min-width: 100px;" @click="">조 회</v-btn>
+      <v-row>
+        <v-col>
+          <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+            <v-btn color="primary" flat @click="">조회</v-btn>
+            <v-btn color="primary" variant="outlined" @click="">초기화</v-btn>
+          </div>
+        </v-col>
       </v-row>
 
       <v-row class="d-flex align-center">
@@ -211,298 +215,296 @@ const selectedItem = ref<{
     </v-row>-->
   <v-row>
     <!-- 왼쪽 정렬: 신규 등록, 삭제, 편집, 재시작 -->
-    <v-col cols="auto">
-      <v-dialog v-model="dialog1" persistent class="dialog-mw">
-        <template v-slot:activator="{ props }">
-          <v-btn size="large" color="primary" class="w-100" v-bind="props" flat style="max-width: 100px; min-width: 100px;">신규등록</v-btn>
-        </template>
-        <v-card style="height: 660px; width: 500px;" class="overflow-auto">
-          <v-container>
-            <v-card-title class="pa-5">
-              <span class="text-h5">디바이스 추가</span>
-            </v-card-title>
-            <v-row>
-              <v-card-text>
-                <v-row class="mb-3">
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">표시이름</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row class="mb-3">
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">MAC 주소</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">디바이스 유형</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['Avaya', 'CISCO', 'ZOOM', 'Genesys']"
-                        label="제조사 선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium"></v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['J139', 'J159', 'J179']"
-                        label="모델 선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">할당</v-label>
-                  </v-col>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['SIP', 'H.323', 'Cloud']"
-                        label="선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="5" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-row>
-            <v-row class="d-flex justify-end">
-              <v-card-actions>
-                <v-btn color="primary" variant="text"  @click="dialog2 = !dialog2" flat>
-                  저장
-                </v-btn>
-                <v-btn color="error" variant="text" @click="dialog1 = false" flat style="margin-right: 30px;">
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog v-model="dialog2" class="dialog-mw" persistent>
-        <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
-          <v-card-title>
-            <span>저장 되었습니다.</span>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn color="primary" variant="text" @click="dialog2 = false; dialog1 = false;" flat> 확인 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-col>
-    <v-col cols="auto">
-      <v-dialog v-model="dialog3" persistent class="dialog-mw">
-        <template v-slot:activator="{ props }">
-          <v-btn size="large" color="error" class="w-100" v-bind="props" flat style="max-width: 100px; min-width: 100px; margin-left: -10px;">삭 제</v-btn>
-        </template>
-        <v-card style="height: 190px; width: 470px;" class="overflow-auto">
-          <v-container>
-            <v-row class="mt-2" style="display: flex; justify-content: center;">
-              <v-card-title style="font-size: 16px;">
-                <span>선택하신 “Desk Phone 2” 디바이스가 삭제됩니다.</span>
-                <br> <br>
-                <span>삭제 하시겠습니까?</span>
+    <v-col cols="6">
+      <div class="d-flex gap-3 justify-start flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+        <v-dialog v-model="dialog1" persistent class="dialog-mw">
+          <template v-slot:activator="{ props }">
+            <v-btn flat color="primary" variant="outlined" v-bind="props"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
+          </template>
+          <v-card style="height: 660px; width: 500px;" class="overflow-auto">
+            <v-container>
+              <v-card-title class="pa-5">
+                <span class="text-h5">디바이스 추가</span>
               </v-card-title>
-            </v-row>
-            <v-row class="d-flex justify-center mt-5">
-              <v-card-actions>
-                <v-btn color="primary" variant="text"  @click="dialog4 = !dialog4" flat>
-                  확인
-                </v-btn>
-                <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
-                <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
+              <v-row>
+                <v-card-text>
+                  <v-row class="mb-3">
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">표시이름</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row class="mb-3">
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">MAC 주소</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">디바이스 유형</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['Avaya', 'CISCO', 'ZOOM', 'Genesys']"
+                          label="제조사 선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium"></v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['J139', 'J159', 'J179']"
+                          label="모델 선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">할당</v-label>
+                    </v-col>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['SIP', 'H.323', 'Cloud']"
+                          label="선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="5" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-row>
+              <v-row class="d-flex justify-end">
+                <v-card-actions>
+                  <v-btn color="primary" variant="text"  @click="dialog2 = !dialog2" flat>
+                    저장
+                  </v-btn>
+                  <v-btn color="error" variant="text" @click="dialog1 = false" flat style="margin-right: 30px;">
+                    취소
+                  </v-btn>
+                </v-card-actions>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
 
-      <v-dialog v-model="dialog4" class="dialog-mw" persistent>
-        <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
-          <v-card-title>
-            <span>삭제 되었습니다.</span>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn color="primary" variant="text" @click="dialog4 = false; dialog3 = false;" flat> 확인 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-col>
-    <v-col cols="auto">
-      <v-dialog v-model="dialog5" persistent class="dialog-mw">
-        <template v-slot:activator="{ props }">
-          <v-btn v-if="button1" size="large" color="info" class="w-100" v-bind="props" flat style="max-width: 80px; min-width: 80px;">편집</v-btn>
-        </template>
-        <v-card style="height: 660px; width: 500px;" class="overflow-auto">
-          <v-container>
-            <v-card-title class="pa-5">
-              <span class="text-h5">디바이스 추가</span>
+        <v-dialog v-model="dialog2" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
+            <v-card-title>
+              <span>저장 되었습니다.</span>
             </v-card-title>
-            <v-row>
-              <v-card-text>
-                <v-row class="mb-3">
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">표시이름</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row class="mb-3">
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">MAC 주소</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">디바이스 유형</v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['Avaya', 'CISCO', 'ZOOM', 'Genesys']"
-                        label="제조사 선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium"></v-label>
-                  </v-col>
-                  <v-col cols="8" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['J139', 'J159', 'J179']"
-                        label="모델 선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-label class="font-weight-medium" style="margin-top: -23px;">할당</v-label>
-                  </v-col>
-                  <v-col cols="3" class="d-flex align-center justify-center">
-                    <v-select
-                        :items="['SIP', 'H.323', 'Cloud']"
-                        label="선택"
-                        required
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="5" class="d-flex align-center justify-center">
-                    <v-text-field></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-row>
-            <v-row class="d-flex justify-end">
-              <v-card-actions>
-                <v-btn color="error" variant="text"  @click="dialog9 = !dialog9" flat style="margin-right: 200px; margin-top: -70px;">
-                  할당해제
-                </v-btn>
-                <v-btn color="primary" variant="text"  @click="dialog6 = !dialog6" flat>
-                  저장
-                </v-btn>
-                <v-btn color="error" variant="text" @click="dialog5 = false" flat style="margin-right: 30px;">
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
+            <v-card-actions>
+              <v-btn color="primary" variant="text" @click="dialog2 = false; dialog1 = false;" flat> 확인 </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
-      <v-dialog v-model="dialog9" class="dialog-mw" persistent>
-        <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
-          <v-card-title>
-            <span>할당해제 되었습니다.</span>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn color="primary" variant="text" @click="dialog9 = false; dialog5 = false;" flat> 확인 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+        <v-dialog v-model="dialog3" persistent class="dialog-mw">
+          <template v-slot:activator="{ props }">
+            <v-btn flat color="error" variant="outlined" v-bind="props"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
+          </template>
+          <v-card style="height: 190px; width: 470px;" class="overflow-auto">
+            <v-container>
+              <v-row class="mt-2" style="display: flex; justify-content: center;">
+                <v-card-title style="font-size: 16px;">
+                  <span>선택하신 “Desk Phone 2” 디바이스가 삭제됩니다.</span>
+                  <br> <br>
+                  <span>삭제 하시겠습니까?</span>
+                </v-card-title>
+              </v-row>
+              <v-row class="d-flex justify-center mt-5">
+                <v-card-actions>
+                  <v-btn color="primary" variant="text"  @click="dialog4 = !dialog4" flat>
+                    확인
+                  </v-btn>
+                  <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
+                  <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
+                    취소
+                  </v-btn>
+                </v-card-actions>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
 
-      <v-dialog v-model="dialog6" class="dialog-mw" persistent>
-        <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
-          <v-card-title>
-            <span>저장 되었습니다.</span>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn color="primary" variant="text" @click="dialog6 = false; dialog5 = false;" flat> 확인 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-col>
-    <v-col cols="auto">
-      <v-dialog v-model="dialog7" persistent class="dialog-mw">
-        <template v-slot:activator="{ props }">
-          <v-btn v-if="button1" size="large" color="info" class="w-100" v-bind="props" flat style="max-width: 80px; min-width: 80px; margin-left: -10px;">재시작</v-btn>
-        </template>
-        <v-card style="height: 190px; width: 400px;" class="overflow-auto">
-          <v-container>
-            <v-row class="mt-2" style="display: flex; justify-content: center;">
-              <v-card-title style="font-size: 16px;">
-                <span>선택하신 디바이스가 재시작됩니다.</span>
-                <br> <br>
-                <span>재시작 하시겠습니까?</span>
+        <v-dialog v-model="dialog4" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
+            <v-card-title>
+              <span>삭제 되었습니다.</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn color="primary" variant="text" @click="dialog4 = false; dialog3 = false;" flat> 확인 </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog5" persistent class="dialog-mw">
+          <template v-slot:activator="{ props }">
+            <v-btn v-if="button1"  color="info" v-bind="props" flat>편집</v-btn>
+          </template>
+          <v-card style="height: 660px; width: 500px;" class="overflow-auto">
+            <v-container>
+              <v-card-title class="pa-5">
+                <span class="text-h5">디바이스 추가</span>
               </v-card-title>
-            </v-row>
-            <v-row class="d-flex justify-center mt-5">
-              <v-card-actions>
-                <v-btn color="primary" variant="text"  @click="dialog8 = !dialog8" flat>
-                  확인
-                </v-btn>
-                <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
-                <v-btn color="error" variant="text" @click="dialog7 = false" flat style="margin-right: 30px;">
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
+              <v-row>
+                <v-card-text>
+                  <v-row class="mb-3">
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">표시이름</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row class="mb-3">
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">MAC 주소</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">디바이스 유형</v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['Avaya', 'CISCO', 'ZOOM', 'Genesys']"
+                          label="제조사 선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium"></v-label>
+                    </v-col>
+                    <v-col cols="8" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['J139', 'J159', 'J179']"
+                          label="모델 선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-label class="font-weight-medium" style="margin-top: -23px;">할당</v-label>
+                    </v-col>
+                    <v-col cols="3" class="d-flex align-center justify-center">
+                      <v-select
+                          :items="['SIP', 'H.323', 'Cloud']"
+                          label="선택"
+                          required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="5" class="d-flex align-center justify-center">
+                      <v-text-field></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-row>
+              <v-row class="d-flex justify-end">
+                <v-card-actions>
+                  <v-btn color="error" variant="text"  @click="dialog9 = !dialog9" flat style="margin-right: 200px; margin-top: -70px;">
+                    할당해제
+                  </v-btn>
+                  <v-btn color="primary" variant="text"  @click="dialog6 = !dialog6" flat>
+                    저장
+                  </v-btn>
+                  <v-btn color="error" variant="text" @click="dialog5 = false" flat style="margin-right: 30px;">
+                    취소
+                  </v-btn>
+                </v-card-actions>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
 
-      <v-dialog v-model="dialog8" class="dialog-mw" persistent>
-        <v-card class="pa-6" style="height: 180px; width: 300px; margin: auto;">
-          <v-card-title style="font-size: 18px;">
-            <span>디바이스가</span>
-            <br>
-            <span>재시작 되었습니다.</span>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn class="mt-3" color="primary" variant="text" @click="dialog8 = false; dialog7 = false;" flat> 확인 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+        <v-dialog v-model="dialog9" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
+            <v-card-title>
+              <span>할당해제 되었습니다.</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn color="primary" variant="text" @click="dialog9 = false; dialog5 = false;" flat> 확인 </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog6" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
+            <v-card-title>
+              <span>저장 되었습니다.</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn color="primary" variant="text" @click="dialog6 = false; dialog5 = false;" flat> 확인 </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog7" persistent class="dialog-mw">
+          <template v-slot:activator="{ props }">
+            <v-btn v-if="button1"  color="info" v-bind="props" flat>재시작</v-btn>
+          </template>
+          <v-card style="height: 190px; width: 400px;" class="overflow-auto">
+            <v-container>
+              <v-row class="mt-2" style="display: flex; justify-content: center;">
+                <v-card-title style="font-size: 16px;">
+                  <span>선택하신 디바이스가 재시작됩니다.</span>
+                  <br> <br>
+                  <span>재시작 하시겠습니까?</span>
+                </v-card-title>
+              </v-row>
+              <v-row class="d-flex justify-center mt-5">
+                <v-card-actions>
+                  <v-btn color="primary" variant="text"  @click="dialog8 = !dialog8" flat>
+                    확인
+                  </v-btn>
+                  <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
+                  <v-btn color="error" variant="text" @click="dialog7 = false" flat style="margin-right: 30px;">
+                    취소
+                  </v-btn>
+                </v-card-actions>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog8" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 180px; width: 300px; margin: auto;">
+            <v-card-title style="font-size: 18px;">
+              <span>디바이스가</span>
+              <br>
+              <span>재시작 되었습니다.</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn class="mt-3" color="primary" variant="text" @click="dialog8 = false; dialog7 = false;" flat> 확인 </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
     </v-col>
 
     <!-- 오른쪽 정렬: 엑셀 다운로드, 엑셀 업로드 -->
-    <v-spacer></v-spacer>
-    <v-col cols="auto">
-      <v-btn block size="large" color="primary" to="/ecommerce/checkout" style="font-size: 14px; max-width: 100px; min-width: 100px; margin-right: -10px;">엑셀 다운로드</v-btn>
-    </v-col>
-    <v-col cols="auto">
-      <v-btn block size="large" color="primary" style="font-size: 14px; max-width: 100px; min-width: 100px;">엑셀 업로드</v-btn>
+    <v-col cols="6">
+      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+        <v-btn color="grey" variant="outlined" to="/ecommerce/checkout">엑셀 다운로드</v-btn>
+        <v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
+      </div>
     </v-col>
   </v-row>
   <v-row>
