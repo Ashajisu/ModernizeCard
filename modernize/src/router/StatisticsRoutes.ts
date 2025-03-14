@@ -7,27 +7,27 @@ const StatisticsRoutes = {
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
         {
-            name: 'Code-App',
+            name: '코드 관리',
             path: '/manage/code',
             component: () => import('@/views/manage/CodeManage.vue')
         },
         {
-            name: 'Menu-App',
+            name: '메뉴 관리',
             path: '/manage/menu',
             component: () => import('@/views/manage/MenuManage.vue')
         },
         {
-            name: 'ZoomPhoneAdmin-App',
+            name: '디바이스',
             path: '/zoomAdmin/ZoomPhoneAdmin',
             component: () => import('@/views/zoomAdmin/ZoomPhoneAdmin.vue')
         },
         {
-            name: 'DeptPhonePayment-App',
+            name: '부서별 과금 통계',
             path: '/statistics/deptPayment',
             component: () => import('@/views/statistics/deptPayment.vue')
         },
         {
-            name: 'DeptPhoneUsing-App',
+            name: '부서별 유형 통계',
             path: '/statistics/deptCall',
             component: () => import('@/views/statistics/DeptCall.vue')
         },
@@ -37,12 +37,12 @@ const StatisticsRoutes = {
             component: () => import('@/views/statistics/TeamCall.vue')
         },
         {
-            name: 'TeamDailyPhoneUsing-App',
+            name: '일자별 수발신 통계',
             path: '/statistics/teamDailyCall',
             component: () => import('@/views/statistics/TeamDailyCall.vue')
         },
         {
-            name: 'TeamDailyPhoneUsing2-App',
+            name: '일자별 수발신 유형별 통계',
             path: '/statistics/teamDailyCall2',
             component: () => import('@/views/statistics/TeamDailyCallSecond.vue')
         },
