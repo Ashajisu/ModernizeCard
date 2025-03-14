@@ -5,11 +5,17 @@ const AuthRoutes = {
         requiresAuth: false
     },
     children: [
+        // home 경로 로그인화면
         {
             name: 'Landing Page',
             path: '/',
-            component: () => import('@/views/pages/landingpage/index.vue')
+            component: () => import('@/views/authentication/CustomSideLogin.vue')
         },
+        // {
+        //     name: 'Landing Page',
+        //     path: '/',
+        //     component: () => import('@/views/pages/landingpage/index.vue')
+        // },
         {
             name: 'FrontPage',
             path: '/front-page/homepage',
@@ -48,7 +54,7 @@ const AuthRoutes = {
         {
             name: 'Side Login',
             path: '/auth/login',
-            component: () => import('@/views/authentication/SideLogin.vue')
+            component: () => import('@/views/authentication/CustomSideLogin.vue')
         },
         {
             name: 'Boxed Login',
