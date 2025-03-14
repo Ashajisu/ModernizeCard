@@ -189,17 +189,17 @@ const sidebarItem: menu[] = [
     {
         title: '사용량 통계',
         icon: FilesIcon,
-        to: '/apps/calendar'
+        to: '/statistics/usedStatistics'
     },
     {
         title: '전화 통화 이력',
         icon: MailIcon,
-        to: '/apps/email'
+        to: '/statistics/callStaticsRecord'
     },
     {
         title: '전화 최대 사용 이력',
         icon: TicketIcon,
-        to: '/apps/tickets'
+        to: '/statistics/callMaxStaticsRecord'
     },
 
     { header: '디바이스 현황'},
