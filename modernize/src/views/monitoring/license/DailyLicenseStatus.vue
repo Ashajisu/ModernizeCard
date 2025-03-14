@@ -43,7 +43,7 @@
       <!-- 라이센스 사용 현황 카드 2 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Total Workplace</div>
+          <div class="text-h6 mb-3">Workplace Enterprise</div>
           <div class="text-h3 "> 47 / 50</div>
         </v-card>
       </v-col>
@@ -51,7 +51,7 @@
       <!-- 라이센스 사용 현황 카드 3 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Total Workplace</div>
+          <div class="text-h6 mb-3">Workplace Business</div>
           <div class="text-h3 "> 125 / 130</div>
         </v-card>
       </v-col>
@@ -60,7 +60,7 @@
       <!-- 라이센스 사용 현황 카드 4 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Total Workplace</div>
+          <div class="text-h6 mb-3">Workplace Basic</div>
           <div class="text-h3 "> 20</div>
         </v-card>
       </v-col>
@@ -81,7 +81,7 @@
       <!-- 라이센스 사용 현황 카드 2 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">phone Pro</div>
+          <div class="text-h6 mb-3">Phone Pro</div>
           <div class="text-h3 "> 125 / 130</div>
         </v-card>
       </v-col>
@@ -89,7 +89,7 @@
       <!-- 라이센스 사용 현황 카드 3 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">phone Basic</div>
+          <div class="text-h6 mb-3">Phone Basic</div>
           <div class="text-h3 ">10</div>
         </v-card>
       </v-col>
@@ -99,11 +99,47 @@
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4 text-center">
           <div class="text-h6 mb-3">Power Pack</div>
-          <div class="text-h3 "> 2/3</div>
+          <div class="text-h3 "> 2 / 3</div>
+        </v-card>
+      </v-col>
+    </v-row>
+
+      <!-- 라이센스 사용 현황 카드 영역 3 -->
+      <v-row>
+
+        <!-- 라이센스 사용 현황 카드 2 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Rooms</div>
+            <div class="text-h3 "> 1 / 1</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 2 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Rooms Connector</div>
+            <div class="text-h3 "> 0 / 1</div>
+          </v-card>
+        </v-col>
+
+
+      </v-row>
+
+    <!-- 라이센스 사용 현황 카드 영역 4 -->
+    <v-row>
+
+      <!-- 라이센스 사용 현황 카드 1 -->
+      <v-col cols="12" md="3">
+        <v-card elevation="10" class="pa-4 text-center">
+          <div class="text-h6 mb-3">Cloud Storage (GB)</div>
+          <div class="text-h3 "> 1.03 / 101</div>
         </v-card>
       </v-col>
 
+
     </v-row>
+
 
 
   </v-card>
