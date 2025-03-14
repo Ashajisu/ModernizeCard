@@ -114,7 +114,7 @@ const sidebarItem: menu[] = [
     {
         title: '디바이스',
         icon: Message2Icon,
-        to: '/ecommerce/product/detail/1'
+        to: '/zoomAdmin/ZoomPhoneAdmin'
     },
     {
         title: '내선번호',
@@ -168,22 +168,22 @@ const sidebarItem: menu[] = [
     {
         title: '부서별 과금 통계',
         icon: FilesIcon,
-        to: '/apps/invoice/details/102'
+        to: '/statistics/deptPayment'
     },
     {
         title: ' 부서별 유형 통계',
         icon: FilesIcon,
-        to: '/apps/invoice/create'
+        to: '/statistics/deptCall'
     },
     {
         title: '일자별 수발신 통계',
         icon: FilesIcon,
-        to: '/apps/invoice/edit/102'
+        to: '/statistics/teamDailyCall'
     },
     {
         title: '일자별 수발신 유형별 통계',
         icon: FilesIcon,
-        to: '/apps/notes'
+        to: '/statistics/teamDailyCall2'
     },
     {
         title: '사용량 통계',
@@ -229,12 +229,12 @@ const sidebarItem: menu[] = [
     {
         title: '메뉴 관리',
         icon: LayoutIcon,
-        to: '/widget-card',
+        to: '/manage/menu',
     },
     {
         title: '코드관리',
         icon: HelpIcon,
-        to: '/pages/faq'
+        to: '/manage/code'
     },
     {
         title: 'Extension 번호 관리',

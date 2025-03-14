@@ -6,6 +6,7 @@ import UserRoutes from "@/router/UserRoutes";
 import MonitoringRoutes from './MonitoringRoutes';
 import EnvManagementRoutes from '@/router/EnvManagementRoutes';
 import GroupRoutes from "@/router/GroupRoutes";
+import StatisticsRoutes from "@/router/StatisticsRoutes";
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +21,8 @@ export const router = createRouter({
         UserRoutes,
         MonitoringRoutes,
         EnvManagementRoutes,
-        GroupRoutes
+        GroupRoutes,
+        StatisticsRoutes
     ]
 });
 
