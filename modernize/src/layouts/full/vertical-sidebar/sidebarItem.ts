@@ -129,7 +129,7 @@ const sidebarItem: menu[] = [
     {
         title: '당겨받기 그룹',
         icon: FilesIcon,
-        to: '/ecommerce/add-product'
+        to: '/apps/General'
     },
     {
         title: '과금',
@@ -205,12 +205,12 @@ const sidebarItem: menu[] = [
     {
         title: '폰 디바이스 현황',
         icon: LayoutKanbanIcon,
-        to: '/apps/kanban'
+        to: '/apps/DeviceStatus'
     },
     {
         title: 'SBC 현황',
         icon: CurrencyDollarIcon,
-        to: '/pages/pricing'
+        to: '/apps/SbcStatus'
     },
 
     { header: '라이선스'},
