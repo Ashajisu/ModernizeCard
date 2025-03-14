@@ -1,4 +1,4 @@
-import type { RecordingItem, UserItem } from '@/types/custom/DataTableTypes.ts'
+import type { UserItem, ZoomPhoneItem, RecordingItem } from '@/types/custom/DataTableTypes.ts'
 
 // 사용자 데이터 리스트
 const UserDataTables: UserItem[] = [
@@ -43,6 +43,62 @@ const UserDataTables: UserItem[] = [
         phoneLicense: "Phone Pro, Power",
     },
 ];
+
+const ZoomPhoneDataTables: ZoomPhoneItem[] = [
+    {
+        department: '고객지원본부',
+        team: '기술1팀',
+        username: '박OO',
+        employeeId: '20019133',
+        position: '사원',
+        mobile: '02-2177-8151',
+        pstnNumber: '•••',
+        pullNumber: '기술2팀',
+        ipPhone: 'Avaya J159_308152',
+        zoomLicense: 'Phone Pro',
+        callRecording: '선택녹취',
+    },
+    {
+        department: '고객지원본부',
+        team: '기술2팀',
+        username: '이OO',
+        employeeId: '20355071',
+        position: '사원',
+        mobile: '02-2177-8152',
+        pstnNumber: '•••',
+        pullNumber: '기술2팀',
+        ipPhone: 'Avaya J159_308152',
+        zoomLicense: 'Basic',
+        callRecording: '선택녹취',
+    },
+    {
+        department: '고객지원본부',
+        team: 'SPM팀',
+        username: '최OO',
+        employeeId: '20415072',
+        position: '사원',
+        mobile: '02-2177-8153',
+        pstnNumber: '•••',
+        pullNumber: '기술2팀',
+        ipPhone: 'Avaya J159_308152',
+        zoomLicense: 'Phone Pro',
+        callRecording: '전수녹취',
+    },
+    {
+        department: '고객지원본부',
+        team: '기술1팀',
+        username: '전OO',
+        employeeId: '20680414',
+        position: '사원',
+        mobile: '02-2177-8154',
+        pstnNumber: '•••',
+        pullNumber: '기술2팀',
+        ipPhone: 'Avaya J159_308152',
+        zoomLicense: 'Phone Pro',
+        callRecording: '미사용',
+    },
+];
+
 
 const RecordingDataTables : RecordingItem[] = [
     {
@@ -92,4 +148,4 @@ const RecordingDataTables : RecordingItem[] = [
     },
 ];
 
-export { UserDataTables, RecordingDataTables };
+export { UserDataTables, ZoomPhoneDataTables, RecordingDataTables };

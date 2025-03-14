@@ -15,6 +15,23 @@ type UserItem = {
     phoneLicense?: string; // 줌폰 라이센스
 };
 
+type ZoomPhoneItem = {
+    department: string;  // 부서명
+    team: string;        // 팀명
+    username: string;    // 사용자명
+    employeeId: string;  // 사원번호
+    position: string; // 직위
+    mobile: string; // 내선번호
+    pstnNumber: string;  // PSTN 번호
+    pullNumber: string;    // 당겨받기
+    ipPhone: string;     // IP 전화기
+    zoomLicense: string; // 줌폰 라이센스
+    callRecording: string; // 통화녹음
+    // 인덱스 시그니처 추가
+    [key: string]: string;
+};
+
+
 type RecordingItem = {
     type: string;       // 유형 (전수, 선택 등)
     direction: string;  // 구분 (인바운드, 아웃바운드)
@@ -31,4 +48,4 @@ type RecordingItem = {
     id: string;         // ID (아이콘 버튼)
 }
 
-export type { UserItem, RecordingItem };
+export type { UserItem, ZoomPhoneItem, RecordingItem };
