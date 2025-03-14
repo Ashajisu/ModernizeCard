@@ -32,11 +32,6 @@ const StatisticsRoutes = {
             component: () => import('@/views/statistics/DeptCall.vue')
         },
         {
-            name: 'TeamPhoneUsing-App',
-            path: '/statistics/teamCall',
-            component: () => import('@/views/statistics/TeamCall.vue')
-        },
-        {
             name: '일자별 수발신 통계',
             path: '/statistics/teamDailyCall',
             component: () => import('@/views/statistics/TeamDailyCall.vue')
@@ -45,6 +40,21 @@ const StatisticsRoutes = {
             name: '일자별 수발신 유형별 통계',
             path: '/statistics/teamDailyCall2',
             component: () => import('@/views/statistics/TeamDailyCallSecond.vue')
+        },
+        {
+            name: '사용량 통계',
+            path: '/statistics/usedStatistics',
+            component: () => import('@/views/statistics/UsedStatistics.vue')
+        },
+        {
+            name: '전화 통화 이력',
+            path: '/statistics/callStaticsRecord',
+            component: () => import('@/views/statistics/CallStaticsRecord.vue')
+        },
+        {
+            name: '전화 최대 사용 이력',
+            path: '/statistics/callMaxStaticsRecord',
+            component: () => import('@/views/statistics/CallMaxStaticsRecord.vue')
         },
     ]
 };

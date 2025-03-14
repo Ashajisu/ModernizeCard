@@ -18,10 +18,12 @@ interface Team {
 
 const headers = [
   { title: '본부명', align: 'center', key: 'dept' },
-  // { title: '부서명', align: 'center', key: 'team'},
-  { title: '유형', align: 'center', key: 'phonecase' },
-  { title: '발신 건수 (Call)', align: 'center', key: 'calltotal' },
-  { title: '총 통화시간', align: 'center', key: 'totaltime' },
+  { title: '부서명', align: 'center', key: 'team'},
+  { title: '사용일', align: 'center', key: 'date'},
+  { title: '발신 건수', align: 'center', key: 'calltotal' },
+  { title: '발신 통화시간', align: 'center', key: 'totaltime' },
+  { title: '수신 건수', align: 'center', key: 'inCalltotal' },
+  { title: '수신 통화시간', align: 'center', key: 'inTotaltime' },
 ] as const;
 
 const itemsPerPage = ref(3);
@@ -31,8 +33,8 @@ const PhoneStatus = ref(['시간대별','일별', '월별']);
 
 const selectedItem = ref({
   date: "",
-  dept: "",
-  // team: "",
+  // dept: "",
+  team: "",
   phonecase: "",
   calltotal: "",
   totaltime: "",
@@ -132,9 +134,14 @@ function select(period : string) {
 
 </script>
 
+<!--<div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+<v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+<v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
+</div>-->
+
 <template>
   <br>
-  <h5 class="text-20 mb-3">부서별 전화 사용량 통계</h5>
+  <h5 class="text-20 mb-3">사용량 통계</h5>
   <h5 class="text-15 mb-7">※ 조회조건</h5>
   <v-btn
       v-for="(period, index) in periods"
@@ -215,26 +222,26 @@ function select(period : string) {
 
         <!-- 엑셀 다운로드 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                           style="max-width: 100px; min-width: 100px;">
-                      엑셀 다운로드
-                    </v-btn>-->
+<!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                 style="max-width: 100px; min-width: 100px;">
+            엑셀 다운로드
+          </v-btn>-->
           <v-btn color="grey" variant="outlined" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">엑셀 다운로드</v-btn>
         </v-col>
 
         <!-- 조회 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                           style="max-width: 60px; min-width: 60px;">
-                      조회
-                    </v-btn>-->
+<!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                 style="max-width: 60px; min-width: 60px;">
+            조회
+          </v-btn>-->
           <v-btn color="primary" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">조회</v-btn>
         </v-col>
       </v-row>
     </v-card-item>
   </v-card>
   <br>
-  <h5 class="text-15 mb-7">※ 부서별 유형 통계</h5>
+  <h5 class="text-15 mb-7">※ 전화 사용량 통계</h5>
   <v-data-table
       class="border rounded-md text-center light scrollable-card"
       :headers="headers"
@@ -245,12 +252,13 @@ function select(period : string) {
   >
     <template v-slot:body="props">
       <tr v-for="(item, index) in props.items" :key="index">
-        <!-- 그룹 내 첫 번째 항목에만 rowspan 적용 -->
-        <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.dept }}</td>
-<!--        <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.team }}</td>-->
-        <td>{{ item.phonecase }}</td>
+        <td>{{ item.dept }}</td>
+        <td>{{ item.team }}</td>
+        <td>{{ item.date }}</td>
         <td>{{ item.calltotal }}</td>
         <td>{{ item.totaltime }}</td>
+        <td>{{ item.inCalltotal }}</td>
+        <td>{{ item.inTotaltime }}</td>
       </tr>
     </template>
     <template v-slot:bottom>

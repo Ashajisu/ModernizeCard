@@ -231,18 +231,20 @@ function select(period : string) {
 
         <!-- 엑셀 다운로드 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                 style="max-width: 100px; min-width: 100px;">
-            엑셀 다운로드
-          </v-btn>
+          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                           style="max-width: 100px; min-width: 100px;">
+                      엑셀 다운로드
+                    </v-btn>-->
+          <v-btn color="grey" variant="outlined" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">엑셀 다운로드</v-btn>
         </v-col>
 
         <!-- 조회 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                 style="max-width: 60px; min-width: 60px;">
-            조회
-          </v-btn>
+          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                           style="max-width: 60px; min-width: 60px;">
+                      조회
+                    </v-btn>-->
+          <v-btn color="primary" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">조회</v-btn>
         </v-col>
       </v-row>
     </v-card-item>

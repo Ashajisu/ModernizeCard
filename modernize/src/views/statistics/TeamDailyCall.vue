@@ -136,7 +136,7 @@ function select(period : string) {
 
 <template>
   <br>
-  <h5 class="text-20 mb-3">팀별 전화 사용량 통계</h5>
+  <h5 class="text-20 mb-3">일자별 수발신 통계</h5>
   <h5 class="text-15 mb-7">※ 조회조건</h5>
   <v-btn
       v-for="(period, index) in periods"
@@ -217,18 +217,20 @@ function select(period : string) {
 
         <!-- 엑셀 다운로드 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                 style="max-width: 100px; min-width: 100px;">
-            엑셀 다운로드
-          </v-btn>
+          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                           style="max-width: 100px; min-width: 100px;">
+                      엑셀 다운로드
+                    </v-btn>-->
+          <v-btn color="grey" variant="outlined" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">엑셀 다운로드</v-btn>
         </v-col>
 
         <!-- 조회 버튼 -->
         <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                 style="max-width: 60px; min-width: 60px;">
-            조회
-          </v-btn>
+          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
+                           style="max-width: 60px; min-width: 60px;">
+                      조회
+                    </v-btn>-->
+          <v-btn color="primary" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">조회</v-btn>
         </v-col>
       </v-row>
     </v-card-item>
