@@ -23,6 +23,16 @@ const MonitoringRoutes: RouteRecordRaw = {
             path: 'active-recording-stats',
             name: '활성 녹취',
             component: () => import('@/views/monitoring/real-time/ActiveRecordingStats.vue')
+        },
+        {
+            path: 'daily-license-stats',
+            name: '사용 현황',
+            component: () => import('@/views/monitoring/license/DailyLicenseStatus.vue')
+        },
+        {
+            path: 'monthly-license-stats',
+            name: '사용 내역',
+            component: () => import('@/views/monitoring/license/MonthlyLicenseStatus.vue')
         }
     ]
 };
