@@ -117,16 +117,6 @@ const sidebarItem: menu[] = [
         to: '/zoomAdmin/ZoomPhoneAdmin'
     },
     {
-        title: '내선번호',
-        icon: FileCheckIcon,
-        to: '/ecommerce/productlist'
-    },
-    {
-        title: 'PSTN',
-        icon: FilesIcon,
-        to: '/ecommerce/checkout'
-    },
-    {
         title: '당겨받기 그룹',
         icon: FilesIcon,
         to: '/apps/General'
