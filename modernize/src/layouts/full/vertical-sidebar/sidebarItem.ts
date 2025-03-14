@@ -218,12 +218,12 @@ const sidebarItem: menu[] = [
     {
         title: '사용 현황',
         icon: UserCircleIcon,
-        to: '/pages/gallery-lightbox'
+        to: '/monitoring/daily-license-stats'
     },
     {
         title: '사용 내역',
         icon: HelpIcon,
-        to: '/pages/faq'
+        to: '/monitoring/monthly-license-stats'
     },
 
     { header: '환경설정'},
