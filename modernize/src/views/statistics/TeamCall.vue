@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import {DepartmentCallDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
 
-import type {departmentCall} from "@/types/components/datatables/sampleIndex"; // 날짜 포맷을 쉽게 다룰 수 있는 라이브러리
+import type {departmentCall} from '@/types/apps/SampleType'; // 날짜 포맷을 쉽게 다룰 수 있는 라이브러리
 
 const billFrom = ref(false);
 const rules = ref([
