@@ -117,10 +117,21 @@ const sidebarItem: menu[] = [
         to: '/zoomAdmin/ZoomPhoneAdmin'
     },
     {
+        title: '내선번호',
+        icon: PhoneIcon,
+        to: '/env-management/extension-list'
+    },
+    {
+        title: 'PSTN',
+        icon: CloudComputingIcon,
+        to: '/env-management/pstn-list'
+    },
+    {
         title: '당겨받기 그룹',
         icon: FilesIcon,
         to: '/apps/General'
     },
+
     {
         title: '과금',
         icon: FilesIcon,
@@ -225,16 +236,6 @@ const sidebarItem: menu[] = [
         title: '코드관리',
         icon: HelpIcon,
         to: '/manage/code'
-    },
-    {
-        title: 'Extension 번호 관리',
-        icon: PhoneIcon,
-        to: '/env-management/extension-list'
-    },
-    {
-        title: 'PSTN 번호 관리',
-        icon: CloudComputingIcon, 
-        to: '/env-management/pstn-list'
     },
 ]
 
