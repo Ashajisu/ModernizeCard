@@ -18,100 +18,161 @@
             class="date-picker"
             style="max-width: 200px"
         />
-        <v-btn color="primary" class="ml-2" @click="fetchData"> 조회 </v-btn>
+        <v-btn color="primary" class="ml-2" @click="getDailyLicenseStatus"> 조회 </v-btn>
       </v-col>
     </v-row>
 
-    <!-- 라이센스 사용 현황 타이틀 -->
-    <v-row>
-      <v-col cols="12" class="align-center">
-        <div class="text-h6">줌 라이센스 사용 현황</div>
-      </v-col>
-    </v-row>
 
-    <!-- 라이센스 사용 현황 카드 영역 1 -->
-    <v-row>
-
-      <!-- 라이센스 사용 현황 카드 1 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Total Workplace</div>
-          <div class="text-h3 "> 192 / 200</div>
-        </v-card>
-      </v-col>
-
-      <!-- 라이센스 사용 현황 카드 2 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Workplace Enterprise</div>
-          <div class="text-h3 "> 47 / 50</div>
-        </v-card>
-      </v-col>
-
-      <!-- 라이센스 사용 현황 카드 3 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Workplace Business</div>
-          <div class="text-h3 "> 125 / 130</div>
-        </v-card>
-      </v-col>
-
-
-      <!-- 라이센스 사용 현황 카드 4 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Workplace Basic</div>
-          <div class="text-h3 "> 20</div>
-        </v-card>
-      </v-col>
-
-    </v-row>
-
-    <!-- 라이센스 사용 현황 카드 영역 2 -->
-    <v-row>
-
-      <!-- 라이센스 사용 현황 카드 2 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Phone</div>
-          <div class="text-h3 "> 135 / 140</div>
-        </v-card>
-      </v-col>
-
-      <!-- 라이센스 사용 현황 카드 2 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Phone Pro</div>
-          <div class="text-h3 "> 125 / 130</div>
-        </v-card>
-      </v-col>
-
-      <!-- 라이센스 사용 현황 카드 3 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Phone Basic</div>
-          <div class="text-h3 ">10</div>
-        </v-card>
-      </v-col>
-
-
-      <!-- 라이센스 사용 현황 카드 4 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Power Pack</div>
-          <div class="text-h3 "> 2 / 3</div>
-        </v-card>
-      </v-col>
-    </v-row>
-
-      <!-- 라이센스 사용 현황 카드 영역 3 -->
-      <v-row>
+    <!-- 라이센스 사용 현황 카드 영역 1 - Workplace -->
+    <v-card class="mb-5">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span>Workplace 라이센스</span>
+        <v-btn
+          icon
+          variant="text"
+          @click="toggleChartSection('workplace')"
+          :color="activeChartSections.workplace ? 'primary' : ''"
+        >
+          <v-icon>mdi-chart-line</v-icon>
+        </v-btn>
+      </v-card-title>
+      
+      <v-row class="px-4">
+        <!-- 라이센스 사용 현황 카드 1 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Total Workplace</div>
+            <div class="text-h3"> 192 / 200</div>
+          </v-card>
+        </v-col>
 
         <!-- 라이센스 사용 현황 카드 2 -->
         <v-col cols="12" md="3">
           <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Workplace Enterprise</div>
+            <div class="text-h3"> 47 / 50</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 3 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Workplace Business</div>
+            <div class="text-h3"> 125 / 130</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 4 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Workplace Basic</div>
+            <div class="text-h3"> 20</div>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- 차트 영역 -->
+      <v-expand-transition>
+        <div v-if="activeChartSections.workplace" class="pa-4">
+          <v-card>
+            <v-card-text>
+              <apexchart
+                type="line"
+                height="350"
+                :options="getWorkplaceChartOptions()"
+                :series="workplaceChartSeries"
+              ></apexchart>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-expand-transition>
+    </v-card>
+
+    <!-- 라이센스 사용 현황 카드 영역 2 - Phone -->
+    <v-card class="mb-5">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span>Zoom Phone 라이센스</span>
+        <v-btn
+          icon
+          variant="text"
+          @click="toggleChartSection('phone')"
+          :color="activeChartSections.phone ? 'primary' : ''"
+        >
+          <v-icon>mdi-chart-line</v-icon>
+        </v-btn>
+      </v-card-title>
+      
+      <v-row class="px-4">
+        <!-- 라이센스 사용 현황 카드 1 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Phone</div>
+            <div class="text-h3"> 135 / 140</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 2 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Phone Pro</div>
+            <div class="text-h3"> 125 / 130</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 3 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Phone Basic</div>
+            <div class="text-h3">10</div>
+          </v-card>
+        </v-col>
+
+        <!-- 라이센스 사용 현황 카드 4 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Power Pack</div>
+            <div class="text-h3"> 2 / 3</div>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- 차트 영역 -->
+      <v-expand-transition>
+        <div v-if="activeChartSections.phone" class="pa-4">
+          <v-card>
+            <v-card-text>
+              <apexchart
+                type="line"
+                height="350"
+                :options="getPhoneChartOptions()"
+                :series="phoneChartSeries"
+              ></apexchart>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-expand-transition>
+    </v-card>
+
+    <!-- 라이센스 사용 현황 카드 영역 3 - Rooms -->
+    <v-card class="mb-5">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span>Rooms 라이센스</span>
+        <v-btn
+          icon
+          variant="text"
+          @click="toggleChartSection('rooms')"
+          :color="activeChartSections.rooms ? 'primary' : ''"
+        >
+          <v-icon>mdi-chart-line</v-icon>
+        </v-btn>
+      </v-card-title>
+      
+      <v-row class="px-4">
+        <!-- 라이센스 사용 현황 카드 1 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Rooms</div>
-            <div class="text-h3 "> 1 / 1</div>
+            <div class="text-h3"> 1 / 1</div>
           </v-card>
         </v-col>
 
@@ -119,188 +180,308 @@
         <v-col cols="12" md="3">
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Rooms Connector</div>
-            <div class="text-h3 "> 0 / 1</div>
+            <div class="text-h3"> 0 / 1</div>
           </v-card>
         </v-col>
-
-
       </v-row>
 
-    <!-- 라이센스 사용 현황 카드 영역 4 -->
-    <v-row>
+      <!-- 차트 영역 -->
+      <v-expand-transition>
+        <div v-if="activeChartSections.rooms" class="pa-4">
+          <v-card>
+            <v-card-text>
+              <apexchart
+                type="line"
+                height="350"
+                :options="getRoomsChartOptions()"
+                :series="roomsChartSeries"
+              ></apexchart>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-expand-transition>
+    </v-card>
 
-      <!-- 라이센스 사용 현황 카드 1 -->
-      <v-col cols="12" md="3">
-        <v-card elevation="10" class="pa-4 text-center">
-          <div class="text-h6 mb-3">Cloud Storage (GB)</div>
-          <div class="text-h3 "> 1.03 / 101</div>
-        </v-card>
-      </v-col>
+    <!-- 라이센스 사용 현황 카드 영역 4 - Storage -->
+    <v-card class="mb-5">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span>CloudStorage 라이센스</span>
+        <v-btn
+          icon
+          variant="text"
+          @click="toggleChartSection('storage')"
+          :color="activeChartSections.storage ? 'primary' : ''"
+        >
+          <v-icon>mdi-chart-line</v-icon>
+        </v-btn>
+      </v-card-title>
+      
+      <v-row class="px-4">
+        <!-- 라이센스 사용 현황 카드 1 -->
+        <v-col cols="12" md="3">
+          <v-card elevation="10" class="pa-4 text-center">
+            <div class="text-h6 mb-3">Cloud Storage (GB)</div>
+            <div class="text-h3"> 1.03 / 101</div>
+          </v-card>
+        </v-col>
+      </v-row>
 
-
-    </v-row>
-
-
-
+      <!-- 차트 영역 -->
+      <v-expand-transition>
+        <div v-if="activeChartSections.storage" class="pa-4">
+          <v-card>
+            <v-card-text>
+              <apexchart
+                type="line"
+                height="350"
+                :options="getStorageChartOptions()"
+                :series="storageChartSeries"
+              ></apexchart>
+            </v-card-text>
+          </v-card>
+        </div>
+      </v-expand-transition>
+    </v-card>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useTheme } from 'vuetify';
+import VueApexCharts from 'vue3-apexcharts';
 
 // 상태 관리
 const theme = useTheme();
 const selectedDate = ref(new Date().toISOString().slice(0, 10));
 const selectedTypes = ref(['outbound', 'inbound', 'internal']);
-// const totalCalls = ref(684);
-// const outboundCalls = ref(471);
-// const inboundCalls = ref(213);
 const lastUpdatedTime = ref('2025-03-06 10:00:00');
 
-// 바 차트 데이터
-const timeLabels = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
+// 차트 섹션 토글 상태 관리
+const activeChartSections = reactive({
+  workplace: false,
+  phone: false,
+  rooms: false,
+  storage: false
+});
 
-/* 바 차트트 목 데이터 */
-const chartData = {
-  outbound: [2, 5, 22, 38, 45, 45, 25, 3, 28],
-  inbound: [6, 23, 48, 63, 58, 42, 5, 8, 42],
-  internal: [3, 17, 35, 40, 38, 18, 5, 6, 46]
+// 차트 섹션 토글 함수
+const toggleChartSection = (sectionId: 'workplace' | 'phone' | 'rooms' | 'storage') => {
+  activeChartSections[sectionId] = !activeChartSections[sectionId];
 };
 
-// 바 차트 시리즈
-const chartSeries = computed(() => {
-  const series = [];
-
-  if (selectedTypes.value.includes('outbound')) {
-    series.push({
-      name: '아웃바운드',
-      data: chartData.outbound
-    });
+// 날짜 데이터 생성 (최근 30일)
+const generateDates = () => {
+  const dates = [];
+  const today = new Date();
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(today.getDate() - i);
+    dates.push(date.getTime());
   }
+  return dates;
+};
 
-  if (selectedTypes.value.includes('inbound')) {
-    series.push({
-      name: '인바운드',
-      data: chartData.inbound
-    });
-  }
-
-  if (selectedTypes.value.includes('internal')) {
-    series.push({
-      name: '내선통화',
-      data: chartData.internal
-    });
-  }
-
-  return series;
+const dates = generateDates();
+const categories = dates.map(date => {
+  const d = new Date(date);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
 });
-/* 도넛 차트 옵션 */
-const donutchartOptions = computed(() => {
+
+// Workplace 차트 시리즈
+const workplaceChartSeries = [
+  {
+    name: 'Total Workplace',
+    data: Array.from({ length: 30 }, () => Math.floor(170 + Math.random() * 30))
+  },
+  {
+    name: 'Workplace Enterprise',
+    data: Array.from({ length: 30 }, () => Math.floor(40 + Math.random() * 10))
+  },
+  {
+    name: 'Workplace Business',
+    data: Array.from({ length: 30 }, () => Math.floor(110 + Math.random() * 20))
+  },
+  {
+    name: 'Workplace Basic',
+    data: Array.from({ length: 30 }, () => Math.floor(15 + Math.random() * 5))
+  }
+];
+
+// Phone 차트 시리즈
+const phoneChartSeries = [
+  {
+    name: 'Phone',
+    data: Array.from({ length: 30 }, () => Math.floor(125 + Math.random() * 15))
+  },
+  {
+    name: 'Phone Pro',
+    data: Array.from({ length: 30 }, () => Math.floor(115 + Math.random() * 15))
+  },
+  {
+    name: 'Phone Basic',
+    data: Array.from({ length: 30 }, () => Math.floor(8 + Math.random() * 3))
+  },
+  {
+    name: 'Power Pack',
+    data: Array.from({ length: 30 }, () => Math.floor(1 + Math.random() * 2))
+  }
+];
+
+// Rooms 차트 시리즈
+const roomsChartSeries = [
+  {
+    name: 'Rooms',
+    data: Array.from({ length: 30 }, () => 1)
+  },
+  {
+    name: 'Rooms Connector',
+    data: Array.from({ length: 30 }, () => Math.random() > 0.7 ? 1 : 0)
+  }
+];
+
+// Storage 차트 시리즈
+const storageChartSeries = [
+  {
+    name: 'Cloud Storage (GB)',
+    data: Array.from({ length: 30 }, () => parseFloat((0.8 + Math.random() * 0.5).toFixed(2)))
+  }
+];
+
+// Workplace 차트 옵션
+const getWorkplaceChartOptions = () => {
   return {
     chart: {
-      type: 'donut',
-      height: 300,
-      fontFamily: `inherit`,
-      foreColor: '#adb0bb'
-    },
-    labels: ['아웃바운드', '인바운드', '내선통화'],
-    dataLabels: {
-      enabled: true
-    },
-    plotOptions: {
-      pie: {
-        donut: {
-          size: '50px'
-        }
+      height: 350,
+      type: 'line',
+      fontFamily: 'inherit',
+      zoom: {
+        type: 'x',
+        enabled: true
+      },
+      toolbar: {
+        show: false
+      },
+      shadow: {
+        enabled: true,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2
       }
+    },
+    colors: [
+      theme.current.value.colors.primary,
+      theme.current.value.colors.error,
+      theme.current.value.colors.success,
+      theme.current.value.colors.warning
+    ],
+    markers: {
+      size: 4
+    },
+    xaxis: {
+      categories: categories,
+      title: {
+        text: '날짜'
+      }
+    },
+    yaxis: {
+      title: {
+        text: '사용량'
+      }
+    },
+    grid: {
+      show: true,
+      borderColor: 'rgba(0,0,0,0.1)'
+    },
+    dataLabels: {
+      enabled: false
     },
     stroke: {
-      width: 2,
-      colors: 'rgba(var(--v-theme-surface))'
+      curve: 'smooth',
+      width: 2
     },
     legend: {
-      show: true,
-      position: 'bottom',
-      width: '50px'
+      position: 'top',
+      horizontalAlign: 'right',
+      floating: true,
+      offsetY: -25,
+      offsetX: -5
     },
-    colors: [theme.current.value.colors.success, theme.current.value.colors.primary, theme.current.value.colors.lighterror],
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
+    tooltip: {
+      theme: 'light',
+      x: {
+        format: 'MM/dd'
       }
-    ]
+    },
+    title: {
+      text: 'Workplace 라이센스 사용 추이',
+      align: 'left',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }
+    }
   };
-});
-/* 도넛 차트 목데이터터 */
-const donutChart = {
-  series: [44, 55, 41]
 };
 
-// 차트 옵션 (기존 chartOptions를 barChartOptions로 변경)
-const barChartOptions = computed(() => ({
-  chart: {
-    type: 'bar',
-    toolbar: {
-      show: false
-    }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '55%',
-      endingShape: 'rounded'
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    show: true,
-    width: 2,
-    colors: ['transparent']
-  },
-  colors: [theme.current.value.colors.success, theme.current.value.colors.primary, theme.current.value.colors.lighterror],
-  xaxis: {
-    categories: timeLabels.map((time, index) => {
-      if (index < timeLabels.length - 1) {
-        return `${time} ~ ${timeLabels[index + 1]}`;
-      }
-      return `${time} ~ 15:00`;
-    }),
-    labels: {
-      style: {
-        fontSize: '12px'
-      }
-    }
-  },
-  yaxis: {
+// Phone 차트 옵션
+const getPhoneChartOptions = () => {
+  return {
+    ...getWorkplaceChartOptions(),
+    colors: [
+      theme.current.value.colors.error,
+      theme.current.value.colors.info,
+      theme.current.value.colors.success,
+      theme.current.value.colors.warning
+    ],
     title: {
-      text: '통화 건수'
-    }
-  },
-  fill: {
-    opacity: 1
-  },
-  tooltip: {
-    y: {
-      formatter: function (val: number) {
-        return val + ' 건';
+      text: 'Phone 라이센스 사용 추이',
+      align: 'left',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold'
       }
     }
-  },
-  grid: {
-    borderColor: 'rgba(0,0,0,0.1)'
-  }
-}));
+  };
+};
+
+// Rooms 차트 옵션
+const getRoomsChartOptions = () => {
+  return {
+    ...getWorkplaceChartOptions(),
+    colors: [
+      theme.current.value.colors.success,
+      theme.current.value.colors.info
+    ],
+    title: {
+      text: 'Rooms 라이센스 사용 추이',
+      align: 'left',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }
+    }
+  };
+};
+
+// Storage 차트 옵션
+const getStorageChartOptions = () => {
+  return {
+    ...getWorkplaceChartOptions(),
+    colors: [
+      theme.current.value.colors.primary
+    ],
+    title: {
+      text: 'Cloud Storage 사용 추이',
+      align: 'left',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }
+    }
+  };
+};
 
 // 데이터 조회 함수
 const fetchData = () => {
@@ -308,7 +489,19 @@ const fetchData = () => {
   console.log('데이터 조회:', selectedDate.value);
 };
 
+const getDailyLicenseStatus = () => {
+  // API 호출 로직 구현
+  console.log('데이터 조회:', selectedDate.value);
+  window.alert("@@@ 조회 버튼은 아직 API 연동이 안되었습니다.")
+}
+
 onMounted(() => {
   fetchData();
 });
 </script>
+
+<style scoped>
+.v-card {
+  transition: all 0.3s ease;
+}
+</style>
