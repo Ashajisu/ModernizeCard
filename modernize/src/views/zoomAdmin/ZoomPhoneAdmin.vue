@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
 import {SearchIcon} from 'vue-tabler-icons';
 import type { ZoomPhone } from '@/types/apps/SampleType';
 
+import { useContactStore } from '@/stores/apps/contact';
+import contact from "@/_mockApis/apps/contact";
+
+const store = useContactStore();
+
+onMounted(() => {
+  store.fetchContacts();
+});
+const getContacts: any = computed(() => {
+  return store.contacts;
+});
 
 const page = ref({ title: '줌 폰 디바이스 관리' });
 const dialog1 = ref(false);
@@ -148,18 +159,33 @@ const makeExcelFile4 = () => {
   a_tag.click();  // 다운로드 시작
 }
 
-/*function addItem(item) {
-  // 신규 항목 추가 로직
-  if (item.name && item.description) {
-    ZoomPhoneDatatables.push({ ...item });
+function save() {
+  if (editedIndex.value > -1) {
+    Object.assign(zoomPhone.value[editedIndex.value], editedItem.value);
+  } else {
+    zoomPhone.value.push(editedItem.value);
+    console.log("zoomPhone :" + JSON.stringify(editedItem.value));
   }
+  dialog1.value = false;
+  dialog2.value = false;
+  // close();
 }
-function removeItem(item) {
-  const index = ZoomPhoneDatatables.indexOf(item);
-  if (index > -1) {
-    ZoomPhoneDatatables.splice(index, 1);
-  }
-}*/
+
+const zoomPhone = ref(ZoomPhoneDatatables);
+const editedIndex = ref(-1);
+const editedItem = ref({
+  phoneName: '',
+  user: '',
+  phoneNum: '',
+  pstnNum: '',
+  phoneStatus: '',
+  model: '',
+  macAddress: '',
+  firmware: '',
+  publicAddress: '',
+  privateAddress: '',
+});
+
 </script>
 
 <template>
@@ -300,7 +326,7 @@ function removeItem(item) {
                       <v-label class="font-weight-medium" style="margin-top: -23px;">표시이름</v-label>
                     </v-col>
                     <v-col cols="8" class="d-flex align-center justify-center">
-                      <v-text-field></v-text-field>
+                      <v-text-field  v-model="editedItem.phoneName"></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row class="mb-3">
@@ -308,7 +334,7 @@ function removeItem(item) {
                       <v-label class="font-weight-medium" style="margin-top: -23px;">MAC 주소</v-label>
                     </v-col>
                     <v-col cols="8" class="d-flex align-center justify-center">
-                      <v-text-field></v-text-field>
+                      <v-text-field v-model="editedItem.macAddress"></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -320,6 +346,7 @@ function removeItem(item) {
                           :items="['Avaya', 'CISCO', 'ZOOM', 'Genesys']"
                           label="제조사 선택"
                           required
+                          v-model="editedItem.user"
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -332,6 +359,7 @@ function removeItem(item) {
                           :items="['J139', 'J159', 'J179']"
                           label="모델 선택"
                           required
+                          v-model="editedItem.model"
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -347,14 +375,14 @@ function removeItem(item) {
                       ></v-select>
                     </v-col>
                     <v-col cols="5" class="d-flex align-center justify-center">
-                      <v-text-field></v-text-field>
+                      <v-text-field v-model="editedItem.publicAddress"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-card-text>
               </v-row>
               <v-row class="d-flex justify-end">
                 <v-card-actions>
-                  <v-btn color="primary" variant="text"  @click="dialog2 = !dialog2; addItem;" flat>
+                  <v-btn color="primary" variant="text"  @click="save" flat>
                     저장
                   </v-btn>
                   <v-btn color="error" variant="text" @click="dialog1 = false" flat style="margin-right: 30px;">
