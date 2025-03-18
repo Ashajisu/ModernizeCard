@@ -190,7 +190,7 @@ const onDelete = () => {
                 </v-col>
               </v-row>
               <v-row>
-                <v-data-table items-per-page="5" :headers="headers" :items="filteredList" item-value="name"
+                <v-data-table items-per-page="5" :headers="headers" :items="filteredList" item-value="username"
                               select-strategy="single" show-select class="border rounded-md"
                               v-model="selectedName"
                               @update:model-value="onSelectionChange"
@@ -205,7 +205,7 @@ const onDelete = () => {
                 <v-col cols="1"/>
                 <v-col cols="4">
                   <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                    <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)" >편집</v-btn>
+                    <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)">편집</v-btn>
                     <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
                   </div>
                 </v-col>
