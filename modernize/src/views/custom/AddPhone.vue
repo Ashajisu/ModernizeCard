@@ -76,11 +76,11 @@ const filteredList = computed(() => {
 
   return ZoomPhoneDataTables.filter((user: any) => {
     return (
-        (!search.value.department || user.post.toLowerCase() === search.value.department.toLowerCase()) &&
-        (!search.value.team || user.project.toLowerCase() === search.value.team.toLowerCase()) &&
-        (!search.value.employmentStatus || user.status.toLowerCase() === search.value.employmentStatus.toLowerCase()) &&
-        (!search.value.employeeId || user.status.toLowerCase().includes(search.value.employeeId.toLowerCase())) &&
-        (!search.value.username || user.name.toLowerCase().includes(search.value.username.toLowerCase()))
+        (!search.value.department || user.department.toLowerCase() === search.value.department.toLowerCase()) &&
+        (!search.value.team || user.team.toLowerCase() === search.value.team.toLowerCase()) &&
+        (!search.value.employmentStatus || user.employmentStatus.toLowerCase() === search.value.employmentStatus.toLowerCase()) &&
+        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase())) &&
+        (!search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase()))
     );
   });
 });
