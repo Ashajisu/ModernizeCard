@@ -90,6 +90,76 @@ const selectedItem = ref<{
   publicAddress: string;
   privateAddress: string;
 } | null>(null);
+
+const addDevice = ref<{
+  phoneName: string;
+  user: string;
+  phoneNum: string;
+  pstnNum: string;
+  phoneStatus: string;
+  model: string;
+  macAddress: string;
+  firmware: string;
+  publicAddress: string;
+  privateAddress: string;
+}| null>(null);
+
+//
+// function createZoomPhone(){
+//   addDevice.phoneName = dialog1;
+// }
+
+const makeExcelFile4 = () => {
+  let tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+  tab_text += '<head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+  tab_text += '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+  tab_text += '<x:Name>Test Sheet</x:Name>';
+  tab_text += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+  tab_text += '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+  tab_text += "<table border='1'>";
+
+  // 테이블 헤더 생성
+  tab_text += "<thead><tr>";
+  headers.forEach((header) => {
+    tab_text += `<th>${header.title}</th>`;
+  });
+  tab_text += "</tr></thead>";
+
+  // 테이블 데이터 생성
+  tab_text += "<tbody>";
+  ZoomPhoneDatatables.forEach((item) => {
+    tab_text += "<tr>";
+    headers.forEach((header) => {
+      const key = header.key as keyof ZoomPhone;
+      tab_text += `<td>${item[key]}</td>`;
+    });
+    tab_text += "</tr>";
+  });
+  tab_text += "</tbody>";
+
+  tab_text += "</table></body></html>";
+
+  // Blob을 생성하여 다운로드 트리거
+  const fileName = 'ZoomPhoneData.xls';
+  const a_tag = document.createElement('a');
+  const blob = new Blob([tab_text], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+  a_tag.href = window.URL.createObjectURL(blob);
+  a_tag.download = fileName;
+  a_tag.click();  // 다운로드 시작
+}
+
+/*function addItem(item) {
+  // 신규 항목 추가 로직
+  if (item.name && item.description) {
+    ZoomPhoneDatatables.push({ ...item });
+  }
+}
+function removeItem(item) {
+  const index = ZoomPhoneDatatables.indexOf(item);
+  if (index > -1) {
+    ZoomPhoneDatatables.splice(index, 1);
+  }
+}*/
 </script>
 
 <template>
@@ -97,17 +167,14 @@ const selectedItem = ref<{
   <br>
   <v-card elevation="10" class="pa-5">
     <v-card-title class="text-h4 font-weight-bold"> 줌 폰 디바이스 관리 </v-card-title>
-    <v-card-title class="text-h6 font-weight-bold"> 줌 폰의 디바이스 관리를 할 수 있습니다. </v-card-title>
+    <v-card-title class="text-h6 font-weight-bold">
+      줌 폰의 디바이스 관리를 할 수 있습니다.
+      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+        <v-btn color="primary" flat @click="">조회</v-btn>
+        <v-btn color="primary" variant="outlined" @click="">초기화</v-btn>
+      </div>
+    </v-card-title>
     <v-card-item>
-      <v-row>
-        <v-col>
-          <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-            <v-btn color="primary" flat @click="">조회</v-btn>
-            <v-btn color="primary" variant="outlined" @click="">초기화</v-btn>
-          </div>
-        </v-col>
-      </v-row>
-
       <v-row class="d-flex align-center">
         <v-col cols="12" lg="2" class="d-flex align-center">
           <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">사용자명</v-label>
@@ -287,7 +354,7 @@ const selectedItem = ref<{
               </v-row>
               <v-row class="d-flex justify-end">
                 <v-card-actions>
-                  <v-btn color="primary" variant="text"  @click="dialog2 = !dialog2" flat>
+                  <v-btn color="primary" variant="text"  @click="dialog2 = !dialog2; addItem;" flat>
                     저장
                   </v-btn>
                   <v-btn color="error" variant="text" @click="dialog1 = false" flat style="margin-right: 30px;">
@@ -502,8 +569,8 @@ const selectedItem = ref<{
     <!-- 오른쪽 정렬: 엑셀 다운로드, 엑셀 업로드 -->
     <v-col cols="6">
       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-        <v-btn color="grey" variant="outlined" to="/ecommerce/checkout">엑셀 다운로드</v-btn>
-        <v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
+        <v-btn color="grey" variant="outlined" @click="makeExcelFile4">엑셀 다운로드</v-btn>
+        <v-btn color="grey" variant="outlined" @click="makeExcelFile4">엑셀 업로드</v-btn>
       </div>
     </v-col>
   </v-row>
