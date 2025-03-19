@@ -43,6 +43,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Total Workplace</div>
             <div class="text-h3"> 192 / 200</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(192, 200)">{{ calculatePercentage(192, 200) }}%</div>
           </v-card>
         </v-col>
 
@@ -51,6 +52,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Workplace Enterprise</div>
             <div class="text-h3"> 47 / 50</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(47, 50)">{{ calculatePercentage(47, 50) }}%</div>
           </v-card>
         </v-col>
 
@@ -59,6 +61,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Workplace Business</div>
             <div class="text-h3"> 125 / 130</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(125, 130)">{{ calculatePercentage(125, 130) }}%</div>
           </v-card>
         </v-col>
 
@@ -67,6 +70,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Workplace Basic</div>
             <div class="text-h3"> 20</div>
+            <div class="text-subtitle-1">-</div>
           </v-card>
         </v-col>
       </v-row>
@@ -108,6 +112,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Phone</div>
             <div class="text-h3"> 135 / 140</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(135, 140)">{{ calculatePercentage(135, 140) }}%</div>
           </v-card>
         </v-col>
 
@@ -116,6 +121,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Phone Pro</div>
             <div class="text-h3"> 125 / 130</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(125, 130)">{{ calculatePercentage(125, 130) }}%</div>
           </v-card>
         </v-col>
 
@@ -124,6 +130,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Phone Basic</div>
             <div class="text-h3">10</div>
+            <div class="text-subtitle-1">-</div>
           </v-card>
         </v-col>
 
@@ -132,6 +139,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Power Pack</div>
             <div class="text-h3"> 2 / 3</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(2, 3)">{{ calculatePercentage(2, 3) }}%</div>
           </v-card>
         </v-col>
       </v-row>
@@ -173,6 +181,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Rooms</div>
             <div class="text-h3"> 1 / 1</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(1, 1)">{{ calculatePercentage(1, 1) }}%</div>
           </v-card>
         </v-col>
 
@@ -181,6 +190,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Rooms Connector</div>
             <div class="text-h3"> 0 / 1</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(0, 1)">{{ calculatePercentage(0, 1) }}%</div>
           </v-card>
         </v-col>
       </v-row>
@@ -222,6 +232,7 @@
           <v-card elevation="10" class="pa-4 text-center">
             <div class="text-h6 mb-3">Cloud Storage (GB)</div>
             <div class="text-h3"> 1.03 / 101</div>
+            <div class="text-subtitle-1" :class="getPercentageColor(1.03, 101)">{{ calculatePercentage(1.03, 101) }}%</div>
           </v-card>
         </v-col>
       </v-row>
@@ -255,6 +266,27 @@ const theme = useTheme();
 const selectedDate = ref(new Date().toISOString().slice(0, 10));
 const selectedTypes = ref(['outbound', 'inbound', 'internal']);
 const lastUpdatedTime = ref('2025-03-06 10:00:00');
+
+// 퍼센티지 계산 함수
+const calculatePercentage = (used: number, total: number) => {
+  if (!total) return '-';
+  return Math.round((used / total) * 100);
+};
+
+// 퍼센티지에 따른 색상 클래스 반환
+const getPercentageColor = (used: number, total: number) => {
+  if (!total) return '';
+  
+  const percentage = (used / total) * 100;
+  
+  if (percentage >= 90) {
+    return 'text-error';
+  } else if (percentage >= 70) {
+    return 'text-warning';
+  } else {
+    return 'text-success';
+  }
+};
 
 // 차트 섹션 토글 상태 관리
 const activeChartSections = reactive({
