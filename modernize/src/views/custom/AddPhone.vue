@@ -40,6 +40,22 @@ const userFields = ref<FormField[]>([
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...', 'Zoom Phone Basic '], required: true, disabled: false },
   { label: '통화녹음', name: 'callRecording', type: 'select', value: '미사용', options: ['미사용', '선택녹취','전수녹취'], required: false, disabled: false }
 ]);
+const functionData = ref([
+  { number: 1, key: 'Ext.8155', assignment: '입력란', displayName: '선택란', OBNumber: '', actions: '',},
+  { number: 2, key: 'Ext.8156', assignment: '대표번호 발신', displayName: '0221778100', OBNumber: '', actions: '', },
+  { number: 3, key: '단축다이얼', assignment: '010xxxxxxxx', displayName: '홍길동 휴대전화', OBNumber: '', actions: ''},
+  { number: 4, key: '', assignment: '', displayName: '', OBNumber: '', actions: ''},
+]);
+const functionHeaders = ref<any[]>([
+  { title: '라인', align: 'start', key: 'number', value: 'number', sortable: false , maxWidth: "40px"},
+  { title: '키 유형', key: 'key', sortable: false, maxWidth: "200px"},
+  { title: '할당', key: 'assignment', sortable: false, maxWidth: "200px"},
+  { title: '표시이름', key: 'displayName', sortable: false, maxWidth: "200px"},
+  { title: '발신번호', key: 'OBNumber', sortable: false, maxWidth: "200px"},
+  { title: '', key: 'upDown', sortable: false, maxWidth: "150px"},
+]);
+
+const keyOptions = ['Line','Speed Dial', 'Call Park', 'BLF', 'Intercom', 'Zoom Meeting'];
 
 // 초기화
 const resetSearch = ()=>{
@@ -218,12 +234,44 @@ const isProLicense: ComputedRef<boolean> = computed(()=>{
                 <v-col>
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn color="grey" variant="outlined" @click="handleDialog" :disabled="isProLicense">사용자 전화 기능키 관리</v-btn>
-                    <CustomSlotDialog title="d" v-model:view="viewDialog">
+                    <CustomSlotDialog title="기능키 관리" width="1500px" v-model:view="viewDialog">
                         <template v-slot:inCard>
-                          <v-data-table items-per-page="5" :headers="headers" :items="formFields" item-value="username">
+                          <v-data-table :headers="functionHeaders" :items="functionData" item-value="username" hide-default-footer >
+                              <!-- 필수값 표시하기 -->
+                              <template v-slot:header.assignment="{ column }">
+                                  {{ column.title }}
+                                  <span v-if="column.title === '할당'" style="color: red;">*</span>
+                              </template>
 
+                              <!-- 필수값 assignment 이 있을때만 입력란 표시하기 -->
+                              <template v-slot:item.key="{ item }">
+                                <v-select v-if="!!item.assignment"
+                                    v-model="item.key"
+                                    :items="keyOptions"
+                                    dense hide-details>
+                                </v-select>
+                                <div v-else>
+                                  <v-btn variant="outlined" color="primary" class="font-weight-bold" @click="item.assignment='할당'">설정</v-btn>
+                                </div>
+                              </template>
+                              <template v-slot:item.assignment="{ item }">
+                                <v-text-field v-if="!!item.assignment" v-model="item.assignment" dense hide-details></v-text-field>
+                              </template>
+                              <template v-slot:item.displayName="{ item }">
+                                <v-text-field v-if="!!item.assignment" v-model="item.displayName" dense hide-details></v-text-field>
+                              </template>
+                              <template v-slot:item.OBNumber="{ item }">
+                                <v-select v-if="!!item.assignment"
+                                    v-model="item.OBNumber"
+                                    :items="keyOptions"
+                                    dense hide-details>
+                                </v-select>
+                              </template>
+                              <template  v-slot:item.upDown="{ item }">
+                                <v-btn flat variant="plain" v-if="!!item.assignment"><v-chip><v-icon icon="mdi-arrow-up-bold"/>up</v-chip></v-btn>
+                                <v-btn flat variant="plain" v-if="!!item.assignment"><v-chip><v-icon icon="mdi-arrow-down-bold"/>down</v-chip></v-btn>
+                              </template>
                           </v-data-table>
-
                         </template>
                     </CustomSlotDialog>
                     <v-btn flat color="primary" variant="outlined" @click="onSave">저장</v-btn>
