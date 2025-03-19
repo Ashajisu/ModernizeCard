@@ -5,6 +5,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 const props = defineProps<{
   view: boolean;
   title: string;
+  width: undefined | number | string;
 }>();
 
 const dialog = ref(props.view);
@@ -25,7 +26,7 @@ function close() {
 <!--persistent : 외부를 눌러도 닫히지 않게-->
 <!--@click:outside="close" : 외부를 눌러서 닫혀도 dialog=false 값 유지되게-->
 <template>
-    <v-dialog v-model="dialog"  max-width="700"  @click:outside="close">
+    <v-dialog v-model="dialog" :width="width" min-width="700" @click:outside="close">
         <v-card>
             <UiParentCard :title="title" style="height: 100%">
                 <div>
