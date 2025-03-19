@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import UiChildCard from "@/components/shared/UiChildCard.vue";
-import Searchbar from "@/layouts/full/vertical-header/Searchbar.vue";
-import SearchTree from "@/components/forms/form-elements/treeview/SearchTree.vue";
 import AppBaseCard from "@/components/shared/AppBaseCard.vue";
 import CustomPlainForm from "@/components/custom/form/CustomPlainForm.vue";
+import CustomTreeview from "@/components/custom/tree/CustomTreeview.vue";
 
 // 입력 필드 목록 정의
 const groupFields = ref<FormField[]>([
@@ -19,7 +18,7 @@ const groupFields = ref<FormField[]>([
 ]);
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '땡땡땡', placeholder: '이름 입력', required: true, disabled: true },
-  { label: '사원번호', name: 'employeeId', type: 'password', value: '1348684', placeholder: '사원번호 입력', required: true, disabled: true },
+  { label: '사원번호', name: 'employeeId', type: 'text', value: '1348684', placeholder: '사원번호 입력', required: true, disabled: true },
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: true, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: true, disabled: false },
   { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
@@ -58,7 +57,6 @@ const onSave = ()=>{
 }
 
 const selectedId = ref({ id: 0, type: 'person'});
-// const selectedId = ref({ id: 0, type: 'group'});
 
 //조직 상세정보 편집
 const edit = ref<boolean>(false);
@@ -67,13 +65,27 @@ const handleEdit = (bool : boolean) => {
   edit.value = bool;
   console.log('handleEdit', edit.value);
 };
+
+// selectedId 값이 변경될 때, 데이터 불러와 Fields 를 업데이트 : 예시
+watch(selectedId, (newSelectedId) => {
+  if (newSelectedId.type === 'person') {
+    userFields.value.forEach(field => {
+      if (field.name === 'employeeId') field.value = String(newSelectedId.id);
+    });
+  } else {
+    groupFields.value.forEach(field => {
+      if (field.name === 'deptcode1') field.value = String(newSelectedId.id);
+    });
+  }
+})
+
 </script>
 
 <template>
   <v-card elevation="10">
     <AppBaseCard>
       <template v-slot:leftpart>
-        <SearchTree/>
+        <CustomTreeview v-model:selectedId="selectedId"/>
       </template>
       <template v-slot:rightpart>
 <!--        조직 상세-->
@@ -100,33 +112,9 @@ const handleEdit = (bool : boolean) => {
         </div>
       </template>
       <template v-slot:mobileLeftContent>
-<!--        검색 목록 -->
         <v-sheet>
-          <Searchbar />
+          <CustomTreeview/>
         </v-sheet>
-        <SearchTree/>
-        <!--        조직 상세-->
-        <UiChildCard title="조직 상세 정보" v-if="selectedId.type === 'group'">
-          <CustomPlainForm :formFields="groupFields" :colsPerRow="2" :edit="edit"/>
-          <v-row>
-            <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
-              <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
-            </v-col>
-            <v-col cols="12" sm="9" offset-sm="10" v-else>
-              <v-btn color="primary" flat @click="onSave()">저장</v-btn>
-              <v-btn color="primary" flat @click="handleEdit(false)">취소</v-btn>
-            </v-col>
-          </v-row>
-        </UiChildCard>
-        <!--        사용자 상세-->
-        <div v-else>
-          <UiChildCard title="사용자 조직 정보">
-            <CustomPlainForm :formFields="personFields" :colsPerRow="2" :edit="false"/>
-          </UiChildCard>
-          <UiChildCard title="사용자 상세 정보">
-            <CustomPlainForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
-          </UiChildCard>
-        </div>
       </template>
     </AppBaseCard>
   </v-card>

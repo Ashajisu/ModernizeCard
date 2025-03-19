@@ -24,7 +24,8 @@ import VueScrollTo from 'vue-scrollto';
 //LightBox
 import VueEasyLightbox from 'vue-easy-lightbox';
 
-
+// tui-tree : 플러그인 제공되지 않음.
+import 'tui-tree/dist/tui-tree.css';
 
 const i18n = createI18n({
     locale: 'en',
@@ -56,4 +57,3 @@ app.use(VueScrollTo, {
 })
 //Lightbox
 app.use(VueEasyLightbox)
-
