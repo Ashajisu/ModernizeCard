@@ -185,6 +185,38 @@ const isProLicense: ComputedRef<boolean> = computed(()=>{
   return licenseName.toLowerCase().includes('basic');
 });
 
+//마지막 down 버튼 찾기
+const lastAssignedNumber = computed(() => {
+  const reversedIndex = functionData.value
+      .slice() // 원본 배열 유지
+      .reverse()
+      .findIndex(item => !!item.assignment); // assignment 값이 있는 첫 번째 요소 찾기
+
+  return reversedIndex === -1 ? 1 : functionData.value.length - reversedIndex; // 실제 index+1 계산
+});
+
+//upDown 데이터 이동 : 현재위치 index, 이동범위 direction (+-n)
+const moveItem = (number:number, direction:number) => {
+  //index 값을 계산
+  const index = number -1;
+  const newIndex = index - direction;
+
+  // 배열 범위를 벗어나지 않도록 제한
+  if (newIndex < 0 || newIndex >= functionData.value.length) return;
+
+  // 배열 요소 교환 (스왑)
+  const temp = functionData.value[index];
+  functionData.value[index] = functionData.value[newIndex];
+  functionData.value[newIndex] = temp;
+
+  // number 값을 다시 설정
+  functionData.value.forEach((item, idx) => {
+    item.number = idx + 1;
+  });
+};
+
+
+
 </script>
 <!-- 각 버튼의 기능 구현 전 -->
 <!-- 행이 아닌 체크박스만 동작함 -->
@@ -268,8 +300,8 @@ const isProLicense: ComputedRef<boolean> = computed(()=>{
                                 </v-select>
                               </template>
                               <template  v-slot:item.upDown="{ item }">
-                                <v-btn flat variant="plain" v-if="!!item.assignment"><v-chip><v-icon icon="mdi-arrow-up-bold"/>up</v-chip></v-btn>
-                                <v-btn flat variant="plain" v-if="!!item.assignment"><v-chip><v-icon icon="mdi-arrow-down-bold"/>down</v-chip></v-btn>
+                                <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === 1" @click="moveItem(item.number, 1)"><v-chip><v-icon icon="mdi-arrow-up-bold"/>up</v-chip></v-btn>
+                                <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === lastAssignedNumber" @click="moveItem(item.number, -1)"><v-chip><v-icon icon="mdi-arrow-down-bold"/>down</v-chip></v-btn>
                               </template>
                           </v-data-table>
                         </template>
