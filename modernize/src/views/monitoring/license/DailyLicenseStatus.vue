@@ -37,6 +37,18 @@
         </v-btn>
       </v-card-title>
       
+      <!-- 퍼센티지 색상 설명 -->
+      <v-row class="px-4 mb-2">
+        <v-col cols="12">
+          <div class="d-flex align-center">
+            <span class="text-caption text-medium-emphasis mr-2">사용률:</span>
+            <v-chip size="small" color="error" class="mr-2">30% 이하</v-chip>
+            <v-chip size="small" color="warning" class="mr-2">30-50%</v-chip>
+            <v-chip size="small" color="success">50% 초과</v-chip>
+          </div>
+        </v-col>
+      </v-row>
+      
       <v-row class="px-4">
         <!-- 라이센스 사용 현황 카드 1 -->
         <v-col cols="12" md="3">
@@ -44,6 +56,12 @@
             <div class="text-h6 mb-3">Total Workplace</div>
             <div class="text-h3"> 192 / 200</div>
             <div class="text-subtitle-1" :class="getPercentageColor(192, 200)">{{ calculatePercentage(192, 200) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(192, 200)"
+              :color="getPercentageColor(192, 200).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -53,6 +71,12 @@
             <div class="text-h6 mb-3">Workplace Enterprise</div>
             <div class="text-h3"> 47 / 50</div>
             <div class="text-subtitle-1" :class="getPercentageColor(47, 50)">{{ calculatePercentage(47, 50) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(47, 50)"
+              :color="getPercentageColor(47, 50).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -62,6 +86,12 @@
             <div class="text-h6 mb-3">Workplace Business</div>
             <div class="text-h3"> 125 / 130</div>
             <div class="text-subtitle-1" :class="getPercentageColor(125, 130)">{{ calculatePercentage(125, 130) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(125, 130)"
+              :color="getPercentageColor(125, 130).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -71,8 +101,15 @@
             <div class="text-h6 mb-3">Workplace Basic</div>
             <div class="text-h3"> 20</div>
             <div class="text-subtitle-1">-</div>
+            <v-progress-linear
+              model-value="0"
+              color="grey"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
+     
       </v-row>
 
       <!-- 차트 영역 -->
@@ -113,6 +150,12 @@
             <div class="text-h6 mb-3">Phone</div>
             <div class="text-h3"> 135 / 140</div>
             <div class="text-subtitle-1" :class="getPercentageColor(135, 140)">{{ calculatePercentage(135, 140) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(135, 140)"
+              :color="getPercentageColor(135, 140).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -122,6 +165,12 @@
             <div class="text-h6 mb-3">Phone Pro</div>
             <div class="text-h3"> 125 / 130</div>
             <div class="text-subtitle-1" :class="getPercentageColor(125, 130)">{{ calculatePercentage(125, 130) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(125, 130)"
+              :color="getPercentageColor(125, 130).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -131,6 +180,12 @@
             <div class="text-h6 mb-3">Phone Basic</div>
             <div class="text-h3">10</div>
             <div class="text-subtitle-1">-</div>
+            <v-progress-linear
+              model-value="0"
+              color="grey"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -140,6 +195,12 @@
             <div class="text-h6 mb-3">Power Pack</div>
             <div class="text-h3"> 2 / 3</div>
             <div class="text-subtitle-1" :class="getPercentageColor(2, 3)">{{ calculatePercentage(2, 3) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(2, 3)"
+              :color="getPercentageColor(2, 3).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
       </v-row>
@@ -182,6 +243,12 @@
             <div class="text-h6 mb-3">Rooms</div>
             <div class="text-h3"> 1 / 1</div>
             <div class="text-subtitle-1" :class="getPercentageColor(1, 1)">{{ calculatePercentage(1, 1) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(1, 1)"
+              :color="getPercentageColor(1, 1).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
 
@@ -191,6 +258,12 @@
             <div class="text-h6 mb-3">Rooms Connector</div>
             <div class="text-h3"> 0 / 1</div>
             <div class="text-subtitle-1" :class="getPercentageColor(0, 1)">{{ calculatePercentage(0, 1) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(0, 1)"
+              :color="getPercentageColor(0, 1).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
       </v-row>
@@ -233,6 +306,12 @@
             <div class="text-h6 mb-3">Cloud Storage (GB)</div>
             <div class="text-h3"> 1.03 / 101</div>
             <div class="text-subtitle-1" :class="getPercentageColor(1.03, 101)">{{ calculatePercentage(1.03, 101) }}%</div>
+            <v-progress-linear
+              :model-value="calculatePercentage(1.03, 101)"
+              :color="getPercentageColor(1.03, 101).replace('text-', '')"
+              height="8"
+              class="mt-2"
+            ></v-progress-linear>
           </v-card>
         </v-col>
       </v-row>
@@ -279,9 +358,9 @@ const getPercentageColor = (used: number, total: number) => {
   
   const percentage = (used / total) * 100;
   
-  if (percentage >= 90) {
+  if (percentage <= 30) {
     return 'text-error';
-  } else if (percentage >= 70) {
+  } else if (percentage <= 50) {
     return 'text-warning';
   } else {
     return 'text-success';
