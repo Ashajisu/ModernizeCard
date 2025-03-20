@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import {UserDataTables} from "@/_mockApis/custom/RecordingData";
+import { UserDataTables } from "@/_mockApis/custom/RecordingData";
 import type {UserItem} from "@/types/custom/DataTableTypes";
-import {searchSugg} from "@/_mockApis/headerData";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
+import { watchDepartmentChange } from "@/data/teamOptions";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '사용자명', name: 'username',  type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false }
+  { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false },
+  { label: '사용자명', name: 'username',  type: 'search', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false }
 ]);
 const headers = ref<any[]>([
   { title: "부서명", align: "start", key: "department" },
@@ -27,8 +27,8 @@ const headers = ref<any[]>([
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: true, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
-  { label: '부서명', name: 'department',  type: 'search', value: '', searchObj:searchSugg, view:false, required: true, disabled: false },
-  { label: '팀명', name: 'team',  type: 'search', value: '', searchObj:searchSugg, view:false, required: true, disabled: false },
+  { label: '부서명', name: 'department',  type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], view:false, required: true, disabled: false },
+  { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], view:false, required: true, disabled: false },
   { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
   { label: '메일주소', name: 'email', type: 'text', value: 'example@domain.com', placeholder: 'example@domain.com', required: true, disabled: false },
   { label: '전화번호', name: 'phone', type: 'text', value: '', placeholder: '02-0000-0000', required: true, disabled: false },
@@ -42,6 +42,9 @@ const zoomFields = ref<FormField[]>([
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', 'Basic', '...'], required: true, disabled: false },
   { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: 'Phone Pro', options: ['Phone Pro', 'Power', 'Phone Pro, Power'], required: false, disabled: false },
 ]);
+// 부서명 변경 감지 팀명의 옵션 설정
+watchDepartmentChange(formFields.value);
+watchDepartmentChange(userFields.value);
 
 // 초기화
 const resetSearch = ()=>{
@@ -96,37 +99,24 @@ const onSelectionChange = () => {
 
 //사용자 상세정보 출력
 const updateUserFields = (selectedName: string) => {
-  const selectedItem: UserItem | undefined = UserDataTables.find((user) => {
+  const selectedItem: UserItem[] | undefined = UserDataTables.filter((user) => {
     return !selectedName || user.username.includes(selectedName);
   });
 
-  console.log("선택된 정보:", selectedItem);
-  if (!selectedItem) {
-    return;
+  //동명이인이 있는 경우 팝업띄우기
+  let index = 0;
+  if(selectedItem.length > 1) {
+    if(confirm(`${selectedName} 사용자가 ${selectedItem.length}명 검색되었습니다. 어떤 사용자를 선택할까요? \n 확인 : ${selectedItem[0].team} \n 취소 : ${selectedItem[1].team}`)){
+    }else {
+      index = 1;
+    }
   }
 
   userFields.value.forEach(field => {
-    switch (field.label) {
-      case '사용자명':
-        field.value = selectedItem.username;
-        break;
-      case '부서명':
-        field.value = selectedItem.department;
-        break;
-      case '팀명':
-        field.value = selectedItem.team;
-        break;
-      case '사원번호':
-        field.value = selectedItem.employeeId;
-        break;
-      case '직위':
-        field.value = selectedItem.position;
-        break;
-      case '메일주소':
-        field.value = selectedItem.email;
-        break;
-      default:
-        field.value = ''; // 매칭되지 않는 경우 빈 값 설정
+    if (selectedItem[index][field.name] !== undefined) {
+      field.value = selectedItem[index][field.name]; // 값 매칭
+    } else {
+      field.value = ''; // 매칭되지 않으면 빈 값 설정
     }
   });
 };

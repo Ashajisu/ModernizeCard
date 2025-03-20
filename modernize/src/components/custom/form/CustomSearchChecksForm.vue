@@ -46,7 +46,7 @@ const openSearchDialog = (field : FormField) => {
               <template v-slot:append-inner>
                 <v-icon icon="mdi-account-search" class="text-right"></v-icon>
               </template>
-              <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :items="field.searchObj"  @update:selectedValue="(selectedValue : string) => { field.value = selectedValue}" />
+              <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string) => { field.value = selectedValue}" />
             </v-text-field>
             <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                           v-model="field.value"

@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import {computed, type ComputedRef, ref} from "vue";
+import {computed, type ComputedRef, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import {ZoomPhoneDataTables} from "@/_mockApis/custom/RecordingData";
+import { ZoomPhoneDataTables } from "@/_mockApis/custom/RecordingData";
 import type {ZoomPhoneItem} from "@/types/custom/DataTableTypes";
-import {searchSugg} from "@/_mockApis/headerData";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
+import { watchDepartmentChange } from "@/data/teamOptions";
 
 const formFields = ref<FormField[]>([
-  { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
+  { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
-  { label: '사용자명', name: 'username', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '사용자명', name: 'username', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
   { label: '내선번호', name: 'mobile', type: 'text', value: '', required: false, disabled: false },
-  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
+  { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
   { label: '', name: '_', type: 'none', value: '', required: false, disabled: false },
 ]);
 const headers = ref<any[]>([
@@ -33,10 +33,10 @@ const userFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '직위', name: 'position', type: 'select', value: '', options: ['사원', '대리', '과장', '차장', '부장'], required: false, disabled: false },
-  { label: '내선번호', name: 'mobile', type: 'search', value: '', searchObj:searchSugg, view:false, required: true, disabled: false },
-  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:searchSugg,view:false, required: false, disabled: false },
-  { label: '당겨받기', name: 'pullNumber', type: 'search', value: '', searchObj:searchSugg,view:false, required: false, disabled: false },
-  { label: 'IP 전화기', name: 'ipPhone', type: 'search', value: 'Avaya J159_308152', searchObj:searchSugg,view:false, required: false, disabled: false },
+  { label: '내선번호', name: 'mobile', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: true, disabled: false },
+  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
+  { label: '당겨받기', name: 'pullNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
+  { label: 'IP 전화기', name: 'ipPhone', type: 'search', value: 'Avaya J159_308152', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...', 'Zoom Phone Basic '], required: true, disabled: false },
   { label: '통화녹음', name: 'callRecording', type: 'select', value: '미사용', options: ['미사용', '선택녹취','전수녹취'], required: false, disabled: false }
 ]);
@@ -55,7 +55,9 @@ const functionHeaders = ref<any[]>([
   { title: '', key: 'upDown', sortable: false, maxWidth: "150px"},
 ]);
 
-const keyOptions = ['Line','Speed Dial', 'Call Park', 'BLF', 'Intercom', 'Zoom Meeting'];
+// 부서명 변경 감지 팀명의 옵션 설정
+watchDepartmentChange(formFields.value);
+watchDepartmentChange(userFields.value);
 
 // 초기화
 const resetSearch = ()=>{
@@ -122,15 +124,13 @@ const updateUserFields = (selectedName: string) => {
   }
   //동명이인이 있는 경우 팝업띄우기
   if(selectedItem.length > 1) {
-    if(confirm(`${selectedName} 사용자가 ${selectedItem.length}명 검색되었습니다. 사용자를 선택해 주세요.\n ${selectedItem[0].username} or ${selectedItem[1].username}`)){
+    if(confirm(`${selectedName} 사용자가 ${selectedItem.length}명 검색되었습니다. 첫번째 사용자를 선택할까요? \n ${selectedItem[0].username} or ${selectedItem[1].username}`)){
       index = 1;
     }
   }
 
-  // selectedData.value = selectedItem[index];
-
   userFields.value.forEach(field => {
-    const key = field.name; // field.name이 selectedItem의 key 값과 일치
+    const key = field.name; // field.name 이 selectedItem 의 key 값과 일치
     if (selectedItem[index][key] !== undefined) {
       field.value = selectedItem[index][key]; // 값 매칭
     } else {
@@ -176,10 +176,11 @@ const handleDialog = () => {
 }
 
 //기능키 관리 : Zoom Phone Basic 사용자는 사용할 수 없음
+const keyOptions = ['Line','Speed Dial', 'Call Park', 'BLF', 'Intercom', 'Zoom Meeting'];
+
 const isProLicense: ComputedRef<boolean> = computed(()=>{
-  const licenseVar = 'zoomLicense';
   const license: FormField | undefined = userFields.value.find((user: any) => {
-    return !licenseVar || user.name.includes(licenseVar);
+    return user.name.includes('zoomLicense');
   });
   const licenseName:string = license?.value as string;
   return licenseName.toLowerCase().includes('basic');
@@ -214,9 +215,6 @@ const moveItem = (number:number, direction:number) => {
     item.number = idx + 1;
   });
 };
-
-
-
 </script>
 <!-- 각 버튼의 기능 구현 전 -->
 <!-- 행이 아닌 체크박스만 동작함 -->
@@ -299,7 +297,7 @@ const moveItem = (number:number, direction:number) => {
                                     dense hide-details>
                                 </v-select>
                               </template>
-                              <template  v-slot:item.upDown="{ item }">
+                              <template  v-slot:item.actions="{ item }">
                                 <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === 1" @click="moveItem(item.number, 1)"><v-chip><v-icon icon="mdi-arrow-up-bold"/>up</v-chip></v-btn>
                                 <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === lastAssignedNumber" @click="moveItem(item.number, -1)"><v-chip><v-icon icon="mdi-arrow-down-bold"/>down</v-chip></v-btn>
                               </template>
