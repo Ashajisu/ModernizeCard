@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {computed, nextTick, onMounted, ref} from 'vue';
 import {ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
 import {SearchIcon} from 'vue-tabler-icons';
 import type { ZoomPhone } from '@/types/apps/SampleType';
@@ -39,18 +39,6 @@ const rules = ref([
 
 const button1 = ref(false);
 
-const selectDevice = (item: ZoomPhone | null) => {
-  if (item) {
-    selectedItem.value = { ...item }; // 선택한 아이템 저장
-    button1.value = true; // 버튼 표시
-    console.log( "1 : " +  JSON.stringify(selectedItem.value));
-  } else {
-    selectedItem.value = null; // 선택 해제 시 초기화
-    button1.value = false; // 버튼 숨김
-  }
-};
-
-
 const editDevice = () => {
   console.log("편집 버튼 클릭", selectedItem.value);
 };
@@ -89,18 +77,8 @@ const PhoneStatus = ref(['Online','Offline']);
 //   publicAddress: "",
 //   privateAddress: ""
 // })
-const selectedItem = ref<{
-  phoneName: string;
-  user: string;
-  phoneNum: string;
-  pstnNum: string;
-  phoneStatus: string;
-  model: string;
-  macAddress: string;
-  firmware: string;
-  publicAddress: string;
-  privateAddress: string;
-} | null>(null);
+
+const selectedItem = ref<ZoomPhone | null>(null);
 
 const addDevice = ref<{
   phoneName: string;
@@ -159,12 +137,36 @@ const makeExcelFile4 = () => {
   a_tag.click();  // 다운로드 시작
 }
 
+const onDeleteDialog = () => {
+  if (selectedItem.value) {
+    console.log("selectedItem : " + JSON.stringify(selectedItem.value));
+    dialog3.value = true; // 삭제 모달 열기
+  } else {
+    alert('항목을 선택하세요!'); // 항목을 선택하지 않으면 메시지 표시
+  }
+};
+
+function deleteItem(item: any) {
+  if (!item || Object.keys(item).length === 0) {
+    alert("삭제할 항목을 선택해주세요.");
+    return;
+  }
+
+  console.log("삭제할 항목 :", JSON.stringify(item));
+
+  editedIndex.value = zoomPhone.value.indexOf(item);
+  console.log("index : ", editedIndex.value);
+  editedItem.value = Object.assign({}, item);
+  zoomPhone.value.splice(editedIndex.value, 1);
+  dialog4.value = true;
+}
+
 function save() {
   if (editedIndex.value > -1) {
     Object.assign(zoomPhone.value[editedIndex.value], editedItem.value);
   } else {
     zoomPhone.value.push(editedItem.value);
-    console.log("zoomPhone :" + JSON.stringify(editedItem.value));
+    console.log("zoomPhone :" + JSON.stringify(zoomPhone.value));
   }
   dialog1.value = false;
   dialog2.value = false;
@@ -174,6 +176,19 @@ function save() {
 const zoomPhone = ref(ZoomPhoneDatatables);
 const editedIndex = ref(-1);
 const editedItem = ref({
+  phoneName: '',
+  user: '',
+  phoneNum: '',
+  pstnNum: '',
+  phoneStatus: '',
+  model: '',
+  macAddress: '',
+  firmware: '',
+  publicAddress: '',
+  privateAddress: '',
+});
+
+const defaultItem = ref({
   phoneName: '',
   user: '',
   phoneNum: '',
@@ -375,7 +390,7 @@ const editedItem = ref({
                       ></v-select>
                     </v-col>
                     <v-col cols="5" class="d-flex align-center justify-center">
-                      <v-text-field v-model="editedItem.publicAddress"></v-text-field>
+                      <v-text-field v-model="editedItem.privateAddress"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -405,25 +420,98 @@ const editedItem = ref({
           </v-card>
         </v-dialog>
 
+        <!--        <v-dialog v-model="dialog3" persistent class="dialog-mw">
+                  <template v-slot:activator="{ props }">
+                    <v-btn flat color="error" variant="outlined" v-bind="props"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
+                  </template>
+                  <v-card style="height: 190px; width: 470px;" class="overflow-auto">
+                    <v-container>
+                      <v-row class="mt-2" style="display: flex; justify-content: center;">
+                        <v-card-title style="font-size: 16px;">
+                          <span>선택하신 “Desk Phone 2” 디바이스가 삭제됩니다.</span>
+                          <br> <br>
+                          <span>삭제 하시겠습니까?</span>
+                        </v-card-title>
+                      </v-row>
+                      <v-row class="d-flex justify-center mt-5">
+                        <v-card-actions>
+                          <v-btn color="primary" variant="text"  @click="deleteItem" flat>
+                            확인
+                          </v-btn>
+                          <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
+                          <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
+                            취소
+                          </v-btn>
+                        </v-card-actions>
+                      </v-row>
+                    </v-container>
+                  </v-card>
+                </v-dialog>-->
+
+        <!--        <v-dialog v-model="dialog3" persistent class="dialog-mw">
+                  <template v-slot:activator="{ props }">
+                    <v-btn flat color="error" variant="outlined" v-bind="props" @click="onDeleteDialog">
+                      <v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2"/>
+                      삭제
+                    </v-btn>
+                  </template>
+                  <v-card style="height: 190px; width: 470px;" class="overflow-auto">
+                    <v-container>
+                      <v-row class="mt-2" style="display: flex; justify-content: center;">
+                        <v-card-title style="font-size: 16px;">
+                          <span>선택하신 “{{ selectedItem.phoneName }}” 디바이스가 삭제됩니다.</span>
+                          <br> <br>
+                          <span>삭제 하시겠습니까?</span>
+                        </v-card-title>
+                      </v-row>
+                      <v-row class="d-flex justify-center mt-5">
+                        <v-card-actions>
+                          <v-btn color="primary" variant="text" @click="deleteItem" flat>
+                            확인
+                          </v-btn>
+                          <v-spacer></v-spacer>
+                          <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
+                            취소
+                          </v-btn>
+                        </v-card-actions>
+                      </v-row>
+                    </v-container>
+                  </v-card>
+                </v-dialog>
+
+                <v-dialog v-model="dialog4" class="dialog-mw" persistent>
+                  <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
+                    <v-card-title>
+                      <span>삭제 되었습니다.</span>
+                    </v-card-title>
+                    <v-card-actions>
+                      <v-btn color="primary" variant="text" @click="dialog4 = false; dialog3 = false;" flat> 확인 </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>-->
+
         <v-dialog v-model="dialog3" persistent class="dialog-mw">
           <template v-slot:activator="{ props }">
-            <v-btn flat color="error" variant="outlined" v-bind="props"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
+            <v-btn flat color="error" variant="outlined" v-bind="props" @click="onDeleteDialog">
+              <v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2"/>
+              삭제
+            </v-btn>
           </template>
           <v-card style="height: 190px; width: 470px;" class="overflow-auto">
             <v-container>
               <v-row class="mt-2" style="display: flex; justify-content: center;">
                 <v-card-title style="font-size: 16px;">
-                  <span>선택하신 “Desk Phone 2” 디바이스가 삭제됩니다.</span>
+                  <span>선택하신 디바이스가 삭제됩니다.</span>
                   <br> <br>
                   <span>삭제 하시겠습니까?</span>
                 </v-card-title>
               </v-row>
               <v-row class="d-flex justify-center mt-5">
                 <v-card-actions>
-                  <v-btn color="primary" variant="text"  @click="dialog4 = !dialog4" flat>
+                  <v-btn color="primary" variant="text" @click="deleteItem(selectedItem)" flat>
                     확인
                   </v-btn>
-                  <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
+                  <v-spacer></v-spacer>
                   <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
                     취소
                   </v-btn>
@@ -443,6 +531,7 @@ const editedItem = ref({
             </v-card-actions>
           </v-card>
         </v-dialog>
+
 
         <v-dialog v-model="dialog5" persistent class="dialog-mw">
           <template v-slot:activator="{ props }">
@@ -606,12 +695,12 @@ const editedItem = ref({
     <v-col cols="12">
       <v-data-table class="border rounded-md text-center light scrollable-card"
                     v-model="selectedItem"
-                    :headers="headers"  :items="ZoomPhoneDatatables"
+                    :headers="headers"  :items="zoomPhone"
                     item-key="phoneName"
                     show-select
                     return-object
-                    hide-default-footer
-                    @update:modelValue="selectDevice">
+                    hide-default-footer>
+
         <template v-slot:bottom>
           <div class="text-center pt-2 mt-2 px-3">
             <v-text-field :model-value="itemsPerPage" class="pa-2 mr-auto" label="페이지당 항목 수" type="number"
