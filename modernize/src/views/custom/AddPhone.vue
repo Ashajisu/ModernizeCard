@@ -2,11 +2,11 @@
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, type ComputedRef, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import { ZoomPhoneDataTables } from "@/_mockApis/custom/RecordingData";
+import { ZoomPhoneDataTables } from "@/_mockApis/custom/ZoomData";
 import type {ZoomPhoneItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import { watchDepartmentChange } from "@/data/teamOptions";
+import { watchDepartmentChange } from "@/_mockApis/custom/teamOptions";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },

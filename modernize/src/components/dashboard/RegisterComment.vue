@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useComment } from "@/data/Comment";
+import { useComment } from "@/_mockApis/custom/Comment";
 const { comment, createComment } = useComment();
 const error = ref('');
 const createDetail = ref<string>('');
