@@ -48,6 +48,7 @@
         "vue3-print-nb": "0.1.4",
         "vuedraggable": "2.24.3",
         "vuetify": "3.7.1",
+        "wavesurfer.js": "^7.9.3",
         "yup": "1.4.0"
     },
     "devDependencies": {

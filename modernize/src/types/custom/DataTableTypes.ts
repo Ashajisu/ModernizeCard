@@ -50,7 +50,7 @@ type RecordingItem = {
     startTime: string;  // 통화 시작 시간
     endTime: string;    // 통화 종료 시간
     duration: string;   // 통화 시간
-    play: string;       // 재생 (아이콘 버튼)
+    play: string;       // 재생할 음성파일 경로. public/audio/...
     download: string;   // 다운로드 (아이콘 버튼)
     id: string;         // ID (아이콘 버튼)
 }
