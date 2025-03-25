@@ -1,6 +1,8 @@
 import WaveSurfer from 'wavesurfer.js'
 import type { WaveSurferOptions } from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.esm.js';
+import type {RegionParams} from "wavesurfer.js/dist/plugins/regions";
+import type {GenericPlugin} from "wavesurfer.js/dist/base-plugin";
 
 // 기본 설정값
 export const options:WaveSurferOptions & Record<string, any> = {
@@ -9,7 +11,7 @@ export const options:WaveSurferOptions & Record<string, any> = {
     /** The height of the waveform in pixels */
     height: 128,
     /** The width of the waveform in pixels or any CSS value; defaults to 100% */
-    width: 650,
+    width: '100%',
     /** Render each audio channel as a separate waveform */
     // splitChannels: false,
     /** Stretch the waveform to the full height */
@@ -62,11 +64,11 @@ export const options:WaveSurferOptions & Record<string, any> = {
 // WaveSurfer 인스턴스를 생성하고 이벤트를 설정하는 함수
 /** Guide to
  * import { onMounted } from 'vue';
- * import { createWaveSurferWithOptions } from '@/plugins/WaveSufer';
+ * import { createWaveSurferWithOptions } from '@/plugins/Wavesufer';
  *
  * onMounted(() => {
  *   // 음성파일로 파형 및 오디오 생성
- *   // createWaveSurferWithRegions('/public/assets/audio/PartOfYourWorld.wav');
+ *   // createWaveSurferWithRegions("/public/assets/audio/PartOfYourWorld.wav");
  * });
  * **/
 export const createWaveSurferWithRegions = (audioUrl: string) => {
@@ -87,7 +89,7 @@ export const createWaveSurferWithRegions = (audioUrl: string) => {
 /**
  * Guide to
  * import { onMounted } from 'vue';
- * import { createWaveSurferWithOptions, options } from '@/plugins/WaveSufer';
+ * import { createWaveSurferWithOptions, options } from '@/plugins/Wavesufer';
  *
  * onMounted(() => {
  *   options.barAlign = 'top';
@@ -96,7 +98,7 @@ export const createWaveSurferWithRegions = (audioUrl: string) => {
  * });
  * **/
 export const createWaveSurferWithOptions = (options:WaveSurferOptions & Record<string, any>) => {
-    const regions = RegionsPlugin.create(); // 중복사용 금지. 항상 새로 생성해야함.
+    const regions: GenericPlugin = RegionsPlugin.create(); // 중복사용 금지. 항상 새로 생성해야함.
     options.plugins = [regions];
 
     // WaveSurfer 인스턴스 생성
@@ -109,7 +111,7 @@ export const createWaveSurferWithOptions = (options:WaveSurferOptions & Record<s
 // 이벤트 설정 함수
 const loop = true;
 export const setupWaveSurferEvents = (wavesurfer: WaveSurfer, regions: any) => {
-    let activeRegion = null;
+    let activeRegion: RegionParams[]| null = null;
     wavesurfer.on('ready', () => {
         wavesurfer.setTime(10);
     });
@@ -119,7 +121,7 @@ export const setupWaveSurferEvents = (wavesurfer: WaveSurfer, regions: any) => {
         activeRegion = null;
     });
 
-    // 디코드가 끝나면 region을 추가하고 이벤트 설정
+    // 디코드가 끝나면 region 을 추가하고 이벤트 설정
     wavesurfer.on('decode', () => {
         console.log('decode_ setting regions');
 
@@ -131,14 +133,14 @@ export const setupWaveSurferEvents = (wavesurfer: WaveSurfer, regions: any) => {
         });
 
         // region 클릭 시 재생
-        regions.on('region-clicked', (region, e) => {
+        regions.on('region-clicked', (region:any, e:any) => {
             e.stopPropagation();  // 파형의 클릭 이벤트를 방지
             activeRegion = region;
-            region.play(true);  // region을 강제로 재생
+            region.play(true);  // region 을 강제로 재생
         });
 
         // region 영역을 벗어나면 루프 실행
-        regions.on('region-out', (region) => {
+        regions.on('region-out', (region:any) => {
             if (activeRegion === region) {
                 if (loop) {
                     region.play();

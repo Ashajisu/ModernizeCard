@@ -155,7 +155,7 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                 <CustomTwoSlotDialog title="청취" title-sec="텍스트" v-model:view="viewDialog.play">
                     <template v-slot:top>
                         <v-card-title class="text-subtitle-1">발신자 {{ selectedItem?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ selectedItem?.receiver}}</v-card-title>
-                          <Wave :url="selectedItem?.play"/>
+                          <Wave v-if="!!selectedItem?.play" :url="selectedItem?.play"/>
                     </template>
                     <template v-slot:bottom>
                         <v-row>
