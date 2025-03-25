@@ -244,6 +244,7 @@ function select(period : string) {
       :items="departmentCallDatatables"
       item-key="dept"
       hide-default-footer
+      fixed-header
       style="overflow-x: hidden; max-width: 100%;"
   >
     <template v-slot:body="props">

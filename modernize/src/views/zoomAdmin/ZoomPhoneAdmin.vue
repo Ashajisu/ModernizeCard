@@ -699,6 +699,7 @@ const defaultItem = ref({
                     item-key="phoneName"
                     show-select
                     return-object
+                    fixed-header
                     hide-default-footer>
 
         <template v-slot:bottom>
