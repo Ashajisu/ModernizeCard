@@ -9,7 +9,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "allowJs": true
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types", "node_modules/wavesurfer.js/dist/plugins"]
   },
   "references": [
     {
