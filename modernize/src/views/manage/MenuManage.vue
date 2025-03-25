@@ -234,6 +234,7 @@ const saveChanges = () => {
             v-model="selectedItems"
             return-object
             hide-default-footer
+            fixed-header
             :headers="headers"
             :items="leftTableData"
             item-key="main"
@@ -271,6 +272,7 @@ const saveChanges = () => {
             v-model="selectedItems"
             return-object
             hide-default-footer
+            fixed-header
             :headers="headers"
             :items="rightUpTableData"
             item-key="main"
@@ -308,6 +310,7 @@ const saveChanges = () => {
         <v-data-table class="border rounded-md text-center light scrollable-card"
                       style="height: 450px; width: 100%;"
                       hide-default-footer
+                      fixed-header
                       :headers="headers2"
                       :items="MenuDatatables"
                       :sort-by="[{ key: 'id', order: 'asc' }]">

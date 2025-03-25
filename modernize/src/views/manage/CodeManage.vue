@@ -112,14 +112,16 @@ watch(dialogDelete, val => {
 
       <v-row class="d-flex align-center">
         <!-- 코드명 -->
-        <v-col cols="12" lg="5" class="d-flex align-center">
+        <v-col cols="12" lg="4" class="d-flex align-center">
           <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">코드명</v-label>
           <v-text-field
               hide-details
               label="Search Code"
               v-model="codeName"
               :rules="rules"
-              required>
+              required
+              style="max-width: 400px;"
+          >
             <template v-slot:prepend-inner>
               <SearchIcon size="18"/>
             </template>
@@ -138,14 +140,16 @@ watch(dialogDelete, val => {
         </v-col>
 
         <!-- 미사용 체크박스 -->
-        <v-col cols="12" lg="2" class="d-flex align-center" >
-          <v-checkbox-btn :model-value="false" color='primary'></v-checkbox-btn>
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 70px;">미사용</v-label>
+        <v-col cols="12" lg="2" class="d-flex align-center">
+          <div class="d-flex align-center">
+            <v-checkbox-btn :model-value="false" color="primary"></v-checkbox-btn>
+            <v-label class="font-weight-semibold ml-2">미사용</v-label>
+          </div>
         </v-col>
 
         <!-- 코드 ID -->
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px; margin-left: -50px;">코드 ID</v-label>
+          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px; margin-left: -70px;">코드 ID</v-label>
           <v-text-field
               v-model="codeid"
               :rules="rules"
@@ -159,46 +163,57 @@ watch(dialogDelete, val => {
         </v-col>
 
         <!-- 조회 버튼 -->
-        <v-col cols="12" lg="1" class="d-flex align-center">
+        <v-col cols="12" lg="2" class="d-flex align-center">
           <v-btn color="primary" flat to="/apps/invoice/create"
-                 style="min-height: 44px; min-width: 80px; margin-left: -10px;">조 회</v-btn>
+                 style="min-height: 44px; min-width: 80px; margin-left: 40px;">조 회</v-btn>
         </v-col>
       </v-row>
     </v-card-item>
   </v-card>
 
   <br>
-  <v-card elevation="10">
-  <v-row class="d-flex align-center ma-2">
-    <v-col cols="12" lg="5" class="d-flex align-center">
-      <v-label style="margin-left:60px; text-align: center; ">총 건수</v-label>
-      <v-text-field class="pa-2 text-center custom-text-field"
-                    hide-details
-                    value="12"
-                    style="text-align:center; max-width: 130px; min-width: 130px;"></v-text-field>
-      <v-label>건</v-label>
-
-      <v-label style="margin-left: 50px;  ">조회</v-label>
-      <v-text-field
-          :model-value="itemsPerPage"
-          class="pa-2"
-          type="number"
-          min="10"
-          max="50"
-          hide-details
-          style="text-align: center; max-width: 100px; min-width: 100px;"
-          @update:model-value="itemsPerPage = parseInt($event, 10)"
-      />
+  <v-row class="d-flex align-stretch">
+    <!-- 첫 번째 카드 -->
+    <v-col cols="12" lg="5">
+      <v-card elevation="9" class="pa-4 d-flex flex-column justify-center flex-grow-1" style="min-height: 80px;">
+        <v-row
+            class="align-center no-gutters"
+            style="display: flex; justify-content: center; align-items: center; gap: 12px;"
+        >
+          <v-label class="text-center">총 건수</v-label>
+          <v-text-field
+              class="text-center custom-text-field"
+              hide-details
+              value="12"
+              style="max-width: 130px; min-width: 130px;"
+          />
+          <v-label>건</v-label>
+          <v-label>조회</v-label>
+          <v-text-field
+              v-model="itemsPerPage"
+              class="text-center"
+              type="number"
+              min="10"
+              max="50"
+              hide-details
+              style="max-width: 100px; min-width: 100px;"
+          />
+        </v-row>
+      </v-card>
     </v-col>
-    <v-col cols="12" lg="7" class="d-flex align-center">
-      <v-btn color="primary" flat to="/apps/invoice/create" style="margin-left: 70px; min-height: 44px; min-width: 100px; ">등 록</v-btn>
-      <v-btn color="secondary" flat to="/apps/invoice/create" style="margin-left: 10px; min-height: 44px; min-width: 100px; ">수 정</v-btn>
-      <v-btn color="error" flat to="/apps/invoice/create" style="margin-left: 10px; min-height: 44px; min-width: 100px; ">삭 제</v-btn>
-      <v-btn color="warning" flat to="/apps/invoice/create" style="margin-left: 10px; min-height: 44px; min-width: 100px; ">취 소</v-btn>
-      <v-btn color="info" flat to="/apps/invoice/create" style="margin-left: 10px; min-height: 44px; min-width: 100px; ">저 장</v-btn>
+
+    <!-- 두 번째 카드 -->
+    <v-col cols="12" lg="7">
+      <v-card elevation="9" class="pa-4 d-flex justify-center flex-grow-1" style="min-height: 80px;">
+        <v-btn color="primary" flat to="/apps/invoice/create" class="mx-2">등 록</v-btn>
+        <v-btn color="secondary" flat to="/apps/invoice/create" class="mx-2">수 정</v-btn>
+        <v-btn color="error" flat to="/apps/invoice/create" class="mx-2">삭 제</v-btn>
+        <v-btn color="warning" flat to="/apps/invoice/create" class="mx-2">취 소</v-btn>
+        <v-btn color="info" flat to="/apps/invoice/create" class="mx-2">저 장</v-btn>
+      </v-card>
     </v-col>
   </v-row>
-  </v-card>
+
   <v-row>
     <!--        <v-card class="d-flex align-center">-->
 
@@ -269,7 +284,7 @@ watch(dialogDelete, val => {
 
 
     <v-col cols="12" lg="5">
-        <v-data-table class="border rounded-md text-center light scrollable-card" style="height: 400px;"
+        <v-data-table class="border rounded-md text-center light scrollable-card" style="height: 400px;" fixed-header
                       hide-default-footer  :headers="headers1" :items="CodeDatatables" :sort-by="[{ key: 'id', order: 'asc' }]">
           <template v-slot:bottom>
             <div class="text-center pt-2 mb-3 px-3">
@@ -280,7 +295,7 @@ watch(dialogDelete, val => {
     </v-col>
 
     <v-col cols="12" lg="7">
-      <v-data-table class="border rounded-md text-center light"  style="height: 400px;"
+      <v-data-table class="border rounded-md text-center light"  style="height: 400px;" fixed-header
                     :headers="headers2" item-value="name" :items="CodeDatatables" :sort-by="[{ key: 'id', order: 'asc' }]">
 
          <template v-slot:top>
