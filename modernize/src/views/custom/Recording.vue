@@ -170,7 +170,7 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                         </v-row>
                     </template>
                 </CustomTwoSlotDialog>
-                <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download">
+                <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download" width="">
                   <template v-slot:inCard>
                     <v-row>
                       <v-col>
@@ -190,7 +190,7 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                       <v-btn color="primary" variant="flat">저장</v-btn>
                   </template>
                 </CustomSlotDialog>
-                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id">
+                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id" width="">
                   <template v-slot:inCard>
                     <span> {{ JSON.stringify(selectedItem) }} </span>
                   </template>

@@ -1,9 +1,43 @@
-import type { UserItem, ZoomPhoneItem, RecordingItem } from '@/types/custom/DataTableTypes.ts'
+import type {UserItem, ZoomPhoneItem, RecordingItem, searchDialogType} from '@/types/custom/DataTableTypes.ts'
 
+const UsernameList:searchDialogType[] = [
+    {
+        title: '박00',
+        sub : {
+            username: '박00',
+            team: "기술1팀",
+            employeeId: "20019133",
+        }
+    },
+    {
+        title: '이OO',
+        sub : {
+            username: '이OO',
+            team: "기술2팀",
+            employeeId: "20019133",
+        }
+    },
+    {
+        title: '최OO',
+        sub : {
+            username: '최OO',
+            team: "SPM팀",
+            employeeId: "20019133",
+        }
+    },
+    {
+        title: '전OO',
+        sub : {
+            username: '전OO',
+            team: "기술1팀",
+            employeeId: "20019133",
+        }
+    },
+]
 // 사용자 데이터 리스트
 const UserDataTables: UserItem[] = [
     {
-        department: "고객지원본부",
+        department: "기술팀",
         team: "기술1팀",
         username: "박OO",
         employeeId: "20019133",
@@ -13,7 +47,7 @@ const UserDataTables: UserItem[] = [
         phoneLicense: "",
     },
     {
-        department: "고객지원본부",
+        department: "기술팀",
         team: "기술2팀",
         username: "이OO",
         employeeId: "20355071",
@@ -25,7 +59,7 @@ const UserDataTables: UserItem[] = [
     {
         department: "고객지원본부",
         team: "SPM팀",
-        username: "최OO",
+        username: "박OO",
         employeeId: "20415072",
         position: "수석",
         email: "love@arisys.co.kr",
@@ -33,7 +67,7 @@ const UserDataTables: UserItem[] = [
         phoneLicense: "Phone Pro",
     },
     {
-        department: "고객지원본부",
+        department: "기술팀",
         team: "기술1팀",
         username: "전OO",
         employeeId: "20680414",
@@ -46,20 +80,20 @@ const UserDataTables: UserItem[] = [
 
 const ZoomPhoneDataTables: ZoomPhoneItem[] = [
     {
-        department: '고객지원본부',
-        team: '기술1팀',
+        department: '영업팀',
+        team: '영업1팀',
         username: '박OO',
         employeeId: '20019133',
         position: '사원',
         mobile: '02-2177-8151',
         pstnNumber: '•••',
-        pullNumber: '기술2팀',
+        pullNumber: '영업2팀',
         ipPhone: 'Avaya J159_308152',
         zoomLicense: 'Phone Pro',
         callRecording: '선택녹취',
     },
     {
-        department: '고객지원본부',
+        department: '기술팀',
         team: '기술2팀',
         username: '이OO',
         employeeId: '20355071',
@@ -85,8 +119,8 @@ const ZoomPhoneDataTables: ZoomPhoneItem[] = [
         callRecording: '전수녹취',
     },
     {
-        department: '고객지원본부',
-        team: '기술1팀',
+        department: '기술팀',
+        team: '기술지원팀',
         username: '전OO',
         employeeId: '20680414',
         position: '사원',
@@ -148,4 +182,4 @@ const RecordingDataTables : RecordingItem[] = [
     },
 ];
 
-export { UserDataTables, ZoomPhoneDataTables, RecordingDataTables };
+export { UsernameList, UserDataTables, ZoomPhoneDataTables, RecordingDataTables };

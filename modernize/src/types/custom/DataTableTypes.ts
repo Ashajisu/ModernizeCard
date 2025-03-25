@@ -1,3 +1,8 @@
+type searchDialogType = {
+    title: string;
+    sub: object;
+};
+
 type UserItem = {
     department: string; // 부서명
     team: string; // 팀명
@@ -5,14 +10,16 @@ type UserItem = {
     employeeId: string; // 사원번호
     position: string; // 직위
     email: string; // 메일주소
-    phone?: string; // 전화번호 (옵션)
-    mobile?: string; // 내선번호 (옵션)
-    hireDate?: string; // 입사일자
-    employmentStatus?: string; // 재직상태
-    userRole?: string; // 사용자 권한
-    activeStatus?: string; // 사용 유무
-    zoomLicense?: string; // 줌 라이센스
-    phoneLicense?: string; // 줌폰 라이센스
+    phone: string; // 전화번호 (옵션)
+    mobile: string; // 내선번호 (옵션)
+    hireDate: string; // 입사일자
+    employmentStatus: string; // 재직상태
+    userRole: string; // 사용자 권한
+    activeStatus: string; // 사용 유무
+    zoomLicense: string; // 줌 라이센스
+    phoneLicense: string; // 줌폰 라이센스
+    // 인덱스 시그니처 추가
+    [key: string]: string;
 };
 
 type ZoomPhoneItem = {
@@ -48,4 +55,4 @@ type RecordingItem = {
     id: string;         // ID (아이콘 버튼)
 }
 
-export type { UserItem, ZoomPhoneItem, RecordingItem };
+export type { searchDialogType, UserItem, ZoomPhoneItem, RecordingItem };

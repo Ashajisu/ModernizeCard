@@ -2,31 +2,31 @@
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import {searchSugg} from "@/_mockApis/headerData";
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import {RecordingDataTables} from "@/_mockApis/custom/RecordingData";
 import type {RecordingItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
+import { watchDepartmentChange } from "@/data/teamOptions";
 
 const formFields_admin = ref<FormField[]>([
-  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '부서', name: 'department', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '팀', name: 'team', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '사용자', name: 'username', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '부서', name: 'department', type: 'select', value: '', options:['기술팀', '영업팀', '고객지원본부'], view:false, required: false, disabled: false },
+  { label: '팀', name: 'team', type: 'select', value: '', options:[], view:false, required: false, disabled: false },
+  { label: '사용자', name: 'username', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '통화시작시간', name: 'startTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
-  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['국제전화', '모바일', '유선', '내선'], required: false, disabled: false },
   { label: '', name: '', type: 'none', value: '', required: false, disabled: true },
 ]);
 const formFields_user = ref<FormField[]>([
-  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '통화시작시간', name: 'startTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
-  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['국제전화', '모바일', '유선', '내선'], required: false, disabled: false },
 ]);
@@ -46,6 +46,8 @@ const headers = ref<any[]>([
   { title: '결과', align: 'end', key: 'download' },
   { title: 'ID', align: 'end', key: 'id' },
 ])
+// 부서명 변경 감지 팀명의 옵션 설정
+watchDepartmentChange(formFields_admin.value);
 
 const auth = ref<string>('admin'); //authStore 에서 받아올 예정
 /* 관리자 / 사용자 구분 */
@@ -191,7 +193,7 @@ const formatValue = (key: string, value: any) => {
                   </template>
                 </v-data-table>
 <!--              팝업 : 콜 상세정보 -->
-                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog" :item="selectedItem">
+                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog" width="500">
                   <template v-slot:inCard>
                     <div v-if="!!selectedItem">
                         <div v-for="(value, key) in selectedItem" :key="key">
