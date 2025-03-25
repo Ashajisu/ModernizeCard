@@ -72,7 +72,7 @@ const handleDialog = () => {
                     > 비밀번호를 잊어버렸나요 ?</RouterLink
                 >
             </v-col>
-          <CustomSlotDialog title="환경설정" v-model:view="viewDialog">
+          <CustomSlotDialog title="환경설정" v-model:view="viewDialog" width="">
             <template v-slot:inCard>
 
             </template>
