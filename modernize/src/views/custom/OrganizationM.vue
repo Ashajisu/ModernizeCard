@@ -29,7 +29,7 @@ const userFields = ref<FormField[]>([
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: true, disabled: false },
   { label: '직책', name: 'jobTitle', type: 'select', value: '', options: ['사원', '대리', '과장', '차장', '부장'], required: true, disabled: false },
   { label: '사용자 권한', name: 'userRole', type: 'select', value: '', options: ['사용자', '관리자', '슈퍼 관리자'], required: true, disabled: false },
-  { label: '사용유무', name: 'activeStatus', type: 'select', value: '', options: ['Y', 'N'], required: true, disabled: false }
+  { label: '사용유무', name: 'activeStatus', type: 'switch', value: true, required: true, disabled: false }
 ]);
 
 const personFields = ref<FormField[]>([
