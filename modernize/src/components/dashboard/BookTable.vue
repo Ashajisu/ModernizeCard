@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
-import { useBook } from "@/data/Book";
+import { useBook } from "@/_mockApis/custom/Book.js";
 import { router } from "@/router";
 const { error, books, getBooks  } = useBook();
 

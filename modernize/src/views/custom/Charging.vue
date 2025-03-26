@@ -3,10 +3,10 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import {RecordingDataTables} from "@/_mockApis/custom/RecordingData";
+import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
 import type {RecordingItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
-import { watchDepartmentChange } from "@/data/teamOptions";
+import { watchDepartmentChange } from "@/_mockApis/custom/teamOptions";
 
 const formFields_admin = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },

@@ -4,7 +4,7 @@ import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import {searchSugg} from "@/_mockApis/headerData";
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import {RecordingDataTables} from "@/_mockApis/custom/RecordingData";
+import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
 import type {RecordingItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomTwoSlotDialog from "@/components/custom/dialog/CustomTwoSlotDialog.vue";
@@ -92,6 +92,7 @@ const filteredList = computed(() => {
 });
 
 /* 팝업 띄우기 */
+const dialogWidth = 700;
 const viewDialog = ref<{ [key: string]: boolean }>({
   play: false,
   download: false,
@@ -152,10 +153,14 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                   </template>
                 </v-data-table>
 <!--              팝업 : -->
-                <CustomTwoSlotDialog title="청취" title-sec="텍스트" v-model:view="viewDialog.play">
+                <CustomTwoSlotDialog title="청취" title-sec="텍스트" v-model:view="viewDialog.play" :width="dialogWidth">
                     <template v-slot:top>
-                        <v-card-title class="text-subtitle-1">발신자 {{ selectedItem?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ selectedItem?.receiver}}</v-card-title>
-                          <Wave :url="selectedItem?.play"/>
+                        <v-card-title class="text-subtitle-1">
+                          발신자 {{ selectedItem?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ selectedItem?.receiver}}
+                        </v-card-title>
+                        <v-card-text>
+                            <Wave v-if="!!selectedItem?.play" :url="selectedItem?.play"/>
+                        </v-card-text>
                     </template>
                     <template v-slot:bottom>
                         <v-row>
@@ -177,11 +182,8 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                       </v-col>
                     </v-row>
                     <v-row class="align-center">
-                      <v-col cols="2">
-                      <v-btn color="primary" variant="outlined">찾기</v-btn>
-                      </v-col>
-                      <v-col cols="8">
-                      <v-text-field color="primary" variant="outlined" hide-details type="text"></v-text-field>
+                      <v-col cols="12">
+                        <v-file-input></v-file-input>
                       </v-col>
                     </v-row>
                   </template>
@@ -189,9 +191,11 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                       <v-btn color="primary" variant="flat">저장</v-btn>
                   </template>
                 </CustomSlotDialog>
-                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id" width="">
+                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id" :width="dialogWidth">
                   <template v-slot:inCard>
-                    <span> {{ JSON.stringify(selectedItem) }} </span>
+                    <div v-for="(value, key) in selectedItem" :key="key">
+                      <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
+                    </div>
                   </template>
                 </CustomSlotDialog>
               </v-row>

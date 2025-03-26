@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { createWaveSurferWithRegions } from '@/plugins/WaveSufer';
+import { createWaveSurferWithRegions } from '@/plugins/Wavesufer';
 
 // Props 정의
 const props = defineProps({
@@ -23,7 +23,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <div id="waveform" style="width: 650px; height: 150px"></div>
+        <div id="waveform" style="width: 100%; height: 150px"></div>
         <div v-if="notFound">
             <span class="text-error">음성파일을 찾을 수 없습니다</span>
         </div>
