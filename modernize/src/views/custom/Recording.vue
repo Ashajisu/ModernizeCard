@@ -177,11 +177,8 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                       </v-col>
                     </v-row>
                     <v-row class="align-center">
-                      <v-col cols="2">
-                      <v-btn color="primary" variant="outlined">찾기</v-btn>
-                      </v-col>
-                      <v-col cols="8">
-                      <v-text-field color="primary" variant="outlined" hide-details type="text"></v-text-field>
+                      <v-col cols="12">
+                        <v-file-input></v-file-input>
                       </v-col>
                     </v-row>
                   </template>
