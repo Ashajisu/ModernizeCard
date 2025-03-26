@@ -1,4 +1,4 @@
-import type {UserItem, ZoomPhoneItem, RecordingItem, searchDialogType} from '@/types/custom/DataTableTypes.ts'
+import type {UserItem, ZoomPhoneItem, RecordingItem, RecordChat, searchDialogType} from '@/types/custom/DataTableTypes.ts'
 
 const UsernameList:searchDialogType[] = [
     {
@@ -206,4 +206,55 @@ const RecordingDataTables : RecordingItem[] = [
     },
 ];
 
-export { UsernameList, UserDataTables, ZoomPhoneDataTables, RecordingDataTables };
+const RecordChatExample: RecordChat = {
+    recordingId: "31c08cb6255848b2b8630ec90c1e59e4",
+    recordingStart: "2025-03-25T01:22:58Z",
+    recordingEnd: "2025-03-25T01:23:12Z",
+    userId: "821095720921",
+    chatHistory: [
+        {
+            text: "안녕하세요.",
+            ts: "00:00:00.730",
+            end_ts: "00:00:01.900",
+            userId: "821095720921",
+            username: "821095720921"
+        },
+        {
+            text: "반갑습니다.",
+            ts: "00:00:04.990",
+            end_ts: "00:00:06.520",
+            userId: "821095720921",
+            username: "821095720921"
+        },
+        {
+            text: "무엇으 도와드릴까요?",
+            ts: "00:00:08.980",
+            end_ts: "00:00:09.750",
+            userId: "821095720921",
+            username: "821095720921"
+        },
+        {
+            text: "회의 시작했나요?",
+            ts: "00:00:10.000",
+            end_ts: "00:00:10.940",
+            userId: "8131",
+            username: "박종승"
+        },
+        {
+            text: "네, 하고 있습니다.",
+            ts: "00:00:10.970",
+            end_ts: "00:00:12.640",
+            userId: "821095720921",
+            username: "821095720921"
+        },
+        {
+            text: "감사합니다",
+            ts: "00:00:12.640",
+            end_ts: "00:00:14.720",
+            userId: "8131",
+            username: "박종승"
+        }
+    ]
+};
+
+export { UsernameList, UserDataTables, ZoomPhoneDataTables, RecordingDataTables, RecordChatExample };
