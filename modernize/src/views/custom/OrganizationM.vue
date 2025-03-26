@@ -3,8 +3,8 @@ import {computed, ref, watch} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import UiChildCard from "@/components/shared/UiChildCard.vue";
 import AppBaseCard from "@/components/shared/AppBaseCard.vue";
-import CustomPlainForm from "@/components/custom/form/CustomPlainForm.vue";
 import CustomTreeview from "@/components/custom/tree/CustomTreeview.vue";
+import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 
 // 입력 필드 목록 정의
 const groupFields = ref<FormField[]>([
@@ -90,7 +90,7 @@ watch(selectedId, (newSelectedId) => {
       <template v-slot:rightpart>
 <!--        조직 상세-->
         <UiChildCard title="조직 상세 정보" v-if="selectedId.type === 'group'">
-          <CustomPlainForm :formFields="groupFields" :colsPerRow="2" :edit="false"/>
+          <CustomSearchChecksForm :formFields="groupFields" :colsPerRow="2" :edit="false"/>
           <v-row>
             <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
               <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
@@ -104,10 +104,10 @@ watch(selectedId, (newSelectedId) => {
 <!--        사용자 상세-->
         <div v-else>
           <UiChildCard title="사용자 조직 정보">
-            <CustomPlainForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
+            <CustomSearchChecksForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
           </UiChildCard>
           <UiChildCard title="사용자 상세 정보">
-            <CustomPlainForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
+            <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
           </UiChildCard>
         </div>
       </template>
