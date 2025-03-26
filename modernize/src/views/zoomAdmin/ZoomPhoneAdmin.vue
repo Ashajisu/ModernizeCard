@@ -47,6 +47,17 @@ const restartDevice = () => {
   console.log("재시작 버튼 클릭", selectedItem.value);
 };
 
+const selectDevice = (item: ZoomPhone | null) => {
+  if (item) {
+    selectedItem.value = { ...item }; // 선택한 아이템 저장
+    button1.value = true; // 버튼 표시
+    console.log( "1 : " +  JSON.stringify(selectedItem.value));
+  } else {
+    selectedItem.value = null; // 선택 해제 시 초기화
+    button1.value = false; // 버튼 숨김
+  }
+};
+
 const headers = [
   { title: '표시', align: 'center', key: 'phoneName' },
   { title: '사용자', align: 'center', key: 'user'},
@@ -207,20 +218,22 @@ const defaultItem = ref({
   <!--    <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>-->
   <br>
   <v-card elevation="10" class="pa-5">
-    <v-card-title class="text-h4 font-weight-bold"> 줌 폰 디바이스 관리 </v-card-title>
-    <v-card-title class="text-h6 font-weight-bold">
+    <v-card-title class="text-h4 font-weight-bold mt-2"> 줌 폰 디바이스 관리</v-card-title>
+    <v-card-title class="text-h6 font-weight-bold d-flex align-items-center justify-space-between">
       줌 폰의 디바이스 관리를 할 수 있습니다.
-      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+      <div class="d-flex flex-row align-items-center">
         <v-btn color="primary" flat @click="">조회</v-btn>
-        <v-btn color="primary" variant="outlined" @click="">초기화</v-btn>
+        <v-btn color="primary" variant="outlined" class="ml-2" @click="">초기화</v-btn>
       </div>
     </v-card-title>
     <v-card-item>
       <v-row class="d-flex align-center">
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">사용자명</v-label>
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px;">사용자명</v-label>
           <v-text-field
+              density="compact"
               hide-details
+              class="mt-2"
               label="사용자명 입력"
               v-model="user"
               :rules="rules"
@@ -232,9 +245,11 @@ const defaultItem = ref({
         </v-col>
 
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">내선번호</v-label>
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px;">내선번호</v-label>
           <v-text-field
+              density="compact"
               hide-details
+              class="mt-2"
               label="내선번호 입력"
               v-model="phoneNum"
               :rules="rules"
@@ -249,9 +264,11 @@ const defaultItem = ref({
 
         <!-- 코드유형 -->
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">상태</v-label>
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px;">상태</v-label>
           <v-select
+              density="compact"
               hide-details
+              class="mt-2"
               v-model="phoneStatus"
               :items="PhoneStatus"
               required
@@ -259,13 +276,15 @@ const defaultItem = ref({
         </v-col>
 
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px; margin-left: 0px;">모델</v-label>
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px; margin-left: 0px;">모델</v-label>
           <v-text-field
               label="모델 입력"
               v-model="model"
               :rules="rules"
               required
+              density="compact"
               hide-details
+              class="mt-2"
           >
             <template v-slot:prepend-inner>
               <SearchIcon size="16"/>
@@ -274,27 +293,31 @@ const defaultItem = ref({
         </v-col>
 
         <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px; margin-left: 0px;">Mac</v-label>
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px; margin-left: 0px;">Mac</v-label>
           <v-text-field
               label="Mac 주소 입력"
               v-model="mac"
               :rules="rules"
               required
+              density="compact"
               hide-details
+              class="mt-2"
           >
             <template v-slot:prepend-inner>
               <SearchIcon size="16"/>
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="12" lg="2" class="d-flex align-center">
-          <v-label class="font-weight-semibold pb-2" style="margin-right: 8px; margin-left: 0px;">Private IP</v-label>
+        <v-col cols="12" lg="2" class="d-flex align-center ">
+          <v-label class="font-weight-semibold pb-2 mt-2" style="margin-right: 8px; margin-left: 0px;">Private IP</v-label>
           <v-text-field
               label="IP 입력"
               v-model="ip"
               :rules="rules"
               required
+              density="compact"
               hide-details
+              class="mt-2"
           >
             <template v-slot:prepend-inner>
               <SearchIcon size="16"/>
@@ -307,20 +330,6 @@ const defaultItem = ref({
 
 
   <br>
-  <!--  <v-row>
-      <v-col cols="1">
-        <v-btn block size="large" color="primary" to="/ecommerce/checkout" @click="" style="max-width: 100px; min-width: 100px;">신규등록</v-btn>
-      </v-col>
-      <v-col cols="1">
-        <v-btn block size="large" color="error" @click="" style=" max-width: 100px; min-width: 100px;">삭 제</v-btn>
-      </v-col>
-      <v-col cols="1">
-        <v-btn block size="large" color="primary" to="/ecommerce/checkout" @click="" style="max-width: 100px; min-width: 100px;">엑셀 다운로드</v-btn>
-      </v-col>
-      <v-col cols="1">
-        <v-btn block size="large" color="primary" @click="" style=" max-width: 100px; min-width: 100px;">엑셀 업로드</v-btn>
-      </v-col>
-    </v-row>-->
   <v-row>
     <!-- 왼쪽 정렬: 신규 등록, 삭제, 편집, 재시작 -->
     <v-col cols="6">
@@ -419,76 +428,6 @@ const defaultItem = ref({
             </v-card-actions>
           </v-card>
         </v-dialog>
-
-        <!--        <v-dialog v-model="dialog3" persistent class="dialog-mw">
-                  <template v-slot:activator="{ props }">
-                    <v-btn flat color="error" variant="outlined" v-bind="props"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
-                  </template>
-                  <v-card style="height: 190px; width: 470px;" class="overflow-auto">
-                    <v-container>
-                      <v-row class="mt-2" style="display: flex; justify-content: center;">
-                        <v-card-title style="font-size: 16px;">
-                          <span>선택하신 “Desk Phone 2” 디바이스가 삭제됩니다.</span>
-                          <br> <br>
-                          <span>삭제 하시겠습니까?</span>
-                        </v-card-title>
-                      </v-row>
-                      <v-row class="d-flex justify-center mt-5">
-                        <v-card-actions>
-                          <v-btn color="primary" variant="text"  @click="deleteItem" flat>
-                            확인
-                          </v-btn>
-                          <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
-                          <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
-                            취소
-                          </v-btn>
-                        </v-card-actions>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                </v-dialog>-->
-
-        <!--        <v-dialog v-model="dialog3" persistent class="dialog-mw">
-                  <template v-slot:activator="{ props }">
-                    <v-btn flat color="error" variant="outlined" v-bind="props" @click="onDeleteDialog">
-                      <v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2"/>
-                      삭제
-                    </v-btn>
-                  </template>
-                  <v-card style="height: 190px; width: 470px;" class="overflow-auto">
-                    <v-container>
-                      <v-row class="mt-2" style="display: flex; justify-content: center;">
-                        <v-card-title style="font-size: 16px;">
-                          <span>선택하신 “{{ selectedItem.phoneName }}” 디바이스가 삭제됩니다.</span>
-                          <br> <br>
-                          <span>삭제 하시겠습니까?</span>
-                        </v-card-title>
-                      </v-row>
-                      <v-row class="d-flex justify-center mt-5">
-                        <v-card-actions>
-                          <v-btn color="primary" variant="text" @click="deleteItem" flat>
-                            확인
-                          </v-btn>
-                          <v-spacer></v-spacer>
-                          <v-btn color="error" variant="text" @click="dialog3 = false" flat style="margin-right: 30px;">
-                            취소
-                          </v-btn>
-                        </v-card-actions>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                </v-dialog>
-
-                <v-dialog v-model="dialog4" class="dialog-mw" persistent>
-                  <v-card class="pa-6" style="height: 150px; width: 300px; margin: auto;">
-                    <v-card-title>
-                      <span>삭제 되었습니다.</span>
-                    </v-card-title>
-                    <v-card-actions>
-                      <v-btn color="primary" variant="text" @click="dialog4 = false; dialog3 = false;" flat> 확인 </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>-->
 
         <v-dialog v-model="dialog3" persistent class="dialog-mw">
           <template v-slot:activator="{ props }">
@@ -695,18 +634,28 @@ const defaultItem = ref({
     <v-col cols="12">
       <v-data-table class="border rounded-md text-center light scrollable-card"
                     v-model="selectedItem"
-                    :headers="headers"  :items="zoomPhone"
+                    :headers="headers"
+                    :items="zoomPhone"
                     item-key="phoneName"
                     show-select
                     return-object
                     fixed-header
-                    hide-default-footer>
-
+                    hide-default-footer
+                    :items-per-page="itemsPerPage"
+                    v-model:page="pagination"
+                    @update:modelValue="selectDevice">
         <template v-slot:bottom>
           <div class="text-center pt-2 mt-2 px-3">
-            <v-text-field :model-value="itemsPerPage" class="pa-2 mr-auto" label="페이지당 항목 수" type="number"
-                          min="-1" max="15" hide-details style="max-width: 150px;"
-                          @update:model-value="itemsPerPage = parseInt($event, 10)"></v-text-field>
+            <v-text-field
+                :model-value="itemsPerPage"
+                class="pa-2 mr-auto"
+                label="페이지당 항목 수"
+                type="number"
+                min="-1" max="15"
+                hide-details
+                style="max-width: 150px;"
+                @update:model-value="itemsPerPage = parseInt($event, 10)">
+            </v-text-field>
             <v-pagination v-model="pagination" :length="pageCount"></v-pagination>
           </div>
         </template>

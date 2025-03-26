@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 import {MenuDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
-import type { Menu } from '@/types/apps/SampleType';
+import type {Menu} from '@/types/apps/SampleType';
 
-const page = ref({ title: '메뉴 관리' });
+const page = ref({title: '메뉴 관리'});
 const headers = [
-  { title: '메인 메뉴', align: 'center', key: 'main' },
-  { title: '서브 메뉴', align: 'center', key: 'sub' },
+  {title: '메인 메뉴', align: 'center', key: 'main'},
+  {title: '서브 메뉴', align: 'center', key: 'sub'},
 ] as const;
 const headers2 = [
-  { title: '순번', align: 'center', key: 'id' },
-  { title: '메뉴 ID', align: 'center', key: 'menuid' },
-  { title: '메뉴명', align: 'center', key: 'main' },
-  { title: 'URL', align: 'center', key: 'url' },
-  { title: '메뉴표시', align: 'center', key: 'sub' },
-  { title: '이미지 파일명', align: 'center', key: 'imagename' },
-  { title: '정렬', align: 'center', key: 'sortid' },
+  {title: '순번', align: 'center', key: 'id'},
+  {title: '메뉴 ID', align: 'center', key: 'menuid'},
+  {title: '메뉴명', align: 'center', key: 'main'},
+  {title: 'URL', align: 'center', key: 'url'},
+  {title: '메뉴표시', align: 'center', key: 'sub'},
+  {title: '이미지 파일명', align: 'center', key: 'imagename'},
+  {title: '정렬', align: 'center', key: 'sortid'},
 ] as const;
 
 const status = ref("");
@@ -28,7 +28,7 @@ const rules = ref([
 
 const selectedItems = ref<Menu[]>([]);
 const leftTableData = ref(MenuDatatables);
-const itemsPerPage = ref(3);
+const itemsPerPage = ref(6);
 const pagination = ref(1);
 const pageCount = Math.ceil(MenuDatatables.length / itemsPerPage.value);
 const rightUpTableData = ref<Menu[]>([
@@ -54,16 +54,16 @@ const rightUpTableData = ref<Menu[]>([
   },
 ]);
 const rightDownTableData = ref<Menu[]>([
-/*  {
-    main: 'E-Commerce',
-    sub: 'AddProduct3',
-    selectable:false,
-  },
-  {
-    main: 'E-Commerce',
-    sub: 'EditProduct3',
-    selectable:true,
-  },*/
+  /*  {
+      main: 'E-Commerce',
+      sub: 'AddProduct3',
+      selectable:false,
+    },
+    {
+      main: 'E-Commerce',
+      sub: 'EditProduct3',
+      selectable:true,
+    },*/
   {
     main: '환경설정',
     sub: '메뉴 관리',
@@ -94,8 +94,7 @@ function moveDataToRight() {
     rightUpTableData.value.push(...selectedItems.value);
     leftTableData.value = leftTableData.value.filter(item => !selectedItems.value.includes(item));
     selectedItems.value = [];  // 선택 영역 초기화
-  }
-  else{
+  } else {
     console.log("selectedItems is empty");
   }
 }
@@ -108,8 +107,7 @@ function moveDataToLeft() {
     leftTableData.value.push(...selectedItems.value);
     rightUpTableData.value = rightUpTableData.value.filter(item => !selectedItems.value.includes(item));
     selectedItems.value = [];  // 선택 영역 초기화
-  }
-  else{
+  } else {
     console.log("selectedItems is empty");
   }
 }
@@ -122,8 +120,7 @@ function moveDownDataToRight() {
     rightDownTableData.value.push(...selectedItems.value);
     leftTableData.value = leftTableData.value.filter(item => !selectedItems.value.includes(item));
     selectedItems.value = [];  // 선택 영역 초기화
-  }
-  else{
+  } else {
     console.log("selectedItems is empty");
   }
 }
@@ -136,29 +133,44 @@ function moveDownDataToLeft() {
     leftTableData.value.push(...selectedItems.value);
     rightDownTableData.value = rightDownTableData.value.filter(item => !selectedItems.value.includes(item));
     selectedItems.value = [];  // 선택 영역 초기화
-  }
-  else{
+  } else {
     console.log("selectedItems is empty");
   }
 }
-
-
-const menuData = ref({
-  menuid: "MENU001",
-  menuname: "E-Commerce",
-  parent: "shop",
-  menulevel: "1",
-  image: "sortid.png",
-  url: "apps/menu",
-  lastModified: "2025-03-12",
-  lastuser: "홍길동",
-  description: "테스트 메뉴입니다.",
-});
-
 const saveChanges = () => {
-  console.log("변경된 데이터:", menuData.value);
+  console.log("데이터:", menuData.value);
 };
 
+const cancleChanges = () => {
+  menuData.value=null;
+  isCardVisible.value = false;
+};
+
+const deleteChanges = () => {
+  menuData.value=null;
+  isCardVisible.value = false;
+};
+
+
+const isCardVisible = ref(false);  // 카드 표시 여부 상태
+const menuData = ref<Menu | null>(null);
+
+function selectMenu(item: any) {
+  console.log("선택된 메뉴 데이터:", item);
+  menuData.value = {
+    id: item.id || "",
+    menuid: item.menuid || "",
+    main: item.main || "",
+    url: item.url || "",
+    sub: item.sub || "",
+    imagename: item.imagename || "",
+    sortid: item.sortid || "",
+    selectable: item.selectable ?? false,
+  };
+
+  // 메뉴가 선택될 때 카드 표시
+  isCardVisible.value = true;
+}
 </script>
 
 <style scoped lang="scss">
@@ -222,7 +234,6 @@ const saveChanges = () => {
   </v-card>
 
 
-
   <br>
   <v-card class="mt-5 mb-3" elevation="0" style="max-width: 100%; margin-right: 0;">
     <v-row style="width: 100%; padding: 0;" align="center" justify="center">
@@ -237,7 +248,7 @@ const saveChanges = () => {
             fixed-header
             :headers="headers"
             :items="leftTableData"
-            item-key="main"
+            item-key="main" W
             :sort-by="[{ key: 'main', order: 'asc' }]"
             :items-per-page="30"
         >
@@ -291,6 +302,7 @@ const saveChanges = () => {
             v-model="selectedItems"
             return-object
             hide-default-footer
+            fixed-header
             :headers="headers"
             :items="rightDownTableData"
             item-key="main"
@@ -313,7 +325,10 @@ const saveChanges = () => {
                       fixed-header
                       :headers="headers2"
                       :items="MenuDatatables"
-                      :sort-by="[{ key: 'id', order: 'asc' }]">
+                      :items-per-page="itemsPerPage"
+                      v-model:page="pagination"
+                      :sort-by="[{ key: 'id', order: 'asc' }]"
+                      @click:row="(event: Event, item: any) => selectMenu(item.item)">
           <template v-slot:bottom>
             <div class="text-center pt-2 mb-3 px-3">
               <v-pagination v-model="pagination" :length="pageCount"></v-pagination>
@@ -324,95 +339,89 @@ const saveChanges = () => {
     </v-row>
   </v-card>
 
-
   <br>
-  <v-row>
-    <v-col cols="12">
-      <h5>※ 메뉴 정보</h5>
-      <v-container class="mt-5">
-        <v-card elevation="4" class="pa-5" max-width="800px" width="100%">
-          <v-card-title class="text-h6">메뉴 수정</v-card-title>
-          <v-divider class="mb-4"></v-divider>
+  <v-card title="※ 메뉴 정보" v-if="menuData"  v-show="isCardVisible" class="mt-5">
+    <v-container>
+<!--      <v-card elevation="0" class="pa-5" max-width="800px" width="100%">-->
+        <v-card-title class="text-h6">메뉴 수정</v-card-title>
+        <v-divider class="mb-4"></v-divider>
 
-          <v-row class="mb-3">
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">메뉴ID</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.menuid" variant="outlined" dense hide-details></v-text-field>
-            </v-col>
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">메뉴명</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.menuname" variant="outlined" dense hide-details readonly></v-text-field>
-            </v-col>
-          </v-row>
+        <v-row class="mb-3">
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">메뉴ID</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.id" variant="outlined" dense hide-details></v-text-field>
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">메뉴명</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.sub" variant="outlined" dense hide-details readonly></v-text-field>
+          </v-col>
+        </v-row>
 
-          <v-row class="mb-3">
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">상위 메뉴</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.parent" variant="outlined" dense hide-details></v-text-field>
-            </v-col>
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">메뉴레벨</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.menulevel" variant="outlined" dense hide-details readonly></v-text-field>
-            </v-col>
-          </v-row>
+        <v-row class="mb-3">
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">상위 메뉴</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.main" variant="outlined" dense hide-details></v-text-field>
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">메뉴레벨</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.sortid" variant="outlined" dense hide-details readonly></v-text-field>
+          </v-col>
+        </v-row>
 
-          <v-row class="mb-3">
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">이미지 파일명</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.image" variant="outlined" dense hide-details></v-text-field>
-            </v-col>
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">URL</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.url" variant="outlined" dense hide-details readonly></v-text-field>
-            </v-col>
-          </v-row>
+        <v-row class="mb-3">
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">이미지 파일명</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.imagename" variant="outlined" dense hide-details></v-text-field>
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">URL</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="menuData.url" variant="outlined" dense hide-details readonly></v-text-field>
+          </v-col>
+        </v-row>
 
-          <v-row class="mb-3">
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">내용</v-label>
-            </v-col>
-            <v-col cols="10">
-              <v-textarea v-model="menuData.description" variant="outlined" dense hide-details></v-textarea>
-            </v-col>
-          </v-row>
+        <v-row class="mb-3">
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">내용</v-label>
+          </v-col>
+          <v-col cols="10">
+            <v-textarea variant="outlined" dense hide-details></v-textarea>
+          </v-col>
+        </v-row>
 
-          <v-row class="mb-3">
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">최종변경일자</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.lastModified" type="date" variant="outlined" dense hide-details></v-text-field>
-            </v-col>
-            <v-col cols="2" class="d-flex align-center justify-center">
-              <v-label class="font-weight-medium">최종변경자</v-label>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field v-model="menuData.lastuser" variant="outlined" dense hide-details readonly></v-text-field>
-            </v-col>
-          </v-row>
+        <v-row class="mb-3">
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">최종변경일자</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field dense hide-details></v-text-field>
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-label class="font-weight-medium">최종변경자</v-label>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field variant="outlined" dense hide-details readonly></v-text-field>
+          </v-col>
+        </v-row>
 
-          <v-row justify="center" class="mt-4">
-            <v-btn color="primary" class="mx-2" @click="saveChanges">등록</v-btn>
-            <v-btn color="error" class="mx-2" @click="saveChanges">삭제</v-btn>
-            <v-btn color="warning" class="mx-2" @click="saveChanges">취소</v-btn>
-            <v-btn color="info" class="mx-2" @click="saveChanges">저장</v-btn>
-          </v-row>
-        </v-card>
-      </v-container>
-    </v-col>
-  </v-row>
-
-
+        <v-row justify="center" class="mt-4">
+          <v-btn color="primary" class="mx-2" @click="saveChanges">등록</v-btn>
+          <v-btn color="error" class="mx-2" @click="deleteChanges">삭제</v-btn>
+          <v-btn color="warning" class="mx-2" @click="cancleChanges">취소</v-btn>
+          <v-btn color="info" class="mx-2" @click="saveChanges">저장</v-btn>
+        </v-row>
+<!--      </v-card>-->
+    </v-container>
+  </v-card>
 </template>
