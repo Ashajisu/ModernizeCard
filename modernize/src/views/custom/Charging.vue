@@ -132,8 +132,7 @@ const handleDialog = () => {
 }
 /* 복사 */
 function copyToClipboard(item : any) {
-  const jsonString = JSON.stringify(item);
-  navigator.clipboard.writeText(jsonString)
+  navigator.clipboard.writeText(item)
       .then(() => {
         alert('클립보드에 복사되었습니다!');
       })
@@ -141,24 +140,6 @@ function copyToClipboard(item : any) {
         alert('복사 실패: ' + err);
       });
 }
-/* 출력포멧 */
-// key를 포맷하는 함수 (첫 문자 대문자화)
-const formatKey = (key: string) => {
-  return key
-      .replace(/([A-Z])/g, ' $1') // CamelCase로 되어 있는 경우 공백 추가
-      .replace(/^./, str => str.toUpperCase()); // 첫 문자 대문자화
-};
-
-// 특정 키에 대한 값 포맷 (예: 날짜 포맷 변환)
-const formatValue = (key: string, value: any) => {
-  if (key === 'startTime' || key === 'endTime') {
-    return value ? value.replace('T', ' ').slice(0, 16) : ''; // 날짜 형식 변환
-  }
-  if (key === 'duration') {
-    return value; // 통화 시간 그대로 표시
-  }
-  return value;
-};
 
 </script>
 <template>
@@ -197,8 +178,8 @@ const formatValue = (key: string, value: any) => {
                   <template v-slot:inCard>
                     <div v-if="!!selectedItem">
                         <div v-for="(value, key) in selectedItem" :key="key">
-                          <span>{{ formatKey(key) }} : {{ formatValue(key, value) }}</span>
-                          <v-btn color="primary" variant="plain" @click="copyToClipboard(formatValue(key, value))" >복사</v-btn>
+                          <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
+                          <v-btn color="primary" variant="plain" @click="copyToClipboard(value)" >복사</v-btn>
                         </div>
                     </div>
                   </template>
