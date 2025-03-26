@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, nextTick, onMounted, ref} from 'vue';
-import {ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
+import {MenuDatatables, ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
 import {SearchIcon} from 'vue-tabler-icons';
 import type { ZoomPhone } from '@/types/apps/SampleType';
 
@@ -47,15 +47,35 @@ const restartDevice = () => {
   console.log("재시작 버튼 클릭", selectedItem.value);
 };
 
-const selectDevice = (item: ZoomPhone | null) => {
-  if (item) {
-    selectedItem.value = { ...item }; // 선택한 아이템 저장
-    button1.value = true; // 버튼 표시
-    console.log( "1 : " +  JSON.stringify(selectedItem.value));
-  } else {
-    selectedItem.value = null; // 선택 해제 시 초기화
-    button1.value = false; // 버튼 숨김
+const selectDevice = (item: ZoomPhone | null | ZoomPhone[]) => {
+  console.log("item : " + JSON.stringify(item));
+
+  // 배열일 경우 첫 번째 요소만 선택
+  if (Array.isArray(item)) {
+    item = item.length > 0 ? item[0] : null;
   }
+
+  // 현재 선택된 값과 동일하면 선택 해제
+  if (JSON.stringify(modifytItem.value) === JSON.stringify(item)) {
+    modifytItem.value = null;
+    button1.value = false; // 선택 해제 시 버튼 숨김
+    console.log("button1.value : " + button1.value);
+    return;
+  }
+
+  // item이 null이거나 빈 배열일 경우 초기화
+  if (!item) {
+    modifytItem.value = null;
+    button1.value = false;
+    console.log("button1.value : " + button1.value);
+    return;
+  }
+
+  // 새로운 아이템 선택
+  modifytItem.value = { ...item };
+  button1.value = true;
+  console.log("modifytItem 2 : " + JSON.stringify(modifytItem.value));
+  console.log("button1.value : " + button1.value);
 };
 
 const headers = [
@@ -76,38 +96,8 @@ const pagination = ref(1);
 const pageCount = Math.ceil(ZoomPhoneDatatables.length / itemsPerPage.value)
 const PhoneStatus = ref(['Online','Offline']);
 
-// const selectedItem = ref({
-//   phoneName: "",
-//   user: "",
-//   phoneNum: "",
-//   pstnNum: "",
-//   phoneStatus: "",
-//   model: "",
-//   macAddress: "",
-//   firmware: "",
-//   publicAddress: "",
-//   privateAddress: ""
-// })
-
 const selectedItem = ref<ZoomPhone | null>(null);
-
-const addDevice = ref<{
-  phoneName: string;
-  user: string;
-  phoneNum: string;
-  pstnNum: string;
-  phoneStatus: string;
-  model: string;
-  macAddress: string;
-  firmware: string;
-  publicAddress: string;
-  privateAddress: string;
-}| null>(null);
-
-//
-// function createZoomPhone(){
-//   addDevice.phoneName = dialog1;
-// }
+const modifytItem = ref<ZoomPhone | null>(null);
 
 const makeExcelFile4 = () => {
   let tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
@@ -643,6 +633,7 @@ const defaultItem = ref({
                     hide-default-footer
                     :items-per-page="itemsPerPage"
                     v-model:page="pagination"
+                    @click:row="selectDevice"
                     @update:modelValue="selectDevice">
         <template v-slot:bottom>
           <div class="text-center pt-2 mt-2 px-3">
