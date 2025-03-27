@@ -14,7 +14,7 @@ type Code = {
     codename: string;
     maincode: string;
     etccode1: string;
-    etrcode2: string;
+    etccode2: string;
     changecode: string;
     usingcode: string;
 };
