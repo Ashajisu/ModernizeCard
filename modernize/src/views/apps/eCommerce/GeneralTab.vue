@@ -294,19 +294,17 @@ watch(selectedItem, (newValue) => {
 
 
 <template>
-  <!--    <div class="pa-1">-->
-  <!-- General -->
-  <v-card elevation="10" class="mb-1">
-    <v-card-title class="text-h4 font-weight-bold"> 당겨받기 관리 </v-card-title>
-    <v-card-title class="text-h6 font-weight-bold">줌 폰 시스템에서 당겨받기 그룹 및 구성원 관리를 할 수 있습니다.</v-card-title>
+  <br>
+  <v-card elevation="10" class="pa-5">
+    <v-card-title class="text-h4 font-weight-bold mt-2"> 당겨받기 관리</v-card-title>
+    <v-card-title class="text-h6 font-weight-bold d-flex align-items-center justify-space-between">
+      줌 폰 시스템에서 당겨받기 그룹 및 구성원 관리를 할 수 있습니다.
+      <div class="d-flex flex-row align-items-center">
+        <v-btn color="primary" flat @click="searchGroups">조회</v-btn>
+        <v-btn color="primary" variant="outlined" class="ml-2" @click="">초기화</v-btn>
+      </div>
+    </v-card-title>
     <v-card-item>
-      <!--      <h5 class="text-h5 mb-7">당겨받기 그룹 리스트</h5>-->
-
-      <v-row>
-        <v-col cols="auto" class="ml-auto">
-          <v-btn color="primary" @click="searchGroups">조회</v-btn>
-        </v-col>
-      </v-row>
       <v-row class="d-flex align-center">
         <v-col cols="12" lg="3" class="d-flex align-center">
           <v-label class="font-weight-semibold pb-2" style="margin-right: 8px;">당겨받기 그룹</v-label>
@@ -361,19 +359,26 @@ watch(selectedItem, (newValue) => {
   <br>
   <v-row>
     <v-col cols="auto">
-      <v-btn block size="large" color="primary" @click="newGroupDialog = true" style="max-width: 100px; min-width: 100px;">+ 신규등록</v-btn>
+<!--      <v-btn block size="large" color="primary" @click="newGroupDialog = true" style="max-width: 100px; min-width: 100px;">+ 신규등록</v-btn>-->
+      <v-btn flat color="primary" variant="outlined" @click="newGroupDialog = true"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
     </v-col>
     <v-col cols="auto">
-      <v-btn block size="large" color="error" @click="deleteGroup" style="max-width: 100px; min-width: 100px; margin-left: -10px;">- 삭 제</v-btn>
+<!--      <v-btn block size="large" color="error" @click="deleteGroup" style="max-width: 100px; min-width: 100px; margin-left: -10px;">- 삭 제</v-btn>-->
+      <v-btn flat color="error" variant="outlined" v-bind="props" @click="deleteGroup">
+        <v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2"/>
+        삭제
+      </v-btn>
     </v-col>
 
     <!-- 오른쪽 정렬: 엑셀 다운로드, 엑셀 업로드 -->
     <v-spacer></v-spacer>
     <v-col cols="auto">
-      <v-btn block size="large" color="primary" @click="downloadExcel" style="max-width: 100px; min-width: 100px; margin-right: -10px;">엑셀 다운로드</v-btn>
+<!--      <v-btn block size="large" color="primary" @click="downloadExcel" style="max-width: 100px; min-width: 100px; margin-right: -10px;">엑셀 다운로드</v-btn>-->
+      <v-btn color="grey" variant="outlined" @click="downloadExcel">엑셀 다운로드</v-btn>
     </v-col>
     <v-col cols="auto">
-      <v-btn block size="large" color="primary" @click="uploadExcel" style="max-width: 100px; min-width: 100px;">엑셀 업로드</v-btn>
+<!--      <v-btn block size="large" color="primary" @click="uploadExcel" style="max-width: 100px; min-width: 100px;">엑셀 업로드</v-btn>-->
+      <v-btn color="grey" variant="outlined" @click="uploadExcel">엑셀 업로드</v-btn>
     </v-col>
   </v-row>
 
