@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import {computed, nextTick, onMounted, ref} from 'vue';
-import {MenuDatatables, ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
-import {SearchIcon} from 'vue-tabler-icons';
+import {computed, onMounted, ref} from 'vue';
+import {ZoomPhoneDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
+import {SearchIcon, ArrowBigDownFilledIcon, ArrowBigUpFilledIcon} from 'vue-tabler-icons';
 import type { ZoomPhone } from '@/types/apps/SampleType';
-
 import { useContactStore } from '@/stores/apps/contact';
-import contact from "@/_mockApis/apps/contact";
 
 const store = useContactStore();
+
+const TriangleUpComponent = ArrowBigUpFilledIcon;
+const TriangleDownComponent = ArrowBigDownFilledIcon;
 
 onMounted(() => {
   store.fetchContacts();
@@ -631,6 +632,8 @@ const defaultItem = ref({
                     return-object
                     fixed-header
                     hide-default-footer
+                    :sort-asc-icon="TriangleUpComponent"
+                    :sort-desc-icon="TriangleDownComponent"
                     :items-per-page="itemsPerPage"
                     v-model:page="pagination"
                     @click:row="selectDevice"
@@ -639,7 +642,7 @@ const defaultItem = ref({
           <div class="text-center pt-2 mt-2 px-3">
             <v-text-field
                 :model-value="itemsPerPage"
-                class="pa-2 mr-auto"
+                class="pa-2 mr-auto elevation-1"
                 label="페이지당 항목 수"
                 type="number"
                 min="-1" max="15"
