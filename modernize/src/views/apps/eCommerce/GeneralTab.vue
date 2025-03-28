@@ -2,15 +2,57 @@
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import { GroupDatatables} from '@/_mockApis/components/datatable/GroupTable';
 import StarterKit from '@tiptap/starter-kit';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { SearchIcon} from 'vue-tabler-icons';
-import { watch } from 'vue';
+import axios from 'axios';
 
-const editor = useEditor({
-  extensions: [StarterKit]
-});
+const downloadExcel = async () => {
+  try {
+    const response = await axios({
+      url: 'http://localhost:5173/api/excel/download',
+      method: 'GET',
+      responseType: 'blob'
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'group_data.xlsx');
+    document.body.appendChild(link);
+    link.click();
+  }catch(error){
+    console.error("엑셀 다운로드 실패:", error);
+  }
+};
+
+const selectedFile = ref(null);
+
+const uploadExcel = async () => {
+  if(!selectedFile.value){
+    alert("파일을 선택하세요.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", selectedFile.value);
+
+  try{
+    const response = await axios.post("http://localhost:5173/api/excel/upload", formData, {
+      headers: {"Content-Type" : "multipart/form-data"}
+    });
+
+    console.log("업로드 성공 : ", response.data);
+    alert("엑셀 업로드 성공!");
+  } catch(error){
+    console.error("엑셀 업로드 실패 : ", error);
+    alert("엑셀 업로드 실패!");
+  }
+}
+
+const editor = useEditor({extensions: [StarterKit]});
 const discount = ref('no-discount');
 const select = ref('Select an option');
+
 
 //그룹 추가
 const newGroupDialog = ref(false);
@@ -19,6 +61,11 @@ const deleteSuccessDialog = ref(false);
 const saveSuccessDialog = ref(false);
 const manageDialog = ref(false);
 const userSearchTerm = ref('');
+const userExtensionSearchTerm = ref('');
+const groupSearchTerm = ref('');
+const extensionSearchTerm = ref('');
+
+
 
 const userList = ref([
   {id : 1, name: '박OO', extension: '101', group: '경영지원팀'},
@@ -51,6 +98,20 @@ const filteredUserList = computed(() => {
   });
 })
 
+const filteredGroups = computed(() => {
+  return props.GroupDatatables.filter((group : Group) => {
+    const matchesGroup = group.group.includes(groupSearchTerm.value);
+    const matchesExtension = group.groupExtensionNumber.includes(extensionSearchTerm.value);
+    const matchesUser = group.group.includes(userSearchTerm.value);
+    const matchesUserExtension = group.groupNumbers.includes(userExtensionSearchTerm.value);
+
+    return matchesGroup && matchesExtension && matchesUser && matchesUserExtension;
+  });
+});
+
+const searchGroups = () => {
+
+};
 
 // new 그룹 추가 시 필요한 데이터
 const newGroupData = ref({
@@ -62,9 +123,7 @@ const newGroupData = ref({
 })
 
 //부서 목록
-const departments = ref([
-  "경영지원부", "영업본부", "고객지원본부", "개발연구소"
-]);
+const departments = ref(["경영지원부", "영업본부", "고객지원본부", "개발연구소" ]);
 
 interface Group {
   group: string;
@@ -155,7 +214,7 @@ const headers = [
 
 const itemsPerPage = ref(3);
 const pagination = ref(1);
-const PhoneStatus = ref(['Online','Offline']);
+// const PhoneStatus = ref(['Online','Offline']);
 const selectedItem = ref([]);
 const deleteGroupData = ref(null);
 
@@ -195,6 +254,8 @@ const showDetails = () => {
   }
 };
 
+
+
 /// "편집" 버튼 클릭 시 모달 오픈
 const editGroup = () => {
   if (selectedGroup.value) {
@@ -225,9 +286,7 @@ const saveEdit = () => {
 };
 
 watch(selectedItem, (newValue) => {
-  if (!newValue || newValue.length !== 1) {
-    selectedGroup.value = null                  //체크박스 해제 시 숨김처리
-  }
+  selectedGroup.value = newValue.length ===1 ? newValue[0] : null;
 });
 
 
@@ -237,18 +296,15 @@ watch(selectedItem, (newValue) => {
 <template>
   <!--    <div class="pa-1">-->
   <!-- General -->
-  <v-card elevation="10" class="pa-5">
+  <v-card elevation="10" class="mb-1">
     <v-card-title class="text-h4 font-weight-bold"> 당겨받기 관리 </v-card-title>
     <v-card-title class="text-h6 font-weight-bold">줌 폰 시스템에서 당겨받기 그룹 및 구성원 관리를 할 수 있습니다.</v-card-title>
     <v-card-item>
       <!--      <h5 class="text-h5 mb-7">당겨받기 그룹 리스트</h5>-->
 
       <v-row>
-        <v-col>
-          <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-            <v-btn color="primary" flat @click="editGroup">조회</v-btn>
-            <v-btn color="primary" variant="outlined" @click="">초기화</v-btn>
-          </div>
+        <v-col cols="auto" class="ml-auto">
+          <v-btn color="primary" @click="searchGroups">조회</v-btn>
         </v-col>
       </v-row>
       <v-row class="d-flex align-center">
@@ -304,17 +360,20 @@ watch(selectedItem, (newValue) => {
   <br>
   <br>
   <v-row>
-    <v-col>
-      <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-        <v-btn flat color="primary" variant="outlined"  @click="newGroupDialog = true"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
-        <v-btn flat color="error" variant="outlined" @click="deleteGroup"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
-      </div>
+    <v-col cols="auto">
+      <v-btn block size="large" color="primary" @click="newGroupDialog = true" style="max-width: 100px; min-width: 100px;">+ 신규등록</v-btn>
     </v-col>
-    <v-col>
-      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-        <v-btn color="grey" variant="outlined" to="/ecommerce/checkout">엑셀 다운로드</v-btn>
-        <v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
-      </div>
+    <v-col cols="auto">
+      <v-btn block size="large" color="error" @click="deleteGroup" style="max-width: 100px; min-width: 100px; margin-left: -10px;">- 삭 제</v-btn>
+    </v-col>
+
+    <!-- 오른쪽 정렬: 엑셀 다운로드, 엑셀 업로드 -->
+    <v-spacer></v-spacer>
+    <v-col cols="auto">
+      <v-btn block size="large" color="primary" @click="downloadExcel" style="max-width: 100px; min-width: 100px; margin-right: -10px;">엑셀 다운로드</v-btn>
+    </v-col>
+    <v-col cols="auto">
+      <v-btn block size="large" color="primary" @click="uploadExcel" style="max-width: 100px; min-width: 100px;">엑셀 업로드</v-btn>
     </v-col>
   </v-row>
 
@@ -401,8 +460,9 @@ watch(selectedItem, (newValue) => {
   <v-row>
     <v-col cols="12">
       <v-data-table class="border rounded-md text-center light scrollable-card"
-                    v-model="selectedItem"
-                    :headers="headers"  :items="GroupDatatables"
+                    v-model =  "selectedItem"
+                    :headers="headers"
+                    :items="GroupDatatables"
                     show-select
                     return-object
                     hide-default-footer
@@ -548,7 +608,5 @@ watch(selectedItem, (newValue) => {
       </v-dialog>
     </v-col>
   </v-row>
-
-
-  <!--    </div>-->
 </template>
+
