@@ -27,6 +27,7 @@ const dialog6 = ref(false);
 const dialog7 = ref(false);
 const dialog8 = ref(false);
 const dialog9 = ref(false);
+const dialogUpload = ref(false);
 const user = ref();
 const phoneNum = ref();
 const phoneStatus = ref();
@@ -147,6 +148,20 @@ const onDeleteDialog = () => {
     alert('항목을 선택하세요!'); // 항목을 선택하지 않으면 메시지 표시
   }
 };
+
+
+const excelUpload = () => {
+  dialogUpload.value = true;
+}
+
+
+const excelUploadStart = () => {
+  dialogUpload.value = false;
+}
+
+const excelUploadCancle = () => {
+  dialogUpload.value = false;
+}
 
 function deleteItem(item: any) {
   if (!item || Object.keys(item).length === 0) {
@@ -617,7 +632,29 @@ const defaultItem = ref({
     <v-col cols="6">
       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
         <v-btn color="grey" variant="outlined" @click="makeExcelFile4">엑셀 다운로드</v-btn>
-        <v-btn color="grey" variant="outlined" @click="makeExcelFile4">엑셀 업로드</v-btn>
+        <v-btn color="grey" variant="outlined" @click="excelUpload">엑셀 업로드</v-btn>
+        <v-dialog v-model="dialogUpload" class="dialog-mw" persistent>
+          <v-card class="pa-6" style="height: 250px; width: 400px; margin: auto;">
+            <v-card-title>
+              <span>엑셀 업로드</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-container>
+                <v-file-input
+                    label="엑셀 파일을 선택하세요"
+                    accept=".xlsx, .xls"
+                    dense
+                    style="width: 100%;"
+                ></v-file-input>
+              </v-container>
+            </v-card-actions>
+            <!-- 버튼을 flex로 나란히 정렬 -->
+            <v-row class="d-flex gap-4 justify-center">
+              <v-btn color="primary" variant="outlined" @click="excelUploadStart" class="mr-2">업로드</v-btn>
+              <v-btn color="error" variant="outlined" @click="excelUploadCancle">취소</v-btn>
+            </v-row>
+          </v-card>
+        </v-dialog>
       </div>
     </v-col>
   </v-row>
