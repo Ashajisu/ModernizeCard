@@ -2,19 +2,19 @@
 import {computed, ref, watch} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import UiChildCard from "@/components/shared/UiChildCard.vue";
-import AppBaseCard from "@/components/shared/AppBaseCard.vue";
+import CustomAppBaseCard from "@/components/custom/shared/CustomAppBaseCard.vue";
 import CustomTreeview from "@/components/custom/tree/CustomTreeview.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 
 // 입력 필드 목록 정의
 const groupFields = ref<FormField[]>([
-  { label: '조직명', name: 'dept1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
-  { label: '상위조직명', name: 'dept2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
-  { label: '조직코드', name: 'deptcode1', type: 'text', value: '', placeholder: '', required: true, disabled: true },
-  { label: '상위조직코드', name: 'deptcode2', type: 'text', value: '', placeholder: '', required: true, disabled: true },
+  { label: '조직명', name: 'dept1', type: 'text', value: '', placeholder: '', required: false, disabled: true },
+  { label: '상위조직명', name: 'dept2', type: 'text', value: '', placeholder: '', required: false, disabled: true },
+  { label: '조직코드', name: 'deptcode1', type: 'text', value: '', placeholder: '', required: false, disabled: true },
+  { label: '상위조직코드', name: 'deptcode2', type: 'text', value: '', placeholder: '', required: false, disabled: true },
   { label: '조직레벨', name: 'deptlevel', type: 'text', value: '', placeholder: '', required: true, disabled: false },
   { label: '정렬순서', name: 'asc', type: 'number', value: '', placeholder: '', required: true, disabled: false },
-  { label: '사용여부', name: 'activeStatus', type: 'check', value: false, required: true, disabled: false },
+  { label: '사용여부', name: 'activeStatus', type: 'switch', value: false, required: true, disabled: false },
 ]);
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '땡땡땡', placeholder: '이름 입력', required: true, disabled: true },
@@ -82,42 +82,44 @@ watch(selectedId, (newSelectedId) => {
 </script>
 
 <template>
-  <v-card elevation="10">
-    <AppBaseCard>
-      <template v-slot:leftpart>
-        <CustomTreeview v-model:selectedId="selectedId"/>
+  <div>
+    <CustomAppBaseCard>
+      <template v-slot:leftpart >
+          <CustomTreeview v-model:selectedId="selectedId"/>
       </template>
       <template v-slot:rightpart>
 <!--        조직 상세-->
-        <UiChildCard title="조직 상세 정보" v-if="selectedId.type === 'group'">
-          <CustomSearchChecksForm :formFields="groupFields" :colsPerRow="2" :edit="false"/>
-          <v-row>
-            <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
-              <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
-            </v-col>
-            <v-col cols="12" sm="9" offset-sm="10" v-else>
-              <v-btn color="primary" flat @click="onSave()">저장</v-btn>
-              <v-btn color="primary" flat @click="handleEdit(false)">취소</v-btn>
-            </v-col>
-          </v-row>
-        </UiChildCard>
+        <div v-if="selectedId.type === 'group'">
+          <UiChildCard title="조직 상세 정보" variant="">
+            <CustomSearchChecksForm :formFields="groupFields" :colsPerRow="2" :edit="edit"/>
+            <v-row>
+              <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
+                <v-btn color="primary" flat @click="handleEdit(true)">수정</v-btn>
+              </v-col>
+              <v-col cols="12" sm="9" offset-sm="10" v-else>
+                <v-btn color="primary" flat @click="onSave()">저장</v-btn>
+                <v-btn color="primary" flat @click="handleEdit(false)">취소</v-btn>
+              </v-col>
+            </v-row>
+          </UiChildCard>
+        </div>
 <!--        사용자 상세-->
         <div v-else>
-          <UiChildCard title="사용자 조직 정보">
+          <UiChildCard title="사용자 조직 정보" variant="">
             <CustomSearchChecksForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
           </UiChildCard>
-          <UiChildCard title="사용자 상세 정보">
+          <UiChildCard title="사용자 상세 정보" variant="" class="border-t-sm">
             <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
           </UiChildCard>
         </div>
       </template>
-      <template v-slot:mobileLeftContent>
-        <v-sheet>
-          <CustomTreeview/>
-        </v-sheet>
-      </template>
-    </AppBaseCard>
-  </v-card>
+<!--      <template v-slot:mobileLeftContent>-->
+<!--        <v-sheet>-->
+<!--          <CustomTreeview v-model:selectedId="selectedId"/>-->
+<!--        </v-sheet>-->
+<!--      </template>-->
+    </CustomAppBaseCard>
+  </div>
 </template>
 
 <style scoped lang="scss">
