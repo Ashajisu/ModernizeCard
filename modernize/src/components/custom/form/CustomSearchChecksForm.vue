@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
-import {computed} from "vue";
-import CustomDialog from "@/components/custom/dialog/CustomSearchDialog.vue";
+import {computed, ref} from "vue";
+import CustomDialog from "@/components/custom/dialog/CustomSearchsDialog.vue";
 
 const props = defineProps<{
   formFields: FormField[];
@@ -17,6 +17,8 @@ const openSearchDialog = (field : FormField) => {
   if(isEditable.value){ field.view = true; }
   // console.log('done', isEditable.value, field.view); //두 값이 항상 같아야 함.
 };
+
+const emit = defineEmits(["update:view", "update:selectedValue"]);
 
 </script>
 <!-- 다중 체크박스를 지원 -->
@@ -39,7 +41,7 @@ const openSearchDialog = (field : FormField) => {
                 </span>
               </template>
             </v-select>
-            <v-text-field v-else-if="field.type === 'search'"
+            <v-text-field v-else-if="(field.type === 'search' || field.type === 'search_list')"
                           v-model="field.value"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
                           :readonly="!isEditable || field.disabled"
@@ -53,8 +55,9 @@ const openSearchDialog = (field : FormField) => {
                   <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
                 </span>
               </template>
-              <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string) => { field.value = selectedValue}" />
+              <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
             </v-text-field>
+
             <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                           v-model="field.value"
                           :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"

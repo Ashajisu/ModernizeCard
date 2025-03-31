@@ -12,14 +12,14 @@ import Wave from "@/components/custom/Wave.vue";
 import RecordChat from "@/components/apps/chats/RecordChat.vue";
 
 const formFields = ref<FormField[]>([
-  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '부서', name: 'department', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '팀', name: 'team', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
-  { label: '사용자', name: 'username', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '부서', name: 'department', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '팀', name: 'team', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '사용자', name: 'username', type: 'search_list', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '통화시작시간', name: 'startTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
-  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
+  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['전수', '선택'], required: false, disabled: false },
   { label: '', name: '', type: 'none', value: '', required: false, disabled: true },
@@ -77,12 +77,19 @@ const filteredList = computed(() => {
   if (isAllEmpty) return RecordingDataTables;
 
   return RecordingDataTables.filter((record: any) => {
+    //배열일 수 있는 필드라면,
+    const matchesUsername =
+        (Array.isArray(search.value.username)
+                ? search.value.username.length === 0 || search.value.username.some((val: string) => record.username.toLowerCase() === val.toLowerCase())
+                : !search.value.username || record.username.toLowerCase().includes(search.value.username.toLowerCase())
+        );
+
     return (
+        matchesUsername && // username 조건을 포함
         (!search.value.sender || record.sender.toLowerCase().includes(search.value.sender.toLowerCase())) &&
         (!search.value.receiver || record.receiver.toLowerCase().includes(search.value.receiver.toLowerCase())) &&
         (!search.value.department || record.department.toLowerCase().includes(search.value.department.toLowerCase())) &&
         (!search.value.team || record.team.toLowerCase().includes(search.value.team.toLowerCase())) &&
-        (!search.value.username || record.username.toLowerCase().includes(search.value.username.toLowerCase())) &&
         (!search.value.startTime || new Date(record.startTime) >= new Date(search.value.startTime)) &&
         (!search.value.endTime || new Date(record.endTime) <= new Date(search.value.endTime)) &&
         (!search.value.id || record.id.toString().includes(search.value.id)) &&
