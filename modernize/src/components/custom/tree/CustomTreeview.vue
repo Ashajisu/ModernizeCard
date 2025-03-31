@@ -227,27 +227,38 @@ const sendSelected = (nodeData: any) => {
 };
 
 </script>
+<!--tree view 는 부모컴포넌트에 position: relative; 설정이 들어가면 드래그좌표가 달라짐.
+그래서 v-card, AppBaseCard, perpect-scroll-bar 내부에 들어가면 안됨.
+-->
 <template>
-  <UiChildCard title="조직 정보">
-    <v-row>
-      <v-btn color="primary" @click="openAllNodes">전체 펼치기</v-btn>
-      <v-btn color="primary" @click="closeAllNodes">전체 접기</v-btn>
-      <v-btn color="primary"><v-icon icon="mdi-refresh"></v-icon></v-btn>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-text-field density="compact" v-model="search" label="부서명, 사용자를 검색하세요." hide-details variant="outlined" append-outer-icon="mdi-account-search">
-          <template v-slot:append-inner>
-            <v-icon icon="mdi-account-search" class="text-right"></v-icon>
-          </template>
-        </v-text-field>
-      </v-col>
-    </v-row>
-  </UiChildCard>
-  <!--tui-tree-->
-  <div>
-    <div ref="treeContainer" id="tree" class="tui-tree-wrap"></div>
-    <textarea v-model="movedValue" readonly rows="5" style="width: 100%; margin-top: 10px;"></textarea>
-    <textarea v-model="selectedValue" readonly rows="5" style="width: 100%; margin-top: 10px;"></textarea>
-  </div>
+    <UiChildCard title="조직 정보" variant="">
+        <v-row>
+          <v-btn color="primary" @click="openAllNodes">전체 펼치기</v-btn>
+          <v-btn color="primary" @click="closeAllNodes">전체 접기</v-btn>
+          <v-btn color="primary"><v-icon icon="mdi-refresh"></v-icon></v-btn>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-text-field density="compact" v-model="search" label="부서명, 사용자를 검색하세요." hide-details variant="outlined" append-outer-icon="mdi-account-search">
+              <template v-slot:append-inner>
+                <v-icon icon="mdi-account-search" class="text-right"></v-icon>
+              </template>
+            </v-text-field>
+          </v-col>
+        </v-row>
+    <!--tui-tree-->
+    </UiChildCard>
+    <div>
+      <div ref="treeContainer" id="tree" class="tui-tree-wrap custom-treeview"/>
+    </div>
+    <div>
+      <textarea v-model="movedValue" readonly rows="5" style="width: 100%; margin-top: 10px;"></textarea>
+      <textarea v-model="selectedValue" readonly rows="5" style="width: 100%; margin-top: 10px;"></textarea>
+    </div>
 </template>
+<style scoped>
+.custom-treeview {
+  background: #ffffff;
+  font-size: medium;
+}
+</style>
