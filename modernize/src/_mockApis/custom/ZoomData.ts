@@ -160,7 +160,7 @@ const ZoomPhoneDataTables: ZoomPhoneItem[] = [
 
 const RecordingDataTables : RecordingItem[] = [
     {
-        type: "전수",
+        type: "유선",
         direction: "아웃바운드",
         sender: "308151",
         receiver: "010-XXXX-XXXX",
@@ -175,7 +175,7 @@ const RecordingDataTables : RecordingItem[] = [
         id: "1",
     },
     {
-        type: "선택",
+        type: "내선",
         direction: "인바운드",
         sender: "010-XXXX-XXXX",
         receiver: "308153",
@@ -190,7 +190,7 @@ const RecordingDataTables : RecordingItem[] = [
         id: "2",
     },
     {
-        type: "선택",
+        type: "모바일",
         direction: "인바운드",
         sender: "02-XXXX-XXXX",
         receiver: "308153",

@@ -11,7 +11,7 @@ import { watchDepartmentChange } from "@/_mockApis/custom/teamOptions";
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
-  { label: '사용자명', name: 'username', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
+  { label: '사용자명', name: 'username', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
   { label: '내선번호', name: 'mobile', type: 'text', value: '', required: false, disabled: false },
   { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
@@ -33,9 +33,9 @@ const userFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '직위', name: 'position', type: 'select', value: '', options: ['사원', '대리', '과장', '차장', '부장'], required: false, disabled: false },
-  { label: '내선번호', name: 'mobile', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: true, disabled: false },
+  { label: '내선번호', name: 'mobile', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, view:false, required: true, disabled: false },
   { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
-  { label: '당겨받기', name: 'pullNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
+  { label: '당겨받기', name: 'pullNumber', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
   { label: 'IP 전화기', name: 'ipPhone', type: 'search', value: 'Avaya J159_308152', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...', 'Zoom Phone Basic '], required: true, disabled: false },
   { label: '통화녹음', name: 'callRecording', type: 'select', value: '미사용', options: ['미사용', '선택녹취','전수녹취'], required: false, disabled: false }
@@ -93,12 +93,19 @@ const filteredList = computed(() => {
   if (isAllEmpty) return ZoomPhoneDataTables;
 
   return ZoomPhoneDataTables.filter((user: any) => {
+    //배열일 수 있는 필드라면,
+    const matchesUsername =
+        (Array.isArray(search.value.username)
+                ? search.value.username.length === 0 || search.value.username.some((val: string) => user.username.toLowerCase() === val.toLowerCase())
+                : !search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase())
+        );
+
     return (
+        matchesUsername && // username 조건을 포함
         (!search.value.department || user.department.toLowerCase() === search.value.department.toLowerCase()) &&
         (!search.value.team || user.team.toLowerCase() === search.value.team.toLowerCase()) &&
         (!search.value.employmentStatus || user.employmentStatus.toLowerCase() === search.value.employmentStatus.toLowerCase()) &&
-        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase())) &&
-        (!search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase()))
+        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase()))
     );
   });
 });

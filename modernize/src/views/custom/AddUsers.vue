@@ -12,7 +12,7 @@ const formFields = ref<FormField[]>([
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: false, disabled: false },
   { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false },
-  { label: '사용자명', name: 'username',  type: 'search', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false }
+  { label: '사용자명', name: 'username',  type: 'search_list', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false }
 ]);
 const headers = ref<any[]>([
   { title: "부서명", align: "start", key: "department" },
@@ -64,7 +64,7 @@ const searchData = computed(()=> {
   return data;
 });
 const onSearch = ()=>{
-  console.log('save', searchData.value);
+  console.log('onSearch', searchData.value);
   search.value = searchData.value;
 }
 const filteredList = computed(() => {
@@ -80,12 +80,19 @@ const filteredList = computed(() => {
   if (isAllEmpty) return UserDataTables;
 
   return UserDataTables.filter((user: any) => {
+    //배열일 수 있는 필드라면,
+    const matchesUsername =
+        (Array.isArray(search.value.username)
+                ? search.value.username.length === 0 || search.value.username.some((val: string) => user.username.toLowerCase() === val.toLowerCase())
+                : !search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase())
+        );
+
     return (
+        matchesUsername && // username 조건을 포함
         (!search.value.department || user.department.toLowerCase() === search.value.department.toLowerCase()) &&
         (!search.value.team || user.team.toLowerCase() === search.value.team.toLowerCase()) &&
         (!search.value.activeStatus || user.activeStatus.toLowerCase() === search.value.activeStatus.toLowerCase()) &&
-        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase())) &&
-        (!search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase()))
+        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase()))
     );
   });
 });
