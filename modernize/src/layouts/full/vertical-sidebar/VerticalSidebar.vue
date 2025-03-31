@@ -64,3 +64,15 @@ const tabStore = useTabStore();
         </perfect-scrollbar>
     </v-navigation-drawer>
 </template>
+<style scoped lang="scss">
+// 선택사용
+//사이드바에 중복된 스크롤바 제거 : 휠도 동작안함, 로고 고정
+::v-deep .v-navigation-drawer__content {
+  overflow: hidden
+}
+//사이드바에 중복된 스크롤바 화면에서만 제거 : 휠은 동작안함, 로고 안보이게 가능.
+//::v-deep ::-webkit-scrollbar {
+//  width: 0;
+//  background: transparent;
+//}
+</style>
