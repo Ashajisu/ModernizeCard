@@ -41,10 +41,10 @@ const userFields = ref<FormField[]>([
   { label: '통화녹음', name: 'callRecording', type: 'select', value: '미사용', options: ['미사용', '선택녹취','전수녹취'], required: false, disabled: false }
 ]);
 const functionData = ref([
-  { number: 1, key: 'Ext.8155', assignment: '입력란', displayName: '선택란', OBNumber: '', actions: '',},
-  { number: 2, key: 'Ext.8156', assignment: '대표번호 발신', displayName: '0221778100', OBNumber: '', actions: '', },
-  { number: 3, key: '단축다이얼', assignment: '010xxxxxxxx', displayName: '홍길동 휴대전화', OBNumber: '', actions: ''},
-  { number: 4, key: '', assignment: '', displayName: '', OBNumber: '', actions: ''},
+  { number: 1, key: 'Ext.8155', assignment: '입력란', displayName: '선택란', OBNumber: ''},
+  { number: 2, key: 'Ext.8156', assignment: '대표번호 발신', displayName: '0221778100', OBNumber: ''},
+  { number: 3, key: '단축다이얼', assignment: '010xxxxxxxx', displayName: '홍길동 휴대전화', OBNumber: ''},
+  { number: 4, key: '', assignment: '', displayName: '', OBNumber: ''},
 ]);
 const functionHeaders = ref<any[]>([
   { title: '라인', align: 'start', key: 'number', value: 'number', sortable: false , maxWidth: "40px"},
@@ -297,7 +297,7 @@ const moveItem = (number:number, direction:number) => {
                                     dense hide-details>
                                 </v-select>
                               </template>
-                              <template  v-slot:item.actions="{ item }">
+                              <template  v-slot:item.upDown="{ item }">
                                 <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === 1" @click="moveItem(item.number, 1)"><v-chip><v-icon icon="mdi-arrow-up-bold"/>up</v-chip></v-btn>
                                 <v-btn flat variant="plain" v-if="!!item.assignment" :disabled="item.number === lastAssignedNumber" @click="moveItem(item.number, -1)"><v-chip><v-icon icon="mdi-arrow-down-bold"/>down</v-chip></v-btn>
                               </template>
