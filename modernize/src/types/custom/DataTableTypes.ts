@@ -53,6 +53,22 @@ type RecordingItem = {
     play: string;       // 재생할 음성파일 경로. public/audio/...
     download: string;   // 다운로드 (아이콘 버튼)
     id: string;         // ID (아이콘 버튼)
+    // 인덱스 시그니처 추가
+    [key: string]: string;
 }
 
-export type { searchDialogType, UserItem, ZoomPhoneItem, RecordingItem };
+type RecordChat = {
+    recordingId: string;
+    recordingStart: string;
+    recordingEnd: string;
+    userId: string;
+    chatHistory: {
+        text: string;
+        ts: string;
+        end_ts: string;
+        userId: string;
+        username: string;
+    }[];
+};
+
+export type { searchDialogType, UserItem, ZoomPhoneItem, RecordingItem, RecordChat };

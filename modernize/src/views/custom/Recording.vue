@@ -9,6 +9,7 @@ import type {RecordingItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomTwoSlotDialog from "@/components/custom/dialog/CustomTwoSlotDialog.vue";
 import Wave from "@/components/custom/Wave.vue";
+import RecordChat from "@/components/apps/chats/RecordChat.vue";
 
 const formFields = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:searchSugg, view:false, required: false, disabled: false },
@@ -113,6 +114,9 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
   console.log(`open ${type}`, viewDialog.value[type]);
 };
 
+/*  audio 시간 상태를 전달 : Wave -> RecordChat */
+const audioTime = ref(0);
+
 </script>
 <template>
     <v-row>
@@ -159,22 +163,22 @@ const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => 
                           발신자 {{ selectedItem?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ selectedItem?.receiver}}
                         </v-card-title>
                         <v-card-text>
-                            <Wave v-if="!!selectedItem?.play" :url="selectedItem?.play"/>
+                            <Wave v-if="!!selectedItem?.play" :url="selectedItem?.play" v-model:audioTime="audioTime"/>
                         </v-card-text>
                     </template>
                     <template v-slot:bottom>
                         <v-row>
                           <v-col cols="6" class="text-subtitle-1 justify-start">발신자 {{ selectedItem?.sender}}</v-col>
-                          <v-col cols="6" class="text-subtitle-1 justify-end">수신자 {{ selectedItem?.receiver}}</v-col>
+                          <v-col cols="6" class="text-subtitle-1 justify-end text-end">수신자 {{ selectedItem?.receiver}}</v-col>
                         </v-row>
                         <v-row>
                           <v-col cols="12" class="">
-                            <span> {{ JSON.stringify(selectedItem) }} </span>
+                            <RecordChat :audioTime="audioTime"/>
                           </v-col>
                         </v-row>
                     </template>
                 </CustomTwoSlotDialog>
-                <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download" width="">
+                <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download" :width="dialogWidth">
                   <template v-slot:inCard>
                     <v-row>
                       <v-col>
