@@ -2,7 +2,6 @@
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import {searchSugg} from "@/_mockApis/headerData";
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
 import type {RecordingItem} from "@/types/custom/DataTableTypes";
