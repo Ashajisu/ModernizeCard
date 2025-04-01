@@ -21,9 +21,9 @@
 
 /*This is for the Vertical sidebar*/
 .scrollnavbar {
-    /* profile 크기만큼 비워진 사이드바 채우기 */
+    /* profile 크기만큼 비워진 사이드바 채우기 && 고정된로고 크기만큼은 줄이기*/
     //height: calc(100vh - 190px);
-    height: calc(100vh - 20px);
+    height: calc(100vh - 90px);
 
     .userbottom {
         position: fixed;
