@@ -25,7 +25,6 @@ const emit = defineEmits(["update:view", "update:selectedValue"]);
 function close() {
   dialog.value = false;
   emit('update:view', false);
-  console.log('close', dialog.value);
 }
 
 //단일, 배열 모두 저장 가능

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import { UserDataTables } from "@/_mockApis/custom/ZoomData";
-import type {UserItem} from "@/types/custom/DataTableTypes";
+import type { UserItem } from "@/types/custom/DataTableTypes";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import { watchDepartmentChange } from "@/_mockApis/custom/teamOptions";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
+import { useTableManager } from "@/common/useTableManager";
 
 //검색
 const formFields = ref<FormField[]>([
@@ -44,128 +44,21 @@ const userFields = ref<FormField[]>([
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: '', options: ['WorkplaceBiz', 'Basic', '...'], required: true, disabled: false },
   { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: '', options: ['Phone Pro', 'Power', 'Phone Pro, Power'], required: false, disabled: false },
 ]);
-//테이블데이터 반응형 배열로 선언
-const userList = ref<UserItem[]>(UserDataTables);
 
-//부서명 변경 감지 팀명의 옵션 설정
-watchDepartmentChange(formFields.value);
-watchDepartmentChange(userFields.value);
+//모듈 호출
+const {
+  onSearch,
+  resetSearch,
+  filteredList,
+  selectedEmpId,
+  onSelectionChange,
+  edit,
+  handleEdit,
+  onNew,
+  onSave,
+  onDelete,
+} = useTableManager<UserItem>(UserDataTables, formFields, userFields);
 
-//검색기능
-const search = ref();
-const onSearch = async (validateForm:any) =>{
-  const formData:UserItem|null = await validateForm(); // validateForm() 실행 후 결과 대기
-  console.log('onSearch', formData);
-  search.value = formData;
-}
-//검색 초기화
-const resetSearch = ()=>{
-  formFields.value.forEach(field => {
-    field.value='';
-  });
-  search.value = null;
-};
-//검색어로 테이블 필터링
-const filteredList = computed(() => {
-  if (!search.value) return userList.value;
-
-  let isAllEmpty = true;
-  for (const key in search.value) {
-    if (search.value[key] !== "") {
-      isAllEmpty = false;
-      break;
-    }
-  }
-  if (isAllEmpty) return userList.value;
-
-  return userList.value.filter((user: any) => {
-    //배열일 수 있는 필드라면,
-    const matchesUsername =
-        (Array.isArray(search.value.username)
-                ? search.value.username.length === 0 || search.value.username.some((val: string) => user.username.toLowerCase() === val.toLowerCase())
-                : !search.value.username || user.username.toLowerCase().includes(search.value.username.toLowerCase())
-        );
-
-    return (
-        matchesUsername && // username 조건을 포함
-        (!search.value.department || user.department.toLowerCase() === search.value.department.toLowerCase()) &&
-        (!search.value.team || user.team.toLowerCase() === search.value.team.toLowerCase()) &&
-        (!search.value.activeStatus || user.activeStatus.toLowerCase() === search.value.activeStatus.toLowerCase()) &&
-        (!search.value.employeeId || user.employeeId.toLowerCase().includes(search.value.employeeId.toLowerCase()))
-    );
-  });
-});
-
-//체크박스 선택
-const selectedEmpId = ref<string[]>([]);
-const onSelectionChange = () => {
-  console.log("onSelectionChange", selectedEmpId.value);
-  if(!!selectedEmpId.value){
-    updateUserFields(selectedEmpId.value[0]);
-  }
-};
-
-//사용자 상세정보 출력
-const updateUserFields = (selectedEmpId: string) => {
-  const selectedItem: UserItem[] | undefined = userList.value.filter((user) => {
-    return !selectedEmpId || user.employeeId.includes(selectedEmpId);
-  });
-
-  let index = 0;
-  userFields.value.forEach(field => {
-    if (selectedItem[index][field.name] !== undefined) {
-      field.value = selectedItem[index][field.name]; // 값 매칭
-    } else {
-      field.value = ''; // 매칭되지 않으면 빈 값 설정
-    }
-  });
-};
-
-//사용자 상세정보 편집 / 읽기 화면으로 변경
-const edit = ref<boolean>(false);
-const handleEdit = (bool : boolean) => {
-  edit.value = bool;
-  console.log('handleEdit', edit.value);
-};
-
-//사용자 생성
-const onNew = () => {
-  selectedEmpId.value=['new'];
-  userFields.value.forEach(field => {
-      field.value = ''; //빈 값 설정
-  });
-  edit.value = true;
-}
-
-//사용자 저장
-const onSave = async (validateForm:any) => {
-  const formData:UserItem|null = await validateForm(); // validateForm() 실행 후 결과 대기
-  if(!!formData){
-    console.log(formData);
-    const existingUserIndex = userList.value.findIndex(user => user.employeeId === formData.employeeId);
-    if(existingUserIndex === -1){
-        userList.value.push({ ...formData });
-        alert(`"${formData.username}" 사용자의 정보가 등록되었습니다.`);
-    }else {
-        userList.value[existingUserIndex] = { ...formData };
-        alert(`"${formData.username}" 사용자의 정보가 업데이트되었습니다.`);
-    }
-    edit.value = false;
-  }
-}
-
-//사용자 삭제
-const onDelete = (selected : string) => {
-  const existingUserIndex = userList.value.findIndex(user => user.employeeId === selected);
-  if(confirm('줌 폰 사용자도 함께 삭제 됩니다.\n\n선택한 사용자를 삭제 하시겠습니까?')){
-    const removedItems = userList.value.splice(existingUserIndex, 1);
-    if(removedItems?.[0]){
-      alert(`${removedItems?.[0].username} 이 삭제 되었습니다.`);
-    }else {
-      alert('삭제에 실패하였습니다. 다시 시도해주세요.')
-    }
-  }
-}
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -220,7 +113,7 @@ const onDelete = (selected : string) => {
                     </v-col>
                     <v-col cols="7">
                       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                        <CustomSlotDialog ref="passwordDialog" title="패스워드초기화" :view="false" width=""/>
+                        <CustomSlotDialog ref="passwordDialog" title="패스워드초기화"/>
                         <v-btn color="grey" variant="outlined" @click="$refs.passwordDialog?.open()">패스워드초기화</v-btn>
                         <v-btn flat color="primary" variant="outlined" @click="onSave(validateForm)">저장</v-btn>
                       </div>

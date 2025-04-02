@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
-import type {RecordingItem} from "@/types/custom/DataTableTypes";
+import CustomSearchsCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
+import { RecordingDataTables } from "@/_mockApis/custom/ZoomData";
+import type { RecordingItem } from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
-import { watchDepartmentChange } from "@/_mockApis/custom/teamOptions";
+import { useTableManager } from "@/common/useTableManager";
 
 const formFields_admin = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
@@ -46,8 +46,6 @@ const headers = ref<any[]>([
   { title: '결과', align: 'end', key: 'download' },
   { title: 'ID', align: 'end', key: 'id' },
 ])
-// 부서명 변경 감지 팀명의 옵션 설정
-watchDepartmentChange(formFields_admin.value);
 
 const auth = ref<string>('admin'); //authStore 에서 받아올 예정
 /* 관리자 / 사용자 구분 */
@@ -66,70 +64,13 @@ const test_changeAuth = () => {
   }
 }
 
-// 초기화
-const resetSearch = ()=>{
-  formFields.value.forEach(field => {
-    field.value='';
-  });
-  onSearch();
-};
+//모듈 호출
+const {
+  onSearch,
+  resetSearch,
+  filteredList,
+} = useTableManager<RecordingItem>(RecordingDataTables, formFields);
 
-//검색기능
-const search = ref();
-const searchData = computed(()=> {
-  const data: Record<string, any> = {};
-  formFields.value.forEach(field => {
-    data[field.name] = field.value;
-  });
-  return data;
-});
-const onSearch = ()=>{
-  console.log('save', searchData.value);
-  search.value = searchData.value;
-}
-const filteredList = computed(() => {
-  if (!search.value) return RecordingDataTables;
-
-  // 모든 필드가 비어있는지 검사
-  // es2017 이상 필요
-  // const isAllEmpty = Object.values(search.value).every(val => val === "" || (Array.isArray(val) && val.length === 0));
-  const isAllEmpty = search.value &&
-      Object.keys(search.value).length > 0 &&
-      Object.keys(search.value).every((key) => {
-        const val = search.value[key];
-        return val === "" || (Array.isArray(val) && (val.length === 0 || (val.length === 1 && val[0] === "")));
-      });
-
-  if (isAllEmpty) return RecordingDataTables;
-
-  return RecordingDataTables.filter((record: any) => {
-    //배열일 수 있는 필드라면,
-    const matchesUsername =
-        (Array.isArray(search.value.username)
-                ? search.value.username.length === 0 || search.value.username.some((val: string) => record.username.toLowerCase() === val.toLowerCase())
-                : !search.value.username || record.username.toLowerCase().includes(search.value.username.toLowerCase())
-        );
-    return (
-        matchesUsername && // username 조건을 포함
-        (!search.value.sender || record.sender.toLowerCase().includes(search.value.sender.toLowerCase())) &&
-        (!search.value.receiver || record.receiver.toLowerCase().includes(search.value.receiver.toLowerCase())) &&
-        (!search.value.department || record.department.toLowerCase().includes(search.value.department.toLowerCase())) &&
-        (!search.value.team || record.team.toLowerCase().includes(search.value.team.toLowerCase())) &&
-        (!search.value.startTime || new Date(record.startTime) >= new Date(search.value.startTime)) &&
-        (!search.value.endTime || new Date(record.endTime) <= new Date(search.value.endTime)) &&
-        (!search.value.id || record.id.toString().includes(search.value.id)) &&
-        (!search.value.direction || search.value.direction.length === 0 || search.value.direction.includes(record.direction)) &&
-        (!search.value.type || search.value.type.length === 0 || search.value.type.includes(record.type))
-    );
-  });
-});
-
-/* 상세정보 출력 */
-const selectedItem = ref<RecordingItem>();
-const onSelectionChange = (item : RecordingItem) => {
-  console.log("onSelectionChange", item);
-  selectedItem.value = item;
-};
 
 /* 복사 */
 function copyToClipboard(item : any) {
@@ -155,13 +96,15 @@ function copyToClipboard(item : any) {
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
-                    <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                      <v-btn color="primary" flat @click="onSearch">조회</v-btn>
-                      <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                      <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                    </div>
-                  </CustomSearchCheckForm>
+                  <CustomSearchsCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
+                    <template v-slot:lineBtn="{ validateForm }">
+                      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                        <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+                        <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
+                        <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                      </div>
+                    </template>
+                  </CustomSearchsCheckForm>
                 </v-col>
               </v-row>
               <v-row>
@@ -172,7 +115,7 @@ function copyToClipboard(item : any) {
                     <v-btn icon="mdi-eye" variant="text" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )">
                       <FileDescriptionIcon/>
       <!--              팝업 : 콜 상세정보 -->
-                      <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" :view="false" width="500">
+                      <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" width="500">
                         <template v-slot:inCard>
                           <div v-if="!!item">
                               <div v-for="(value, key) in item" :key="key">

@@ -1,0 +1,175 @@
+import { ref, computed, watch } from "vue";
+import type { Ref } from "vue";
+import type {FormField} from "@/types/custom/InputTypes";
+// 팀 옵션 맵
+const teamOptionsMap: Record<string, string[]> = {
+    '기술팀': ['기술2팀', '기술1팀', '기술지원팀'],
+    '영업팀': ['영업1팀', '영업2팀'],
+    '고객지원본부': ['SPM팀'],
+    '연구개발': ['연구개발팀']
+};
+
+export function useTableManager<T extends Record<string, any>>(
+    initialData: T[],
+    formFields: Ref<FormField[]>,   // 검색 필드
+    detailFields?: Ref<FormField[]>,    // 상세정보 필드
+) {
+    // 📌 테이블 데이터
+    const tableList = ref<T[]>(initialData);
+    // 📌 검색어 상태
+    const search = ref<Record<string, any>>({});
+
+    // 부서 변경 시 팀 옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
+    const updateTeamOptions = (fields: Ref<FormField[]>,) => {
+        watch(
+            () => fields.value.find(field => field.name === 'department')?.value,
+            (newDepartment: any) => {
+                const teamField = fields.value.find(field => field.name === 'team');
+                if (teamField) {
+                    teamField.options = teamOptionsMap[newDepartment || ''] || [];
+                }
+            }
+        );
+    };
+    updateTeamOptions(formFields);  // 검색 필드 감시
+    // ✅ 상세정보 필드가 있을 경우에만 실행
+    if (detailFields) {
+        updateTeamOptions(detailFields);
+    }
+    // ✅ formFields 변경 시 다시 watch 걸어주기
+    watch(formFields, () => {
+        updateTeamOptions(formFields);
+    }, { deep: true, immediate: true });
+
+
+
+    // ✅ 검색 기능
+    const onSearch = async (validateForm: any) => {
+        search.value = await validateForm();
+    };
+
+    // ✅ 검색 초기화
+    const resetSearch = () => {
+        formFields.value.forEach(field => {
+            field.value='';
+        });
+        search.value = {};
+    };
+
+    // ✅ 검색어로 테이블 필터링
+    const filteredList = computed(() => {
+        if (!search.value) return tableList.value;
+
+        let isAllEmpty = true;
+        for (const key in search.value) {
+            if (search.value[key] !== "") {
+                isAllEmpty = false;
+                break;
+            }
+        }
+        if (isAllEmpty) return tableList.value;
+
+        return tableList.value.filter((item) =>
+            Object.keys(search.value).every((key) => {
+                const searchVal = search.value[key];
+                const itemVal = item[key];
+
+                if (Array.isArray(searchVal)) {
+                    return searchVal.length === 0 || searchVal.some((val: string) => itemVal.toLowerCase() === val.toLowerCase());
+                } else {
+                    return !searchVal || itemVal.toLowerCase().includes(searchVal.toLowerCase());
+                }
+            })
+        );
+    });
+
+    // 📌 선택된 ID 목록
+    const selectedEmpId = ref<string[]>([]);
+
+    // ✅ 체크박스 선택 변경
+    const onSelectionChange = () => {
+        console.log("onSelectionChange", selectedEmpId.value);
+        if (selectedEmpId.value.length > 0 && detailFields) {
+            updateUserFields(selectedEmpId.value[0]);
+        }
+    };
+
+    // 📌 선택된 상세정보
+    const selectedItem = ref<T | null>(null);
+
+    // ✅ 선택된 상세정보 출력
+    const updateUserFields = (selectedId: string) => {
+        if (!detailFields) return;
+        selectedItem.value = tableList.value.find((item) => item.employeeId === selectedId) || null;
+        if (selectedItem.value) {
+            detailFields.value.forEach((field) => {
+                field.value = selectedItem.value?.[field.name] ?? "";
+            });
+        }
+    };
+    // 📌 편집 모드
+    const edit = ref<boolean>(false);
+
+    // ✅ 편집 모드 변경
+    const handleEdit = (bool: boolean) => {
+        edit.value = bool;
+    };
+
+    // ✅ 새 사용자 추가
+    const onNew = () => {
+        selectedEmpId.value = ["new"];
+        selectedItem.value = null;
+        if (detailFields) {
+            detailFields.value.forEach(field => {
+                field.value = '';
+            });
+        }
+        edit.value = true;
+    };
+
+    // ✅ 저장 (신규 등록 & 수정)
+    const onSave = async (validateForm: any) => {
+        const formData = await validateForm();
+        if (formData) {
+            const index = tableList.value.findIndex((item) => item.employeeId === formData.employeeId);
+            if (index === -1) {
+                tableList.value.push({ ...formData });
+                alert(`"${formData.username}" 사용자가 등록되었습니다.`);
+            } else {
+                tableList.value[index] = { ...formData };
+                alert(`"${formData.username}" 사용자가 업데이트되었습니다.`);
+            }
+            edit.value = false;
+        }
+    };
+
+    // ✅ 삭제 기능
+    const onDelete = (selected: string) => {
+        const index = tableList.value.findIndex((item) => item.employeeId === selected);
+        if (index !== -1 && confirm("삭제 하시겠습니까?")) {
+            const removed = tableList.value.splice(index, 1);
+            if (removed[0]) {
+                alert(`${removed[0].username}이 삭제되었습니다.`);
+            } else {
+                alert("삭제 실패");
+            }
+        }
+    };
+
+    return {
+        tableList,
+        search,
+        onSearch,
+        resetSearch,
+        filteredList,
+        selectedEmpId,
+        onSelectionChange,
+        selectedItem,
+        updateUserFields,
+        edit,
+        handleEdit,
+        onNew,
+        onSave,
+        onDelete,
+    };
+}

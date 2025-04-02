@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import {computed, ref} from "vue";
+import { ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
+import { RecordingDataTables } from "@/_mockApis/custom/ZoomData";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomTwoSlotDialog from "@/components/custom/dialog/CustomTwoSlotDialog.vue";
 import Wave from "@/components/custom/Wave.vue";
 import RecordChat from "@/components/apps/chats/RecordChat.vue";
+import { useTableManager } from "@/common/useTableManager";
+import type { RecordingItem } from "@/types/custom/DataTableTypes";
 
 const formFields = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
@@ -19,7 +21,7 @@ const formFields = ref<FormField[]>([
   { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
-  { label: '유형', name: 'type', type: 'check', value: '',options: ['전수', '선택'], required: false, disabled: false },
+  { label: '유형', name: 'type', type: 'check', value: '',options: ['유선', '내선', '모바일'], required: false, disabled: false },
   { label: '', name: '', type: 'none', value: '', required: false, disabled: true },
 ]);
 
@@ -39,66 +41,12 @@ const headers = ref<any[]>([
   { title: "ID", align: 'start', key: "id"},
 ]);
 
-// 초기화
-const resetSearch = ()=>{
-  formFields.value.forEach(field => {
-    field.value='';
-  });
-  onSearch();
-};
-//검색기능
-const search = ref();
-const searchData = computed(()=> {
-  const data: Record<string, any> = {};
-  formFields.value.forEach(field => {
-    data[field.name] = field.value;
-  });
-  return data;
-});
-const onSearch = ()=>{
-  console.log('save', searchData.value);
-  search.value = searchData.value;
-}
-const filteredList = computed(() => {
-  if (!search.value) return RecordingDataTables;
-
-  // 모든 필드가 비어있는지 검사
-  // es2017 이상 필요
-  // const isAllEmpty = Object.values(search.value).every(val => val === "" || (Array.isArray(val) && val.length === 0));
-  const isAllEmpty = search.value &&
-      Object.keys(search.value).length > 0 &&
-      Object.keys(search.value).every((key) => {
-        const val = search.value[key];
-        return val === "" || (Array.isArray(val) && (val.length === 0 || (val.length === 1 && val[0] === "")));
-      });
-
-  if (isAllEmpty) return RecordingDataTables;
-
-  return RecordingDataTables.filter((record: any) => {
-    //배열일 수 있는 필드라면,
-    const matchesUsername =
-        (Array.isArray(search.value.username)
-                ? search.value.username.length === 0 || search.value.username.some((val: string) => record.username.toLowerCase() === val.toLowerCase())
-                : !search.value.username || record.username.toLowerCase().includes(search.value.username.toLowerCase())
-        );
-
-    return (
-        matchesUsername && // username 조건을 포함
-        (!search.value.sender || record.sender.toLowerCase().includes(search.value.sender.toLowerCase())) &&
-        (!search.value.receiver || record.receiver.toLowerCase().includes(search.value.receiver.toLowerCase())) &&
-        (!search.value.department || record.department.toLowerCase().includes(search.value.department.toLowerCase())) &&
-        (!search.value.team || record.team.toLowerCase().includes(search.value.team.toLowerCase())) &&
-        (!search.value.startTime || new Date(record.startTime) >= new Date(search.value.startTime)) &&
-        (!search.value.endTime || new Date(record.endTime) <= new Date(search.value.endTime)) &&
-        (!search.value.id || record.id.toString().includes(search.value.id)) &&
-        (!search.value.direction || search.value.direction.length === 0 || search.value.direction.includes(record.direction)) &&
-        (!search.value.type || search.value.type.length === 0 || search.value.type.includes(record.type))
-    );
-  });
-});
-
-/* 팝업 크기 */
-const dialogWidth = 700;
+//모듈 호출
+const {
+  onSearch,
+  resetSearch,
+  filteredList
+} = useTableManager<RecordingItem>(RecordingDataTables, formFields);
 
 /*  audio 시간 상태를 전달 : Wave -> RecordChat */
 const audioTime = ref(0);
@@ -114,11 +62,13 @@ const audioTime = ref(0);
               <v-row>
                 <v-col cols="12">
                   <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
-                    <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                      <v-btn color="primary" flat @click="onSearch">조회</v-btn>
-                      <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                      <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                    </div>
+                    <template v-slot:lineBtn="{ validateForm }">
+                      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                        <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+                        <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
+                        <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                      </div>
+                    </template>
                   </CustomSearchCheckForm>
                 </v-col>
               </v-row>
@@ -131,7 +81,7 @@ const audioTime = ref(0);
                     <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`playDialog-${item.id}`]?.open() )" :disabled="!item.play">
                       <v-icon icon="mdi-play-circle-outline"/>
                     </v-btn>
-                    <CustomTwoSlotDialog :ref="`playDialog-${item.id}`" title="청취" title-sec="텍스트" :view="false" :width="dialogWidth">
+                    <CustomTwoSlotDialog :ref="`playDialog-${item.id}`" title="청취" title-sec="텍스트" :view="false">
                       <template v-slot:top>
                         <v-card-title class="text-subtitle-1">
                           발신자 {{ item?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ item?.receiver}}
@@ -159,7 +109,7 @@ const audioTime = ref(0);
                     <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`downloadDialog-${item.id}`]?.open() )">
                       <v-icon icon="mdi-cloud-download" />
                     </v-btn>
-                    <CustomSlotDialog :ref="`downloadDialog-${item.id}`" title="다운로드" :view="false" :width="dialogWidth">
+                    <CustomSlotDialog :ref="`downloadDialog-${item.id}`" title="다운로드">
                       <template v-slot:inCard>
                         <v-row>
                           <v-col>
@@ -183,7 +133,7 @@ const audioTime = ref(0);
                     <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )">
                       <FileDescriptionIcon/>
                     </v-btn>
-                    <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" :view="false" :width="dialogWidth">
+                    <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보">
                       <template v-slot:inCard>
                         <div v-for="(value, key) in item" :key="key">
                           <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>

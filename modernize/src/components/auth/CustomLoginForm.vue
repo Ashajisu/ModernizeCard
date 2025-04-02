@@ -66,7 +66,7 @@ function validate(values: any, { setErrors }: any) {
                     > 비밀번호를 잊어버렸나요 ?</RouterLink
                 >
             </v-col>
-          <CustomSlotDialog ref="settingDialog" title="환경설정" :view="false" width="">
+          <CustomSlotDialog ref="settingDialog" title="환경설정">
             <template v-slot:inCard>
 
             </template>
