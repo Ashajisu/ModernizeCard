@@ -4,7 +4,6 @@ import {computed, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import CustomSearchCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import {RecordingDataTables} from "@/_mockApis/custom/ZoomData";
-import type {RecordingItem} from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomTwoSlotDialog from "@/components/custom/dialog/CustomTwoSlotDialog.vue";
 import Wave from "@/components/custom/Wave.vue";
@@ -98,27 +97,8 @@ const filteredList = computed(() => {
   });
 });
 
-/* 팝업 띄우기 */
+/* 팝업 크기 */
 const dialogWidth = 700;
-const viewDialog = ref<{ [key: string]: boolean }>({
-  play: false,
-  download: false,
-  id: false,
-});
-
-const selectedItem = ref<RecordingItem>();
-
-const handleDialog = (type: "play" | "download" | "id", item: RecordingItem) => {
-  selectedItem.value = item;
-
-  // 모든 다이얼로그 초기화 후 특정 다이얼로그 열기
-  Object.keys(viewDialog.value).forEach((key) => {
-    viewDialog.value[key] = false;
-  });
-
-  viewDialog.value[type] = true;
-  console.log(`open ${type}`, viewDialog.value[type]);
-};
 
 /*  audio 시간 상태를 전달 : Wave -> RecordChat */
 const audioTime = ref(0);
@@ -146,68 +126,72 @@ const audioTime = ref(0);
                 <v-data-table items-per-page="5" :headers="headers" :items="filteredList" item-value="name"
                               select-strategy="single" class="border rounded-md"
                               >
+                  <!--                  청취 -->
                   <template v-slot:item.play="{ item }">
-                    <v-btn icon="mdi-eye" @click="handleDialog('play',item)" :disabled="!item.play">
+                    <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`playDialog-${item.id}`]?.open() )" :disabled="!item.play">
                       <v-icon icon="mdi-play-circle-outline"/>
                     </v-btn>
-                  </template>
-                  <template v-slot:item.download="{ item }">
-                    <v-btn icon="mdi-eye" @click="handleDialog('download',item)">
-                      <v-icon icon="mdi-cloud-download" />
-                    </v-btn>
-                  </template>
-                  <template v-slot:item.id="{ item }">
-                    <v-btn icon="mdi-eye" @click="handleDialog('id',item)">
-                      <FileDescriptionIcon/>
-                    </v-btn>
-                  </template>
-                </v-data-table>
-<!--              팝업 : -->
-                <CustomTwoSlotDialog title="청취" title-sec="텍스트" v-model:view="viewDialog.play" :width="dialogWidth">
-                    <template v-slot:top>
+                    <CustomTwoSlotDialog :ref="`playDialog-${item.id}`" title="청취" title-sec="텍스트" :view="false" :width="dialogWidth">
+                      <template v-slot:top>
                         <v-card-title class="text-subtitle-1">
-                          발신자 {{ selectedItem?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ selectedItem?.receiver}}
+                          발신자 {{ item?.sender}} <v-icon icon="mdi-arrow-right-bold-circle" color="primary"/> 수신자 {{ item?.receiver}}
                         </v-card-title>
                         <v-card-text>
-                            <Wave v-if="!!selectedItem?.play" :url="selectedItem?.play" v-model:audioTime="audioTime"/>
+                          <Wave v-if="!!item?.play" :url="item?.play" v-model:audioTime="audioTime"/>
                         </v-card-text>
-                    </template>
-                    <template v-slot:bottom>
+                      </template>
+                      <template v-slot:bottom>
                         <v-row>
-                          <v-col cols="6" class="text-subtitle-1 justify-start">발신자 {{ selectedItem?.sender}}</v-col>
-                          <v-col cols="6" class="text-subtitle-1 justify-end text-end">수신자 {{ selectedItem?.receiver}}</v-col>
+                          <v-col cols="6" class="text-subtitle-1 justify-start">발신자 {{ item?.sender}}</v-col>
+                          <v-col cols="6" class="text-subtitle-1 justify-end text-end">수신자 {{ item?.receiver}}</v-col>
                         </v-row>
                         <v-row>
                           <v-col cols="12" class="">
                             <RecordChat :audioTime="audioTime"/>
                           </v-col>
                         </v-row>
-                    </template>
-                </CustomTwoSlotDialog>
-                <CustomSlotDialog title="다운로드" v-model:view="viewDialog.download" :width="dialogWidth">
-                  <template v-slot:inCard>
-                    <v-row>
-                      <v-col>
-                        <span> 파일 다운로드 경로를 지정해 주세요. </span>
-                      </v-col>
-                    </v-row>
-                    <v-row class="align-center">
-                      <v-col cols="12">
-                        <v-file-input></v-file-input>
-                      </v-col>
-                    </v-row>
+                      </template>
+                    </CustomTwoSlotDialog>
                   </template>
-                  <template v-slot:btn>
-                      <v-btn color="primary" variant="flat">저장</v-btn>
+
+                  <!--                  다운로드 -->
+                  <template v-slot:item.download="{ item }">
+                    <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`downloadDialog-${item.id}`]?.open() )">
+                      <v-icon icon="mdi-cloud-download" />
+                    </v-btn>
+                    <CustomSlotDialog :ref="`downloadDialog-${item.id}`" title="다운로드" :view="false" :width="dialogWidth">
+                      <template v-slot:inCard>
+                        <v-row>
+                          <v-col>
+                            <span>파일 다운로드 경로를 지정해 주세요. </span>
+                          </v-col>
+                        </v-row>
+                        <v-row class="align-center">
+                          <v-col cols="12">
+                            <v-file-input></v-file-input>
+                          </v-col>
+                        </v-row>
+                      </template>
+                      <template v-slot:btn>
+                        <v-btn color="primary" variant="flat">저장</v-btn>
+                      </template>
+                    </CustomSlotDialog>
                   </template>
-                </CustomSlotDialog>
-                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog.id" :width="dialogWidth">
-                  <template v-slot:inCard>
-                    <div v-for="(value, key) in selectedItem" :key="key">
-                      <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
-                    </div>
+
+                  <!--                  상세정보 -->
+                  <template v-slot:item.id="{ item }">
+                    <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )">
+                      <FileDescriptionIcon/>
+                    </v-btn>
+                    <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" :view="false" :width="dialogWidth">
+                      <template v-slot:inCard>
+                        <div v-for="(value, key) in item" :key="key">
+                          <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
+                        </div>
+                      </template>
+                    </CustomSlotDialog>
                   </template>
-                </CustomSlotDialog>
+                </v-data-table>
               </v-row>
             </UiParentCard>
         </v-col>
