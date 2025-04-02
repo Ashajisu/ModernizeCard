@@ -77,7 +77,7 @@ watch(selectedId, (newSelectedId) => {
       if (field.name === 'deptcode1') field.value = String(newSelectedId.id);
     });
   }
-})
+});
 
 </script>
 
@@ -90,7 +90,7 @@ watch(selectedId, (newSelectedId) => {
       <template v-slot:rightpart>
 <!--        조직 상세-->
         <div v-if="selectedId.type === 'group'">
-          <UiChildCard title="조직 상세 정보" variant="">
+          <UiChildCard title="조직 상세 정보" variant="flat">
             <CustomSearchChecksForm :formFields="groupFields" :colsPerRow="2" :edit="edit"/>
             <v-row>
               <v-col cols="12" sm="9" offset-sm="10" v-if="!edit">
@@ -105,10 +105,10 @@ watch(selectedId, (newSelectedId) => {
         </div>
 <!--        사용자 상세-->
         <div v-else>
-          <UiChildCard title="사용자 조직 정보" variant="">
+          <UiChildCard title="사용자 조직 정보" variant="flat">
             <CustomSearchChecksForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
           </UiChildCard>
-          <UiChildCard title="사용자 상세 정보" variant="" class="border-t-sm">
+          <UiChildCard title="사용자 상세 정보" variant="flat" class="border-t-sm">
             <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
           </UiChildCard>
         </div>
