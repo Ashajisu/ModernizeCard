@@ -13,8 +13,8 @@ const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false },
-  { label: '사용자명', name: 'username',  type: 'search_list', value: '', searchObj:UserDataTables, view:false, required: false, disabled: false }
+  { label: '사원번호', name: 'employeeId',  type: 'search', value: '', searchObj:UserDataTables, required: false, disabled: false },
+  { label: '사용자명', name: 'username',  type: 'search_list', value: '', searchObj:UserDataTables, required: false, disabled: false }
 ]);
 //테이블헤더
 const headers = ref<any[]>([
@@ -31,8 +31,8 @@ const headers = ref<any[]>([
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: true, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
-  { label: '부서명', name: 'department',  type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], view:false, required: true, disabled: false },
-  { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], view:false, required: true, disabled: false },
+  { label: '부서명', name: 'department',  type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: true, disabled: false },
+  { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: true, disabled: false },
   { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
   { label: '메일주소', name: 'email', type: 'text', value: '', placeholder: 'example@domain.com', required: true, disabled: false },
   { label: '전화번호', name: 'phone', type: 'text', value: '', placeholder: '02-0000-0000', required: true, disabled: false },

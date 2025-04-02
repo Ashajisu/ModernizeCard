@@ -4,7 +4,6 @@ import DialogBaseCard from "@/components/custom/dialog/DialogBaseCard.vue";
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 const props = defineProps<{
-  view: boolean;
   title: string;
   single: boolean;
   searchField: string; // items 중 검색할 필드명
@@ -12,27 +11,22 @@ const props = defineProps<{
 }>();
 
 const searchField = computed(() => props.searchField);
-const dialog = ref(props.view);
+const showDialog = ref(false);
 const result = ref<any>();
-// 열릴때
-watch(() => props.view, (newValue : boolean) => {
-  dialog.value = newValue;
-}, { deep: false });
 
-// 닫힐때
-const emit = defineEmits(["update:view", "update:selectedValue"]);
-
-function close() {
-  dialog.value = false;
-  emit('update:view', false);
-}
+/* 열고 닫기 */
+const open = () => {
+  showDialog.value = true;
+};
+const close = () => {
+  showDialog.value = false;
+};
+defineExpose({ open, close });
 
 //단일, 배열 모두 저장 가능
+const emit = defineEmits(["update:selectedValue"]);
 function save() {
-  const values = Array.isArray(result.value) ? result.value : [result.value];
-  const selectedValues = values.map((item: any) => item[searchField.value]);
-  console.log('save', selectedValues);
-  emit('update:selectedValue', selectedValues);
+  emit("update:selectedValue", Array.isArray(result.value) ? result.value.map(item => item[searchField.value]) : result.value[searchField.value]);
   close();
 }
 
@@ -59,7 +53,7 @@ const removeItem= (item:any) => {
 <!--persistent : 외부를 눌러도 닫히지 않게-->
 <!--@click:outside="close" : 외부를 눌러서 닫혀도 dialog=false 값 유지되게-->
 <template>
-  <v-dialog v-model="dialog"  max-width="700"  @click:outside="close">
+  <v-dialog v-model="showDialog"  max-width="700"  @click:outside="close">
     <v-card>
       <v-card-title class="pa-4 bg-primary">
         <span class="title text-white">{{ title }}</span>
