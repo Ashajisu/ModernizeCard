@@ -124,18 +124,13 @@ const filteredList = computed(() => {
   });
 });
 
-/* 팝업 띄우기 */
-const viewDialog = ref<boolean>(false);
+/* 상세정보 출력 */
 const selectedItem = ref<RecordingItem>();
 const onSelectionChange = (item : RecordingItem) => {
   console.log("onSelectionChange", item);
   selectedItem.value = item;
-  handleDialog();
 };
-const handleDialog = () => {
-  viewDialog.value = true;
-  console.log('open',viewDialog.value);
-}
+
 /* 복사 */
 function copyToClipboard(item : any) {
   navigator.clipboard.writeText(item)
@@ -174,22 +169,22 @@ function copyToClipboard(item : any) {
                               select-strategy="single" class="border rounded-md"
                               >
                   <template v-slot:item.id="{ item }">
-                    <v-btn icon="mdi-eye" variant="text" @click="onSelectionChange(item)">
+                    <v-btn icon="mdi-eye" variant="text" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )">
                       <FileDescriptionIcon/>
+      <!--              팝업 : 콜 상세정보 -->
+                      <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" :view="false" width="500">
+                        <template v-slot:inCard>
+                          <div v-if="!!item">
+                              <div v-for="(value, key) in item" :key="key">
+                                <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
+                                <v-btn color="primary" variant="plain" @click="copyToClipboard(value)" >복사</v-btn>
+                              </div>
+                          </div>
+                        </template>
+                      </CustomSlotDialog>
                     </v-btn>
                   </template>
                 </v-data-table>
-<!--              팝업 : 콜 상세정보 -->
-                <CustomSlotDialog title="콜 상세 정보" v-model:view="viewDialog" width="500">
-                  <template v-slot:inCard>
-                    <div v-if="!!selectedItem">
-                        <div v-for="(value, key) in selectedItem" :key="key">
-                          <v-btn readonly><span class="">{{ key }} : {{ value }}</span></v-btn>
-                          <v-btn color="primary" variant="plain" @click="copyToClipboard(value)" >복사</v-btn>
-                        </div>
-                    </div>
-                  </template>
-                </CustomSlotDialog>
               </v-row>
             </UiParentCard>
         </v-col>

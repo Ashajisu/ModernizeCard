@@ -7,7 +7,6 @@ import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 /*Social icons*/
 const checkbox = ref(false);
 const valid = ref(false);
-const show1 = ref(false);
 const password = ref('admin123');
 const username = ref('info@wrappixel.com');
 const passwordRules = ref([
@@ -21,11 +20,6 @@ function validate(values: any, { setErrors }: any) {
     return authStore.login(username.value, password.value).catch((error) => setErrors({ apiError: error }));
 }
 
-//팝업
-const viewDialog = ref<boolean>(false);
-const handleDialog = () => {
-  viewDialog.value = true;
-}
 </script>
 <!-- 환경설정 팝업, 비밀번호 변경 링크 수정해야 함-->
 <template>
@@ -62,7 +56,7 @@ const handleDialog = () => {
         </div>
         <v-row class="d-flex flex-wrap align-baseline mb-3 mt-3">
             <v-col cols="6" sm="6" >
-                <v-btn variant="outlined" size="large" class="border text-subtitle-1" block @click="handleDialog">
+                <v-btn variant="outlined" size="large" class="border text-subtitle-1" block @click="$refs.settingDialog?.open()">
                     <SettingsIcon />
                     <span class="d-sm-flex d-none mr-1"> 환경설정</span>
                 </v-btn>
@@ -72,7 +66,7 @@ const handleDialog = () => {
                     > 비밀번호를 잊어버렸나요 ?</RouterLink
                 >
             </v-col>
-          <CustomSlotDialog title="환경설정" v-model:view="viewDialog" width="">
+          <CustomSlotDialog ref="settingDialog" title="환경설정" :view="false" width="">
             <template v-slot:inCard>
 
             </template>

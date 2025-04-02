@@ -176,12 +176,6 @@ const onDelete = () => {
   }
 }
 
-const viewDialog = ref<boolean>(false);
-//팝업
-const handleDialog = () => {
-  viewDialog.value = true;
-}
-
 //기능키 관리 : Zoom Phone Basic 사용자는 사용할 수 없음
 const keyOptions = ['Line','Speed Dial', 'Call Park', 'BLF', 'Intercom', 'Zoom Meeting'];
 
@@ -270,8 +264,8 @@ const moveItem = (number:number, direction:number) => {
                 </v-col>
                 <v-col>
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                    <v-btn color="grey" variant="outlined" @click="handleDialog" :disabled="isProLicense">사용자 전화 기능키 관리</v-btn>
-                    <CustomSlotDialog title="기능키 관리" width="1500px" v-model:view="viewDialog">
+                    <v-btn color="grey" variant="outlined" @click="$refs.functionDialog?.open()" :disabled="isProLicense">사용자 전화 기능키 관리</v-btn>
+                    <CustomSlotDialog ref="functionDialog" title="기능키 관리" width="1500px" :view="false">
                         <template v-slot:inCard>
                           <v-data-table :headers="functionHeaders" :items="functionData" item-value="username" hide-default-footer >
                               <!-- 필수값 표시하기 -->

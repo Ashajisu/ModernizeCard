@@ -8,25 +8,30 @@ const props = defineProps<{
   titleSec: string;
 }>();
 
-const dialog = ref(props.view);
+const showDialog = ref(props.view);
 // 열릴때
 watch(() => props.view, (newValue : boolean) => {
-  dialog.value = newValue;
+  showDialog.value = newValue;
 }, { deep: false });
+const open = () => {
+  showDialog.value = true;
+};
 
 // 닫힐때
 const emit = defineEmits(["update:view", "update:selectedValue"]);
-function close() {
-  dialog.value = false;
+const close = () => {
+  showDialog.value = false;
   emit('update:view', false);
-  console.log('close', dialog.value);
+  console.log('close', showDialog.value);
 }
+//외부에서 사용가능하게 함
+defineExpose({ open, close });
 
 </script>
 <!--persistent : 외부를 눌러도 닫히지 않게-->
 <!--@click:outside="close" : 외부를 눌러서 닫혀도 dialog=false 값 유지되게-->
 <template>
-    <v-dialog v-model="dialog"  min-width="400" max-width="1200"  @click:outside="close">
+    <v-dialog v-model="showDialog"  min-width="400" max-width="1200"  @click:outside="close">
         <v-card>
           <UiParentCard :title="title">
             <div>

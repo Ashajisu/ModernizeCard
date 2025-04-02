@@ -208,7 +208,8 @@ const onDelete = () => {
                 </v-col>
                 <v-col cols="7">
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                    <v-btn color="grey" variant="outlined" @click="">패스워드초기화</v-btn>
+                    <CustomSlotDialog ref="passwordDialog" title="패스워드초기화" :view="false" width=""/>
+                    <v-btn color="grey" variant="outlined" @click="$refs.passwordDialog?.open()">패스워드초기화</v-btn>
                     <v-btn flat color="primary" variant="outlined" @click="onSave">저장</v-btn>
                   </div>
                 </v-col>
