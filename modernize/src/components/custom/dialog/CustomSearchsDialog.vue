@@ -25,11 +25,12 @@ const emit = defineEmits(["update:view", "update:selectedValue"]);
 function close() {
   dialog.value = false;
   emit('update:view', false);
-  console.log('close', dialog.value);
 }
 
+//단일, 배열 모두 저장 가능
 function save() {
-  const selectedValues = result.value.map((item:any) => item[searchField.value]);
+  const values = Array.isArray(result.value) ? result.value : [result.value];
+  const selectedValues = values.map((item: any) => item[searchField.value]);
   console.log('save', selectedValues);
   emit('update:selectedValue', selectedValues);
   close();

@@ -1,32 +1,27 @@
 <script setup lang="ts">
-import {watch, ref} from "vue";
+import { ref } from "vue";
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 const props = defineProps<{
-  view: boolean;
   title: string;
-  width: undefined | number | string;
+  width?: undefined | number | string;
 }>();
 
-const dialog = ref(props.view);
-// 열릴때
-watch(() => props.view, (newValue : boolean) => {
-  dialog.value = newValue;
-}, { deep: false });
-
-// 닫힐때
-const emit = defineEmits(["update:view", "update:selectedValue"]);
-function close() {
-  dialog.value = false;
-  emit('update:view', false);
-  console.log('close', dialog.value);
+const showDialog = ref(false);
+const open = () => {
+  showDialog.value = true;
+};
+const close = () => {
+  showDialog.value = false;
 }
+//외부에서 사용가능하게 함
+defineExpose({ open, close });
 
 </script>
 <!--persistent : 외부를 눌러도 닫히지 않게-->
 <!--@click:outside="close" : 외부를 눌러서 닫혀도 dialog=false 값 유지되게-->
 <template>
-    <v-dialog v-model="dialog" :width="width" min-width="400" max-width="1200" @click:outside="close">
+    <v-dialog v-model="showDialog" :width="width ?? 700" min-width="400" max-width="1200" @click:outside="close">
         <v-card>
             <UiParentCard :title="title" style="height: 100%">
                 <div>
