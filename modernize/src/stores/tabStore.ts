@@ -1,74 +1,62 @@
 import { defineStore } from "pinia";
-import config from "@/config";
 
+// F5에도 탭 유지 : @pinia-plugin-persistedstate 라이브러리를 설치하고, tabs 상태를 유지하도록 설정 : 불필요
+// 탭전체삭제 : removeAllTabs: 불필요
+// 탭 갯수제한 제거.
 export const useTabStore = defineStore({
   id: "tab",
   state: () => ({
-    maxTabs: config.maxTabs,
-    tabs: [] as { title: string; to: string;}[],
-    activeTab: null as string | null
+    tabs: [] as { name: string; path: string;}[],
+    activeTab: { name: "Modern", path: "/dashboards/modern" },
+    defaultTab: { name: "Modern", path: "/dashboards/modern" }
   }),
   actions: {
-    setActiveTab(page: { title: string; to: string }){
-      if (!page.to || this.activeTab === page.to) return;
-      this.activeTab = page.to;
+    setActiveTab(page: { name: string; path: string }){
+      if (!page.path || this.activeTab.path === page.path) return;
+      this.activeTab = { ...page }; // 새로운 객체 할당
     },
-    addTab(page: { title: string; to: string }) {
-      const existingTab = this.tabs.find(tab => tab.to === page.to);
+    addTab(page: { name: string; path: string }) {
+      const existingTab = this.tabs.find(tab => tab.path === page.path);
       if (existingTab) {
         this.setActiveTab(existingTab); // 이미 열려있다면 활성화
       } else {
-        if (this.tabs.length >= this.maxTabs) {
-          alert(`최대 ${this.maxTabs}개의 탭만 열 수 있습니다.`);
-          if (this.tabs.length > 0) {
-            this.setActiveTab(this.tabs[0]);
-          }
-        } else {
           this.tabs.push(page);
-          // this.activeTab = page.to;
           this.setActiveTab(page);
-        }
       }
     },
-    removeTab(tabTo: string) {
-      // console.log(this.tabs.length);
-      if(this.tabs.length == 1){
-        alert(`최소 1개의 탭은 열려있어야 합니다.`);
-        return;
-      };
-
-      const index = this.tabs.findIndex(tab => tab.to === tabTo);
-      if (index === -1) return; // 이미 없는 탭이면 종료
-      // 활성화된 탭이 삭제된 경우, 적절한 탭으로 이동
-      if (this.activeTab === tabTo) {
-        const newActiveTab = this.tabs[index - 1] || this.tabs[index + 1] || this.tabs[0];
-        this.setActiveTab(newActiveTab);
-      }
-      // 배열에서 해당 탭 삭제
-      this.tabs.splice(index, 1);
-    },
-    refreshTab() {
-      const index = this.tabs.findIndex(tab => tab.to === this.activeTab);
+    removeTab(path: string) {
+      const index = this.tabs.findIndex(tab => tab.path === path);
+      // 없는 탭인 경우 처리
       if (index === -1) return;
 
-      const tab = this.tabs[index];
-      this.removeTab(tab.to);
+      // 현재 활성화된 탭을 닫을 경우 처리
+      if (this.activeTab.path === path) {
+        const newActiveTab = this.tabs[index - 1] || this.tabs[index + 1];
+        this.setActiveTab(newActiveTab || this.defaultTab);
+      }
+      // 탭 삭제
+      this.tabs.splice(index, 1);
 
-      setTimeout(()=>{
-      this.addTab(tab);
-      // console.log("done", tab);
-      });
-
-      setTimeout(()=>{
-      this.setActiveTab(tab);
-      },5);
+      // 모든 탭이 닫히면 기본 탭 추가
+      if (this.tabs.length === 0) {
+        this.addTab(this.defaultTab);
+      }
+    },
+    refreshTab() {
+      if (!this.activeTab) return;
+      const tab = this.tabs.find(t => t.path === this.activeTab.path);
+      if (!tab) return;
+      this.removeTab(tab.path);
+      setTimeout(() => this.addTab(tab), 10);
       //requestAnimationFrame, nextTick 은 제대로 동작하지 않음.
+    },
+    removeAllTabs(){
+      this.tabs = [];
+      this.addTab(this.defaultTab);
     }
   },
   getters: {
-    isActive: (state) => (path: string) => {
-      return state.activeTab === path;
-    },
-    cachedTabs: (state) => state.tabs.map(tab => tab.title),
-  }
+    isActive: (state) => (path: string) => state.activeTab.path === path,
+    cachedTabs: (state) => state.tabs.map(tab => tab.name),
+  },
 });

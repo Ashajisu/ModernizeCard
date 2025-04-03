@@ -6,16 +6,17 @@ import { router } from "@/router";
 import {useCustomizerStore} from "@/stores/customizer";
 const customizer = useCustomizerStore();
 
-//  라우터 감지해서 경로 변경시, 자동으로 탭 추가.
+// 라우터 감지해서 경로 변경시, 자동으로 탭 추가.
 watch(() => router.currentRoute.value, (newRoute) => {
   if (newRoute && newRoute.path) {
-    tabStore.addTab({ to: newRoute.path, title: (newRoute.name as string) || 'New Tab' });
+    const name = (newRoute.name as string) || newRoute.path || 'undefined'; // name이 없으면 path 사용
+    tabStore.addTab({ path: newRoute.path, name }); // 기존 탭이 있으면 setActiveTab 실행됨
   }
 }, { immediate: true });
 
 // 탭 변경 감지해서 라우터 변경
 watch(() => tabStore.activeTab,(newTab) => {
-  if (newTab && newTab !== router.currentRoute.value.path) {
+  if (newTab && decodeURIComponent(newTab.path) !== decodeURIComponent(router.currentRoute.value.path)) {
     router.push(newTab);
   }
 });
@@ -24,9 +25,9 @@ watch(() => tabStore.activeTab,(newTab) => {
 <template>
   <div :class="customizer.boxed ? 'maxWidth v-toolbar__content' : 'px-6 v-toolbar__content'">
       <v-tabs show-arrows color="primary" v-model="tabStore.activeTab" class="custom-tabs" >
-          <v-tab v-for="(tab) in tabStore.tabs" :key="tab.to" :value="tab.to">
-            {{ tab.title}}
-            <v-btn @click.stop="tabStore.removeTab(tab.to)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
+          <v-tab v-for="(tab) in tabStore.tabs" :key="tab.path" :value="tab">
+            {{ tab.name}}
+            <v-btn @click.stop="tabStore.removeTab(tab.path)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
               <XIcon stroke-width="1.5" width="12" />
             </v-btn>
           </v-tab>

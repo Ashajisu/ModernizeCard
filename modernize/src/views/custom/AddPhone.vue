@@ -11,10 +11,10 @@ import { useTableManager } from "@/common/useTableManager";
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
-  { label: '사용자명', name: 'username', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
+  { label: '사용자명', name: 'username', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, required: false, disabled: false },
   { label: '내선번호', name: 'mobile', type: 'text', value: '', required: false, disabled: false },
-  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:ZoomPhoneDataTables, view:false, required: false, disabled: false },
+  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables, required: false, disabled: false },
+  { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:ZoomPhoneDataTables, required: false, disabled: false },
   { label: '', name: '_', type: 'none', value: '', required: false, disabled: false },
 ]);
 const headers = ref<any[]>([
@@ -33,10 +33,10 @@ const userFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
   { label: '직위', name: 'position', type: 'select', value: '', options: ['사원', '대리', '과장', '차장', '부장'], required: false, disabled: false },
-  { label: '내선번호', name: 'mobile', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, view:false, required: true, disabled: false },
-  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
-  { label: '당겨받기', name: 'pullNumber', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
-  { label: 'IP 전화기', name: 'ipPhone', type: 'search', value: 'Avaya J159_308152', searchObj:ZoomPhoneDataTables,view:false, required: false, disabled: false },
+  { label: '내선번호', name: 'mobile', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables, required: true, disabled: false },
+  { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables,required: false, disabled: false },
+  { label: '당겨받기', name: 'pullNumber', type: 'search_list', value: '', searchObj:ZoomPhoneDataTables,required: false, disabled: false },
+  { label: 'IP 전화기', name: 'ipPhone', type: 'search', value: 'Avaya J159_308152', searchObj:ZoomPhoneDataTables,required: false, disabled: false },
   { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: 'WorkplaceBiz', options: ['WorkplaceBiz', '...', 'Zoom Phone Basic '], required: true, disabled: false },
   { label: '통화녹음', name: 'callRecording', type: 'select', value: '미사용', options: ['미사용', '선택녹취','전수녹취'], required: false, disabled: false }
 ]);

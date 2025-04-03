@@ -2,6 +2,8 @@
 import UiChildCard from "@/components/shared/UiChildCard.vue";
 import {ref, onMounted, watch} from "vue";
 
+defineProps<{ selectedId: { id: number; type: string } }>();
+
 const search = ref('');
 
 //tui-tree
@@ -231,7 +233,7 @@ const sendSelected = (nodeData: any) => {
 그래서 v-card, AppBaseCard, perpect-scroll-bar 내부에 들어가면 안됨.
 -->
 <template>
-    <UiChildCard title="조직 정보" variant="">
+    <UiChildCard title="조직 정보" variant="flat">
         <v-row>
           <v-btn color="primary" @click="openAllNodes">전체 펼치기</v-btn>
           <v-btn color="primary" @click="closeAllNodes">전체 접기</v-btn>

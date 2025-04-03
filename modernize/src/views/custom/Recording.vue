@@ -12,14 +12,14 @@ import { useTableManager } from "@/common/useTableManager";
 import type { RecordingItem } from "@/types/custom/DataTableTypes";
 
 const formFields = ref<FormField[]>([
-  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
-  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
-  { label: '부서', name: 'department', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
-  { label: '팀', name: 'team', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
-  { label: '사용자', name: 'username', type: 'search_list', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
+  { label: '수신자 번호', name: 'receiver', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
+  { label: '부서', name: 'department', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
+  { label: '팀', name: 'team', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
+  { label: '사용자', name: 'username', type: 'search_list', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
   { label: '통화시작시간', name: 'startTime', type: 'datetime', value: '', required: false, disabled: false },
   { label: '통화종료시간', name: 'endTime', type: 'datetime', value: '', required: false, disabled: false },
-  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, view:false, required: false, disabled: false },
+  { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['유선', '내선', '모바일'], required: false, disabled: false },
   { label: '', name: '', type: 'none', value: '', required: false, disabled: true },

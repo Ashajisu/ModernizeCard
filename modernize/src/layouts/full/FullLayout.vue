@@ -37,8 +37,8 @@ const tabStore = useTabStore();
                     <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                         <div :class="customizer.boxed ? 'maxWidth' : ''">
                             <RouterView v-slot="{ Component }">
-                              <keep-alive :include="tabStore.cachedTabs" :max="tabStore.maxTabs">
-                                <component :is="Component" :key="tabStore.activeTab" />
+                              <keep-alive :include="tabStore.cachedTabs" >
+                                <component :is="Component"/>
                               </keep-alive>
                             </RouterView>
                             <v-btn
@@ -80,11 +80,11 @@ const tabStore = useTabStore();
             <v-main>
                 <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
-                          <RouterView v-slot="{ Component }">
-                            <keep-alive :include="tabStore.cachedTabs" :max="tabStore.maxTabs">
-                                <component :is="Component" :key="tabStore.activeTab" />
-                            </keep-alive>
-                          </RouterView>
+                        <RouterView v-slot="{ Component }">
+                          <keep-alive :include="tabStore.cachedTabs" >
+                            <component :is="Component"/>
+                          </keep-alive>
+                        </RouterView>
                         <v-btn
                             class="customizer-btn"
                             size="large"

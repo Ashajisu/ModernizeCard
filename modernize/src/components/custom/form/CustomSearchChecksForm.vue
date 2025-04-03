@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
-import {computed, ref} from "vue";
+import {type ComponentPublicInstance, computed, ref} from "vue";
 import CustomDialog from "@/components/custom/dialog/CustomSearchsDialog.vue";
 import type {VForm} from "vuetify/components";
 
@@ -14,12 +14,13 @@ const props = defineProps<{
 const isEditable = computed(() => props.edit);
 
 // Dialog 열림 여부
-const openSearchDialog = (field : FormField) => {
-  if(isEditable.value){ field.view = true; }
-  // console.log('done', isEditable.value, field.view); //두 값이 항상 같아야 함.
+const dialogRefs = ref<Record<string, ComponentPublicInstance<typeof CustomDialog> | null>>({});
+const openSearchDialog = (field: FormField) => {
+  if (isEditable.value) {
+    const dialog = dialogRefs.value[field.name];
+    dialog?.open();
+  }
 };
-
-const emit = defineEmits(["update:view", "update:selectedValue"]);
 
 const formRef = ref<VForm | null>(null);
 // 유효성 검사 함수
@@ -76,7 +77,8 @@ const formData = computed(()=> {
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
                         </span>
                       </template>
-                      <CustomDialog v-if="isEditable && field.view" v-model:view="field.view" :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
+                      <CustomDialog :ref="(el) => { if (el && el instanceof Object) dialogRefs[field.name] = el as ComponentPublicInstance<typeof CustomDialog>; }"
+                                    :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
                     </v-text-field>
 
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
