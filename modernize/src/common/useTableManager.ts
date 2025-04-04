@@ -1,6 +1,9 @@
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, shallowRef } from "vue";
 import type { Ref } from "vue";
 import type {FormField} from "@/types/custom/InputTypes";
+import {parseExcel} from "@/common/excelService";
+import { alert, confirm } from "@/common/alertService";
+
 // 팀 옵션 맵
 const teamOptionsMap: Record<string, string[]> = {
     '기술팀': ['기술2팀', '기술1팀', '기술지원팀'],
@@ -13,9 +16,10 @@ export function useTableManager<T extends Record<string, any>>(
     initialData: T[],
     formFields: Ref<FormField[]>,   // 검색 필드
     detailFields?: Ref<FormField[]>,    // 상세정보 필드
+    identifierField: string = "employeeId"  // 테이블 식별자 필드
 ) {
     // 📌 테이블 데이터
-    const tableList = ref<T[]>(initialData);
+    const tableList = shallowRef<T[]>(initialData);
     // 📌 검색어 상태
     const search = ref<Record<string, any>>({});
 
@@ -100,7 +104,7 @@ export function useTableManager<T extends Record<string, any>>(
     // ✅ 선택된 상세정보 출력
     const updateUserFields = (selectedId: string) => {
         if (!detailFields) return;
-        selectedItem.value = tableList.value.find((item) => item.employeeId === selectedId) || null;
+        selectedItem.value = tableList.value.find((item) => item[identifierField] === selectedId) || null;
         if (selectedItem.value) {
             detailFields.value.forEach((field) => {
                 field.value = selectedItem.value?.[field.name] ?? "";
@@ -128,30 +132,62 @@ export function useTableManager<T extends Record<string, any>>(
     };
 
     // ✅ 저장 (신규 등록 & 수정)
-    const onSave = async (validateForm: any) => {
+    const onSave = async (validateForm: any): Promise<boolean> => {
         const formData = await validateForm();
         if (formData) {
-            const index = tableList.value.findIndex((item) => item.employeeId === formData.employeeId);
+            const index = tableList.value.findIndex((item) => item[identifierField] === formData[identifierField]);
             if (index === -1) {
                 tableList.value.push({ ...formData });
-                alert(`"${formData.username}" 사용자가 등록되었습니다.`);
+                await alert(`"${formData[identifierField]}" 가 등록되었습니다.`);
             } else {
-                tableList.value[index] = { ...formData };
-                alert(`"${formData.username}" 사용자가 업데이트되었습니다.`);
+                tableList.value[index] = { ...tableList.value[index], ...formData }; // 기존 필드 유지
+                await alert(`"${formData[identifierField]}" 가 업데이트되었습니다.`);
             }
             edit.value = false;
+            return true; // 저장 성공
+        }else {
+            return false; // 저장 실패
         }
     };
 
+    const onExcelSave = async (validateForm: () => Promise<File | null>): Promise<boolean> => {
+        const file = await validateForm();
+        if(!file){ return false; }
+
+        const data = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
+
+        if (Array.isArray(data) && data.length > 0) {
+            let addedCount = 0;
+            data.forEach((row) => {
+                const identifier = row[identifierField];
+                const index = tableList.value.findIndex((item) => item[identifierField] === identifier);
+
+                if (index === -1) {
+                    tableList.value.push({ ...row });
+                    addedCount++;
+                } else {
+                    tableList.value[index] = { ...tableList.value[index], ...row };
+                }
+            });
+
+            await alert(`엑셀에서 ${addedCount}건 등록, ${addedCount}건 업데이트 완료`);
+            return true;
+        } else {
+            await alert("엑셀 파싱 실패 또는 데이터가 비어 있습니다.");
+            return false;
+        }
+    };
+
+
     // ✅ 삭제 기능
-    const onDelete = (selected: string) => {
-        const index = tableList.value.findIndex((item) => item.employeeId === selected);
-        if (index !== -1 && confirm("삭제 하시겠습니까?")) {
+    const onDelete = async (selected: string) => {
+        const index = tableList.value.findIndex((item) => item[identifierField] === selected);
+        if (index !== -1 && await confirm("삭제 하시겠습니까?")) {
             const removed = tableList.value.splice(index, 1);
             if (removed[0]) {
-                alert(`${removed[0].username}이 삭제되었습니다.`);
+                await alert(`${removed[0][identifierField]}이 삭제되었습니다.`);
             } else {
-                alert("삭제 실패");
+                await alert("삭제 실패");
             }
         }
     };
@@ -171,5 +207,6 @@ export function useTableManager<T extends Record<string, any>>(
         onNew,
         onSave,
         onDelete,
+        onExcelSave
     };
 }
