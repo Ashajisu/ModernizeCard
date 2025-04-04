@@ -58,7 +58,6 @@ const {
   onSave,
   onDelete,
 } = useTableManager<UserItem>(UserDataTables, formFields, userFields);
-
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -114,7 +113,7 @@ const {
                     <v-col cols="7">
                       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                         <CustomSlotDialog ref="passwordDialog" title="패스워드초기화"/>
-                        <v-btn color="grey" variant="outlined" @click="$refs.passwordDialog?.open()">패스워드초기화</v-btn>
+                        <v-btn color="grey" variant="outlined" @click="( $refs.passwordDialog as any )?.open()">패스워드초기화</v-btn>
                         <v-btn flat color="primary" variant="outlined" @click="onSave(validateForm)">저장</v-btn>
                       </div>
                     </v-col>

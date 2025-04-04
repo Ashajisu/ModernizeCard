@@ -202,7 +202,7 @@ const quickLink: quickLinksType[] = [
 // 
 const searchSugg: searchType[] = [
     {
-        title: 'Modern',
+        title: 'Dashboard',
         href: '/dashboards/modern'
     },
     {
@@ -238,7 +238,7 @@ const searchSugg: searchType[] = [
         href: '/pages/account-settings'
     },
     {
-        title: 'Modern',
+        title: 'Dashboard',
         href: '/dashboards/modern',
     },
     {

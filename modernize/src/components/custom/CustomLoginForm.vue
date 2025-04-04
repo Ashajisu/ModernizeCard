@@ -56,9 +56,12 @@ function validate(values: any, { setErrors }: any) {
         </div>
         <v-row class="d-flex flex-wrap align-baseline mb-3 mt-3">
             <v-col cols="6" sm="6" >
-                <v-btn variant="outlined" size="large" class="border text-subtitle-1" block @click="$refs.settingDialog?.open()">
-                    <SettingsIcon />
-                    <span class="d-sm-flex d-none mr-1"> 환경설정</span>
+                <CustomSlotDialog ref="settingDialog" title="환경설정">
+                  <template v-slot:inCard>
+                  </template>
+                </CustomSlotDialog>
+                <v-btn variant="outlined" size="large" class="border text-subtitle-1" block @click="( $refs.settingDialog as any )?.open()">
+                    <SettingsIcon /><span class="d-sm-flex d-none mr-1"> 환경설정</span>
                 </v-btn>
             </v-col>
             <v-col cols="6" sm="6">
@@ -66,11 +69,6 @@ function validate(values: any, { setErrors }: any) {
                     > 비밀번호를 잊어버렸나요 ?</RouterLink
                 >
             </v-col>
-          <CustomSlotDialog ref="settingDialog" title="환경설정">
-            <template v-slot:inCard>
-
-            </template>
-          </CustomSlotDialog>
         </v-row>
     </Form>
 </template>

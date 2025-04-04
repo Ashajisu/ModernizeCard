@@ -7,8 +7,8 @@ export const useTabStore = defineStore({
   id: "tab",
   state: () => ({
     tabs: [] as { name: string; path: string;}[],
-    activeTab: { name: "Modern", path: "/dashboards/modern" },
-    defaultTab: { name: "Modern", path: "/dashboards/modern" }
+    activeTab: { name: "Dashboard", path: "/dashboards/modern" },
+    defaultTab: { name: "Dashboard", path: "/dashboards/modern" }
   }),
   actions: {
     setActiveTab(page: { name: string; path: string }){
