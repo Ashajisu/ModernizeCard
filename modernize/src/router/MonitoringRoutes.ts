@@ -2,35 +2,39 @@ import type { RouteRecordRaw } from 'vue-router';
 
 const MonitoringRoutes: RouteRecordRaw = {
     path: '/monitoring',
+    meta: {
+        requiresAuth: true
+    },
+    redirect: '/monitoring/real/active/call',
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
         {
-            path: 'active-call-stats',
+            path: 'real/active/call',
             name: '활성통화',
             component: () => import('@/views/monitoring/real-time/ActiveCallStats.vue')
         },
         {
-            path: 'daily-call-stats',
+            path: 'real/daily/call',
             name: '일일 누적 통화',
             component: () => import('@/views/monitoring/real-time/DailyCallStats.vue')
         },
         {
-            path: 'daily-recording-stats',
+            path: 'real/daily/recording',
             name: '일일 누적 녹취',
             component: () => import('@/views/monitoring/real-time/DailyRecordingStats.vue')
         },
         {
-            path: 'active-recording-stats',
+            path: 'real/active/recording',
             name: '활성 녹취',
             component: () => import('@/views/monitoring/real-time/ActiveRecordingStats.vue')
         },
         {
-            path: 'daily-license-stats',
+            path: 'license/daily',
             name: '사용 현황',
             component: () => import('@/views/monitoring/license/DailyLicenseStatus.vue')
         },
         {
-            path: 'monthly-license-stats',
+            path: 'license/monthly',
             name: '사용 내역',
             component: () => import('@/views/monitoring/license/MonthlyLicenseStatus.vue')
         }

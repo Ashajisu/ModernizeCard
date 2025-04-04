@@ -13,9 +13,10 @@ const routes = [
         path: '/:pathMatch(.*)*',
         component: () => import('@/views/authentication/Error.vue')
     },
-    MainRoutes,
-    AuthRoutes,
+    MainRoutes, // 탭 기본 화면 dashboard 포함
+    AuthRoutes, // home 경로 로그인화면 포함
     // 아래에 각자의 route 파일을 생성해 추가하시면 됩니다.
+    // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
     UserRoutes,
     MonitoringRoutes,
     EnvManagementRoutes,

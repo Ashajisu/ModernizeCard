@@ -11,11 +11,8 @@ const AuthRoutes = {
             path: '/',
             component: () => import('@/views/authentication/CustomSideLogin.vue')
         },
-        // {
-        //     name: 'Landing Page',
-        //     path: '/',
-        //     component: () => import('@/views/pages/landingpage/index.vue')
-        // },
+
+        //템플릿 제공 화면 : 절대경로 사용.
         {
             name: 'FrontPage',
             path: '/front-page/homepage',

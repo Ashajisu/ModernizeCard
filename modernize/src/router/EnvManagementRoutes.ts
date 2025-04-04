@@ -1,17 +1,19 @@
 import type { RouteRecordRaw } from 'vue-router';
 
 const EnvManagementRoutes: RouteRecordRaw = {
-    path: '/env-management',
+    path: '/env',
+    redirect: '/env/extension/list',
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
+        //상대경로 설정.
         {
-            name: 'Extension 번호 관리',
-            path: '/env-management/extension-list',
+            name: '내선번호',
+            path: 'extension/list',
             component: () => import('@/views/env-management/extention/ExtentionList.vue')
         },
         {
-            name: 'PSTN 번호 관리',
-            path: '/env-management/pstn-list',
+            name: 'PSTN',
+            path: 'pstn/list',
             component: () => import('@/views/env-management/pstn/PstnList.vue')
         }
     ]
