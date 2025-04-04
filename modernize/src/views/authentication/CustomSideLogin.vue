@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Logo from '@/layouts/full/logo/Logo.vue';
 /* Login form */
-import CustomLoginForm from '@/components/auth/CustomLoginForm.vue';
+import CustomLoginForm from '@/components/custom/CustomLoginForm.vue';
 </script>
 
 <template>

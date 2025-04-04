@@ -162,7 +162,6 @@ const moveItem = (number:number, direction:number) => {
                       </v-col>
                       <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                          <v-btn color="grey" variant="outlined" @click="$refs.functionDialog?.open()" :disabled="isProLicense">사용자 전화 기능키 관리</v-btn>
                           <CustomSlotDialog ref="functionDialog" title="기능키 관리" width="1500px">
                             <template v-slot:inCard>
                               <v-data-table :headers="functionHeaders" :items="functionData" item-value="username" hide-default-footer >
@@ -203,6 +202,7 @@ const moveItem = (number:number, direction:number) => {
                               </v-data-table>
                             </template>
                           </CustomSlotDialog>
+                          <v-btn color="grey" variant="outlined" @click="( $refs.functionDialog as any )?.open()" :disabled="isProLicense">사용자 전화 기능키 관리</v-btn>
                           <v-btn flat color="primary" variant="outlined" @click="onSave(validateForm)">저장</v-btn>
                         </div>
                       </v-col>
