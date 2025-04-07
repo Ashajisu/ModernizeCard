@@ -11,7 +11,7 @@ const PhoneRoutes : RouteRecordRaw = {
         {
             name: '디바이스',
             path: 'device',
-            component: () => import('@/view/phone/ZoomPhoneAdmin.vue')
+            component: () => import('@/view/phone/Device.vue')
         },
         {
             name: '내선번호',

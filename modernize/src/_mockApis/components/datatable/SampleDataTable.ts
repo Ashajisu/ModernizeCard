@@ -124,18 +124,21 @@ const CodeDatatables: Code []= [
 
 ];
 
-const ZoomPhoneDatatables: ZoomPhone []= [
+const ZoomPhoneDatatables: ZoomPhone[] = [
     {
         phoneName: "Phone1",
         user: "조정석",
         phoneNum: "308151",
         pstnNum: "02-2177-8152",
         phoneStatus: "Online",
-        model: "Avaya J159",
+        manufacturer: "Avaya",
+        modelName: "J159",
         macAddress: "c8-1f-ea-d7-a1-f6",
         firmware: "4.1.3.0.6",
         publicAddress: "211.xxx.xxx.xxx",
-        privateAddress: "192.168.101.51"
+        privateAddress: "192.168.101.51",
+        assignmentType: "사용자",
+        assignmentTarget: "조정석"
     },
     {
         phoneName: "Phone2",
@@ -143,11 +146,14 @@ const ZoomPhoneDatatables: ZoomPhone []= [
         phoneNum: "308152",
         pstnNum: "02-2177-8153",
         phoneStatus: "Online",
-        model: "Avaya J139",
+        manufacturer: "Avaya",
+        modelName: "J139",
         macAddress: "c8-1f-ea-d7-a1-f7",
         firmware: "4.1.3.0.6",
         publicAddress: "211.xxx.xxx.xxx",
-        privateAddress: "192.168.101.52"
+        privateAddress: "192.168.101.52",
+        assignmentType: "CAP",
+        assignmentTarget: "308152"
     },
     {
         phoneName: "Phone3",
@@ -155,11 +161,14 @@ const ZoomPhoneDatatables: ZoomPhone []= [
         phoneNum: "308153",
         pstnNum: "02-2177-8154",
         phoneStatus: "Online",
-        model: "Avaya J179",
+        manufacturer: "Avaya",
+        modelName: "J179",
         macAddress: "c8-1f-ea-d7-a1-f8",
         firmware: "4.1.3.0.6",
         publicAddress: "211.xxx.xxx.xxx",
-        privateAddress: "192.168.101.53"
+        privateAddress: "192.168.101.53",
+        assignmentType: "사용자",
+        assignmentTarget: "최민식"
     },
     {
         phoneName: "Phone4",
@@ -167,11 +176,14 @@ const ZoomPhoneDatatables: ZoomPhone []= [
         phoneNum: "308154",
         pstnNum: "02-2177-8155",
         phoneStatus: "Online",
-        model: "Avaya J139",
+        manufacturer: "Avaya",
+        modelName: "J139",
         macAddress: "c8-1f-ea-d7-a1-f9",
         firmware: "4.1.3.0.6",
         publicAddress: "211.xxx.xxx.xxx",
-        privateAddress: "192.168.101.54"
+        privateAddress: "192.168.101.54",
+        assignmentType: "CAP",
+        assignmentTarget: "308154"
     },
 ];
 
