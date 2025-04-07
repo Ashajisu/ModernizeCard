@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { parseExcel } from '@/common/excelService';
+import { parseExcel } from '@/common/excel/excelService';
 import type {VForm} from "vuetify/components"; // 여기서 분리한 함수 사용
 
 const formRef = ref<VForm | null>(null);
@@ -38,7 +38,7 @@ defineExpose({
 </script>
 <!-- 아직 기능 미구현 -->
 <template>
-    <v-form ref="formRef" v-model="validateForm">
+    <v-form ref="formRef" :v-model="validateForm">
         <v-file-input v-model="file" accept=".xlsx, .xls" width="100%" dense label="엑셀 파일을 선택하세요"
 
                       :rules="[v => !!v || '파일을 선택하세요']"

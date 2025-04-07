@@ -1,7 +1,7 @@
-import { ref, computed, watch, shallowRef } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import type { Ref } from "vue";
 import type {FormField} from "@/types/custom/InputTypes";
-import {parseExcel} from "@/common/excelService";
+import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
 
 // 팀 옵션 맵
@@ -19,7 +19,12 @@ export function useTableManager<T extends Record<string, any>>(
     identifierField: string = "employeeId"  // 테이블 식별자 필드
 ) {
     // 📌 테이블 데이터
-    const tableList = shallowRef<T[]>(initialData);
+    // shallowRef 사용시 내부 값 변경에 대해서는 반응하지 않는 단점이 있음.
+    // ref 를 데이터를 담아 초기화하면 UnwrapRef 처리되어 타입문제가 생기는 단점이 있음.-> 마운트 시점에 초기 데이터 주입
+    const tableList: Ref<T[]> = ref([]);
+    onMounted(() => {
+        tableList.value = initialData.map(item => ({ ...item })) as T[];
+    });
     // 📌 검색어 상태
     const search = ref<Record<string, any>>({});
 
@@ -154,11 +159,11 @@ export function useTableManager<T extends Record<string, any>>(
         const file = await validateForm();
         if(!file){ return false; }
 
-        const data = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
+        const data:T[] = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
 
         if (Array.isArray(data) && data.length > 0) {
             let addedCount = 0;
-            data.forEach((row) => {
+            data.forEach((row:T) => {
                 const identifier = row[identifierField];
                 const index = tableList.value.findIndex((item) => item[identifierField] === identifier);
 

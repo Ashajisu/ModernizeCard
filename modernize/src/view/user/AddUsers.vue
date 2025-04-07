@@ -7,6 +7,7 @@ import type { UserItem } from "@/types/custom/DataTableTypes";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { useTableManager } from "@/common/useTableManager";
+import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 
 //검색
 const formFields = ref<FormField[]>([
@@ -57,6 +58,7 @@ const {
   onNew,
   onSave,
   onDelete,
+  onExcelSave
 } = useTableManager<UserItem>(UserDataTables, formFields, userFields);
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
@@ -84,7 +86,7 @@ const {
                 <v-col>
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                    <v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
+                    <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드"/>
                   </div>
                 </v-col>
               </v-row>

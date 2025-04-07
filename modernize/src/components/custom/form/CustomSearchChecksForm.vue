@@ -38,6 +38,10 @@ const formData = computed(()=> {
   });
   return data;
 });
+// 외부에서 접근 가능하도록 노출
+defineExpose({
+  validateForm
+});
 </script>
 <!-- 다중 체크박스를 지원 -->
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
