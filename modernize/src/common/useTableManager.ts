@@ -1,7 +1,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import type { Ref } from "vue";
 import type {FormField} from "@/types/custom/InputTypes";
-import {parseExcel} from "@/common/excelService";
+import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
 
 // 팀 옵션 맵

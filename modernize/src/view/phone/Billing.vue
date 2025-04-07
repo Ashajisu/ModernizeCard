@@ -7,6 +7,7 @@ import { RecordingDataTables } from "@/_mockApis/custom/ZoomData";
 import type { RecordingItem } from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { useTableManager } from "@/common/useTableManager";
+import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 
 const formFields_admin = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
@@ -69,6 +70,7 @@ const {
   onSearch,
   resetSearch,
   filteredList,
+  onExcelSave
 } = useTableManager<RecordingItem>(RecordingDataTables, formFields);
 
 
@@ -95,17 +97,16 @@ function copyToClipboard(item : any) {
                 </h6>
               </v-row>
               <v-row>
-                <v-col cols="12">
                   <CustomSearchsCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
                     <template v-slot:lineBtn="{ validateForm }">
                       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                         <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                         <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                         <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                        <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드"/>
                       </div>
                     </template>
                   </CustomSearchsCheckForm>
-                </v-col>
               </v-row>
               <v-row>
                 <v-data-table items-per-page="5" :headers="headers" :items="filteredList" item-value="name"

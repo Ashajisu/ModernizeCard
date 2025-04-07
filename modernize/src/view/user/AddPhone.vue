@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { computed, type ComputedRef, ref } from "vue";
+import {computed, type ComputedRef, ref} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import { ZoomPhoneDataTables } from "@/_mockApis/custom/ZoomData";
 import type { ZoomPhoneItem } from "@/types/custom/DataTableTypes";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import { useTableManager } from "@/common/useTableManager";
+import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },
@@ -26,7 +27,7 @@ const headers = ref<any[]>([
   { title: 'PSTN 번호', align: 'center', key: 'pstnNumber' },
   { title: '...', align: 'center', key: 'pstnNumber' },
   { title: '통화녹음', align: 'end', key: 'callRecording' },
-])
+]);
 const userFields = ref<FormField[]>([
   { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: false, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: false, disabled: false },
@@ -67,6 +68,7 @@ const {
   onNew,
   onSave,
   onDelete,
+  onExcelSave
 } = useTableManager<ZoomPhoneItem>(ZoomPhoneDataTables, formFields, userFields);
 
 //기능키 관리 : Zoom Phone Basic 사용자는 사용할 수 없음
@@ -136,7 +138,7 @@ const moveItem = (number:number, direction:number) => {
                 <v-col>
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                    <v-btn color="grey" variant="outlined" @click="">엑셀 업로드</v-btn>
+                    <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드"/>
                   </div>
                 </v-col>
               </v-row>
