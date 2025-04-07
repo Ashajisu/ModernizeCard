@@ -2,26 +2,30 @@ import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
-import UserRoutes from "@/router/UserRoutes";
+import UserRoutes from "./UserRoutes";
+import PhoneRoutes from "./PhoneRoutes";
 import MonitoringRoutes from './MonitoringRoutes';
-import EnvManagementRoutes from '@/router/EnvManagementRoutes';
-import GroupRoutes from "@/router/GroupRoutes";
-import StatisticsRoutes from "@/router/StatisticsRoutes";
+import ReportRoutes from "./ReportRoutes";
+import DeviceRoutes from "./DeviceRoutes";
+import LicenseRoutes from "./LicenseRoutes";
+import SettingsRoutes from './SettingsRoutes';
 
 const routes = [
     {
         path: '/:pathMatch(.*)*',
         component: () => import('@/views/authentication/Error.vue')
     },
-    MainRoutes, // 탭 기본 화면 dashboard 포함
+    MainRoutes,
     AuthRoutes, // home 경로 로그인화면 포함
-    // 아래에 각자의 route 파일을 생성해 추가하시면 됩니다.
     // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
-    UserRoutes,
+    UserRoutes, // 탭 기본 화면 dashboard 포함
+    PhoneRoutes,
     MonitoringRoutes,
-    EnvManagementRoutes,
-    GroupRoutes,
-    StatisticsRoutes
+    ReportRoutes,
+    DeviceRoutes,
+    LicenseRoutes,
+    SettingsRoutes,
+
 ]
 // KeepAlive 에서 컴포넌트를 캐싱하려면 컴포넌트에 name 이 필요함.
 // 비동기(import())로 호출된 컴포넌트는 기본적으로 name 이 없으므로,

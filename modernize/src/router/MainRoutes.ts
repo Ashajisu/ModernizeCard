@@ -6,20 +6,11 @@ const MainRoutes = {
     redirect: '/main',
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
-        //탭 기본화면
-        {
-            name: 'Dashboard',
-            path: '/dashboards/modern',
-            component: () => import('@/views/dashboard/modern/index.vue')
-        },
-
-        //템플릿 제공 화면 : 절대경로 사용.
         {
             name: 'eCommerce',
             path: '/dashboards/ecommerce',
             component: () => import('@/views/dashboard/ecommerce/index.vue')
         },
-
         {
             name: 'Chats',
             path: '/apps/chats',

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
-import SystemView from './SystemView.vue';
-import CallView from './CallView.vue';
-import AlarmView from './AlarmView.vue';
+import SystemView from '../../views/apps/kanban/SystemView.vue';
+import CallView from '../../views/apps/kanban/CallView.vue';
+import AlarmView from '../../views/apps/kanban/AlarmView.vue';
 
 // 선택된 SBC 정보
 const selectedServer = ref<{id: number; name: string; descirpiton: string; icon: string} | null > (null);

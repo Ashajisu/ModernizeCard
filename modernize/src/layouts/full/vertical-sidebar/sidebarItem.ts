@@ -92,7 +92,7 @@ const sidebarItem: menu[] = [
         icon: ApertureIcon,
         chipColor: 'surface',
         chipBgColor: 'secondary',
-        to: '/dashboards/modern'
+        to: '/home/dashboard'
     },
 
     { header: '사용자 및 조직' },
@@ -116,128 +116,128 @@ const sidebarItem: menu[] = [
     {
         title: '디바이스',
         icon: Message2Icon,
-        to: '/statistics/device'
+        to: '/phone/device'
     },
     {
         title: '내선번호',
         icon: PhoneIcon,
-        to: '/env/extension/list'
+        to: '/phone/extension'
     },
     {
         title: 'PSTN',
         icon: CloudComputingIcon,
-        to: '/env/pstn/list'
+        to: '/phone/pstn'
     },
     {
         title: '당겨받기 그룹',
         icon: FilesIcon,
-        to: '/group/general'
+        to: '/phone/pickup/group'
     },
 
     {
         title: '과금',
         icon: CurrencyDollarIcon,
-        to: '/user/billing'
+        to: '/phone/billing'
     },
     {
         title: '녹취',
         icon: PlayerPlayIcon,
-        to: '/user/recording'
+        to: '/phone/recording'
     },
 
     { header: '모니터링' },
     {
         title: '일일 누적 통화',
         icon: FilesIcon,
-        to: '/monitoring/real/daily/call'
+        to: '/monitoring/daily/call'
     },
     {
         title: '활성통화',
         icon: FilesIcon,
-        to: '/monitoring/real/active/call'
+        to: '/monitoring/active/call'
     },
     {
         title: '일일 누적 녹취',
         icon: FilesIcon,
-        to: '/monitoring/real/daily/recording'
+        to: '/monitoring/daily/recording'
     },
     {
         title: '활성 녹취',
         icon: FilesIcon,
-        to: '/monitoring/real/active/recording'
+        to: '/monitoring/active/recording'
     },
 
     { header: '통계'},
     {
         title: '부서별 과금 통계',
         icon: FilesIcon,
-        to: '/statistics/dept/billing'
+        to: '/report/dept/billing'
     },
     {
         title: ' 부서별 유형 통계',
         icon: FilesIcon,
-        to: '/statistics/dept/call'
+        to: '/report/dept/call'
     },
     {
         title: '일자별 수발신 통계',
         icon: FilesIcon,
-        to: '/statistics/daily/call'
+        to: '/report/daily/call'
     },
     {
         title: '일자별 수발신 유형별 통계',
         icon: FilesIcon,
-        to: '/statistics/daily/call/type'
+        to: '/report/daily/call/type'
     },
     {
         title: '사용량 통계',
         icon: FilesIcon,
-        to: '/statistics/usage'
+        to: '/report/usage'
     },
     {
         title: '전화 통화 이력',
         icon: MailIcon,
-        to: '/statistics/call/history'
+        to: '/report/call/history'
     },
     {
         title: '전화 최대 사용 이력',
         icon: TicketIcon,
-        to: '/statistics/call/history/max'
+        to: '/report/call/history/maximum'
     },
 
     { header: '디바이스 현황'},
     {
         title: '폰 디바이스 현황',
         icon: LayoutKanbanIcon,
-        to: '/group/device'
+        to: '/device/phone'
     },
     {
         title: 'SBC 현황',
         icon: CurrencyDollarIcon,
-        to: '/group/sbc/status'
+        to: '/device/sbc'
     },
 
     { header: '라이선스'},
     {
         title: '사용 현황',
         icon: UserCircleIcon,
-        to: '/monitoring/license/daily'
+        to: '/license/status'
     },
     {
         title: '사용 내역',
         icon: HelpIcon,
-        to: '/monitoring/license/monthly'
+        to: '/license/history'
     },
 
     { header: '환경설정'},
     {
         title: '메뉴 관리',
         icon: LayoutIcon,
-        to: '/statistics/manage/menu',
+        to: '/settings/menu',
     },
     {
         title: '코드관리',
         icon: HelpIcon,
-        to: '/statistics/manage/code'
+        to: '/settings/code'
     },
 ]
 
