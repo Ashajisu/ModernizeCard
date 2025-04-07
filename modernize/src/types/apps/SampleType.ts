@@ -25,11 +25,14 @@ type ZoomPhone ={
     phoneNum: string;
     pstnNum: string;
     phoneStatus: string;
-    model: string;
+    modelName: string;
+    manufacturer: string;
     macAddress: string;
     firmware: string;
     publicAddress: string;
     privateAddress: string;
+    assignmentType: string;
+    assignmentTarget: string;
 };
 
 type departmentCall ={
