@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import GeneralTab from './GeneralTab.vue';
+import GeneralTab from '@/view/phone/GeneralTab.vue';
 const tab = ref(null);
 </script>
 <template>

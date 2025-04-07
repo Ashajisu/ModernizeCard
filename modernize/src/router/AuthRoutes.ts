@@ -9,9 +9,8 @@ const AuthRoutes = {
         {
             name: 'Landing Page',
             path: '/',
-            component: () => import('@/views/authentication/CustomSideLogin.vue')
+            component: () => import('@/view/home/CustomSideLogin.vue')
         },
-
         //템플릿 제공 화면 : 절대경로 사용.
         {
             name: 'FrontPage',
@@ -51,7 +50,7 @@ const AuthRoutes = {
         {
             name: 'Side Login',
             path: '/auth/login',
-            component: () => import('@/views/authentication/CustomSideLogin.vue')
+            component: () => import('@/view/home/CustomSideLogin.vue')
         },
         {
             name: 'Boxed Login',

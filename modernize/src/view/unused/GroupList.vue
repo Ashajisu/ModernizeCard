@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import LeftSide from '@/components/apps/ecommerce/addproduct/General.vue';
-import GeneralTab from "@/views/apps/eCommerce/GeneralTab.vue";
+import GeneralTab from "@/view/phone/GeneralTab.vue";
 import RightSide from '@/components/apps/ecommerce/addproduct/RightSide.vue';
 
 const page = ref({ title: '당겨받기 관리' });

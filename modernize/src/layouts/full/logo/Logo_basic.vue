@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from "vue";
-import { useCustomizerStore } from "@/stores/customizer";
-import CustomLogo from "@/layouts/full/custom/CustomLogo.vue";
+import { useCustomizerStore } from "@/stores/customizer.js";
+import LogoLight from "@/layouts/full/logo/LogoLight.vue";
+import LogoDark from "@/layouts/full/logo/LogoDark.vue";
 
 const customizer = useCustomizerStore();
 
@@ -24,5 +25,6 @@ const dark = computed(() => {
 
 </script>
 <template>
-  <CustomLogo :theme="dark?'dark':'light'" />
+  <LogoLight v-if="dark" />
+  <LogoDark v-else />
 </template>
