@@ -198,11 +198,14 @@ const editedItem = ref({
   phoneNum: '',
   pstnNum: '',
   phoneStatus: '',
-  model: '',
+  manufacturer: '',
+  modelName: '',
   macAddress: '',
   firmware: '',
   publicAddress: '',
   privateAddress: '',
+  assignmentType: '',
+  assignmentTarget: ''
 });
 
 const defaultItem = ref({
@@ -389,7 +392,7 @@ const defaultItem = ref({
                           :items="['J139', 'J159', 'J179']"
                           label="모델 선택"
                           required
-                          v-model="editedItem.model"
+                          v-model="editedItem.modelName"
                       ></v-select>
                     </v-col>
                   </v-row>

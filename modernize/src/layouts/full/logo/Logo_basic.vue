@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useCustomizerStore } from "@/stores/customizer.js";
+import { useCustomizerStore } from "@/stores/customizer";
 import LogoLight from "@/layouts/full/logo/LogoLight.vue";
 import LogoDark from "@/layouts/full/logo/LogoDark.vue";
 
