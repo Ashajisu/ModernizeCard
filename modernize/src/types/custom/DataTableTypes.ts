@@ -71,4 +71,12 @@ type RecordChat = {
     }[];
 };
 
-export type { searchDialogType, UserItem, ZoomPhoneItem, RecordingItem, RecordChat };
+type ExtensionItem = {
+    number: string;
+    provision: string;
+    assignment: string;
+    // 인덱스 시그니처 추가
+    [key: string]: string;
+};
+
+export type { searchDialogType, UserItem, ZoomPhoneItem, RecordingItem, RecordChat, ExtensionItem };
