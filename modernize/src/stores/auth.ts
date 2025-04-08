@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 import { router } from '@/router';
 import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
-import {getAuthData} from "@/data/Axios";
+// import {getAuthData} from "@/data/Axios";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
-const apiUrl = `/api`;
+// const apiUrl = `/api`;
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore({
             // store user details and jwt in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
             // redirect to previous url or default to home page
-            router.push(this.returnUrl || '/dashboards/modern');
+            await router.push(this.returnUrl || '/home/dashboard');
         },
         logout() {
             this.user = null;
