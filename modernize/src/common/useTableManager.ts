@@ -15,7 +15,7 @@ const teamOptionsMap: Record<string, string[]> = {
 export function useTableManager<T extends Record<string, any>>(
     initialData: T[],
     formFields: Ref<FormField[]>,   // 검색 필드
-    detailFields?: Ref<FormField[]>,    // 상세정보 필드
+    detailFields?: Ref<FormField[]> | null,    // 상세정보 필드
     identifierField: string = "employeeId"  // 테이블 식별자 필드
 ) {
     // 📌 테이블 데이터
