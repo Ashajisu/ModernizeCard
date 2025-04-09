@@ -8,6 +8,7 @@ import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { useTableManager } from "@/common/useTableManager";
 import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 import { alert, confirm } from '@/common/alertService';
+import ArrNumber from './ArrNumber.vue';
 
 //데이터 정보
 const PstnList:PstnItem[] = [
