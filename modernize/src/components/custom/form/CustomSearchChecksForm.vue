@@ -43,16 +43,16 @@ defineExpose({
   validateForm
 });
 </script>
-<!-- 다중 체크박스를 지원 -->
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
-<!-- 자동검증을 위한 form 태그 추가-->
-<!-- form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것.-->
+<!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
+<!-- type 항목: select, search, search_list, password, date, datetime, check, switch, text, slot, hidden, 그 외는 공백처리-->
 <template>
   <v-container>
       <slot name="topBtn" :validateForm="validateForm"/>
       <v-form ref="formRef" lazy-validation="false">
           <v-row class="mb-6">
-              <v-col :cols="12 / colsPerRow" v-for="(field, index) in formFields" :key="index">
+            <template v-for="(field) in formFields">
+              <v-col :cols="12 / colsPerRow" v-if="field.type!=='hidden'">
                 <v-row class="align-center">
                   <v-col cols="12" sm="12" class="pb-sm-1 pb-0 custom-height">
                     <v-select v-if="field.type === 'select'" return-object variant="outlined"
@@ -147,11 +147,16 @@ defineExpose({
                         </span>
                       </template>
                     </v-text-field>
+                    <template v-else-if="field.type === `slot`">
+                      <slot :name="field.name" :field="field" />
+                    </template>
                     <!--            공백처리-->
+                    <div v-else-if="field.type==='hidden'"></div>
                     <div v-else></div>
                   </v-col>
                 </v-row>
               </v-col>
+            </template>
               <!--          한줄 버튼 슬롯-->
               <v-col :cols="12 / colsPerRow">
                 <slot name="lineBtn" :validateForm="validateForm"/>

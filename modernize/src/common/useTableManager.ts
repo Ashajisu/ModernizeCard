@@ -148,6 +148,7 @@ export function useTableManager<T extends Record<string, any>>(
                 tableList.value[index] = { ...tableList.value[index], ...formData }; // 기존 필드 유지
                 await alert(`"${formData[identifierField]}" 가 업데이트되었습니다.`);
             }
+            console.debug('onSave:', formData);
             edit.value = false;
             return true; // 저장 성공
         }else {
