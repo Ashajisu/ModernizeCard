@@ -40,6 +40,7 @@ const headers = ref<any[]>([
   { title: '벨울림 지연', align: 'center', key: 'bellRingDelay' },
 ]);
 const groupFields = ref<FormField[]>([
+  { label: 'id', name: 'id', type: 'hidden', value: '', placeholder: '이름 입력', required: false, disabled: false },
   { label: '그룹명', name: 'group', type: 'text', value: '', placeholder: '이름 입력', required: false, disabled: false },
   { label: '부서명', name: 'department', type: 'select', value: '', options:[], required: false, disabled: false },
   { label: '그룹 내선번호', name: 'groupExtensionNumber', type: 'search', value: '', searchObj:GroupDatatables, required: false, disabled: false },
@@ -64,7 +65,7 @@ const {
   onSave,
   onDelete,
   onExcelSave,
-  deptOptions
+  updateUserFields
 } = useTableManager<Datatables>(GroupDatatables, formFields, groupFields, identifierField);
 
 // 엑셀 다운로드 처리 : ?? 사용자 안내창 없음.
@@ -118,11 +119,14 @@ const userSearchTerm = ref('');
 //구성원 관리 저장: 성공여부 반환
 const selectedUser = ref([]);
 const confirmManage = async () => {
+  const count = selectedUser.value.length;
   console.log('선택된 사용자들:', selectedUser.value);
-  console.log('구성원 수:', selectedUser.value.length);
-  console.log('선택정보:', selectedItem.value);
-  if (selectedItem.value) {
-    selectedItem.value.groupNumbers = String(selectedUser.value.length);
+  console.log('구성원 수:', count);
+  if (!!count) {
+    const groupNumbersField = groupFields.value.find(f => f.name === 'groupNumbers');
+    if (groupNumbersField) {
+      groupNumbersField.value = String(count);
+    }
     return true;
   } else {
     await alert('저장에 실패하였습니다. 잠시후 다시 시도해 주세요.');
@@ -200,7 +204,7 @@ const filteredUserList = computed(() => {
 
             <!-- 관리 버튼 및 모달 -->
             <template v-slot:manage="{field}">
-              <v-btn flat color="warning" variant="outlined" @click="( $refs.manageDialog as any )?.open()">관리</v-btn>
+              <v-btn flat color="warning" variant="outlined" :disabled="!edit" @click="( $refs.manageDialog as any )?.open()">관리</v-btn>
               <CustomSlotDialog ref="manageDialog" title="당겨받기 구성원 관리">
                 <template v-slot:inCard>
                   <v-text-field
