@@ -2,6 +2,7 @@ import type {Datatables} from "@/types/components/datatables/groupIndex";
 
 const GroupDatatables: Datatables[] = [
     {
+        id:1,
         group: "경영지원팀",
         department: "경영지원부",
         groupExtensionNumber: "8701",
@@ -9,6 +10,7 @@ const GroupDatatables: Datatables[] = [
         bellRingDelay: "0초"
     },
     {
+        id:2,
         group: "영업1팀",
         department: "영업본부",
         groupExtensionNumber: "8702",
@@ -17,6 +19,7 @@ const GroupDatatables: Datatables[] = [
 
     },
     {
+        id:3,
         group: "영업2팀",
         department: "영업본부",
         groupExtensionNumber: "8703",
@@ -24,6 +27,7 @@ const GroupDatatables: Datatables[] = [
         bellRingDelay: "10초"
     },
     {
+        id:4,
         group: "기술지원1팀",
         department: "고객지원본부",
         groupExtensionNumber: "8704",
@@ -31,6 +35,7 @@ const GroupDatatables: Datatables[] = [
         bellRingDelay: "0초"
     },
     {
+        id:5,
         group: "SPM팀",
         department: "고객지원본부",
         groupExtensionNumber: "8705",
@@ -38,6 +43,7 @@ const GroupDatatables: Datatables[] = [
         bellRingDelay: "5초"
     },
     {
+        id:6,
         group: "개발연구소",
         department: "고객지원본부",
         groupExtensionNumber: "8706",

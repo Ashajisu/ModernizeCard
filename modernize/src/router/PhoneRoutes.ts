@@ -26,7 +26,7 @@ const PhoneRoutes : RouteRecordRaw = {
         {
             name: '당겨받기 그룹',
             path: 'pickup/group',
-            component: () => import('@/view/phone/GeneralTab.vue')
+            component: () => import('@/view/phone/PickupGroup.vue')
         },
         {
             name: '과금',
