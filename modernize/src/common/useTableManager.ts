@@ -4,6 +4,9 @@ import type {FormField} from "@/types/custom/InputTypes";
 import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
 
+// 부서 맵
+const deptOptions = ['기술팀', '영업팀', '고객지원본부', '연구개발'];
+
 // 팀 옵션 맵
 const teamOptionsMap: Record<string, string[]> = {
     '기술팀': ['기술2팀', '기술1팀', '기술지원팀'],
@@ -27,6 +30,21 @@ export function useTableManager<T extends Record<string, any>>(
     });
     // 📌 검색어 상태
     const search = ref<Record<string, any>>({});
+
+    // 부서옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
+    const hasDepartment = initialData[0] && Object.prototype.hasOwnProperty.call(initialData[0], "department");
+    if (hasDepartment) {
+        const targetField = formFields.value.find(f => f.name === "department");
+        if (targetField) {
+            targetField.options = deptOptions;
+        }
+        if (detailFields?.value) {
+            const detailField = detailFields.value.find(f => f.name === "department");
+            if (detailField) {
+                detailField.options = deptOptions;
+            }
+        }
+    }
 
     // 부서 변경 시 팀 옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
     const updateTeamOptions = (fields: Ref<FormField[]>,) => {
@@ -213,6 +231,7 @@ export function useTableManager<T extends Record<string, any>>(
         onNew,
         onSave,
         onDelete,
-        onExcelSave
+        onExcelSave,
+        deptOptions
     };
 }
