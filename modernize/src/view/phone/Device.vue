@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 다른사람 페이지를 컴포넌트로 수정할 수 있는지 확인중.
-import {ref, watch} from 'vue';
+import {ref, watch, computed} from 'vue';
 import { ZoomPhoneDatatables } from '@/_mockApis/components/datatable/SampleDataTable';
 import type { ZoomPhone } from '@/types/apps/SampleType';
 import { useTableManager } from "@/common/useTableManager";
@@ -88,6 +88,13 @@ const onClickSave = async ()=>{
     await alert('저장에 실패하였습니다. 다시 시도해주세요');
   }
 }
+
+const itemsPerPage = ref(5);
+const pagination = ref(1);
+const pageCount = computed(() => {
+  return Math.ceil(ZoomPhoneDatatables.length / itemsPerPage.value);
+});
+
 </script>
 
 <template>
@@ -138,15 +145,37 @@ const onClickSave = async ()=>{
         </v-row>
 
         <v-row>
-          <v-data-table items-per-page="5" :headers="headers" :items="filteredList" :item-value="identifierField"
+          <v-data-table :headers="headers" :items="filteredList" :item-value="identifierField"
                         select-strategy="single" show-select class="border rounded-md"
                         v-model="selectedEmpId"
+                        :items-per-page="itemsPerPage"
+                        v-model:page="pagination"
                         @update:model-value="onSelectionChange"
           >
             <template v-slot:item.model="{ item }">
               <div :key="`${item.manufacturer}-${item.modelName}`">
                 {{ item.manufacturer }} {{ item.modelName }}
               </div>
+            </template>
+            <template v-slot:bottom>
+              <v-row align="center" justify="space-between" class="pt-2 mt-3 px-3">
+                <v-col cols="auto">
+                  <v-text-field
+                      :model-value="itemsPerPage"
+                      class="pa-2"
+                      label="페이지당 항목 수"
+                      type="number"
+                      min="-1"
+                      max="15"
+                      hide-details
+                      style="max-width: 130px; min-width: 130px;"
+                      @update:model-value="itemsPerPage = parseInt($event, 10)"
+                  />
+                </v-col>
+                <v-col style="margin-right: 160px;">
+                  <v-pagination v-model="pagination" :length="pageCount"></v-pagination>
+                </v-col>
+              </v-row>
             </template>
           </v-data-table>
         </v-row>
