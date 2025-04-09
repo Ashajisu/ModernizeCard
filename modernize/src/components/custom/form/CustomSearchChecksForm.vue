@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
-import {type ComponentPublicInstance, computed, ref} from "vue";
+import {type ComponentPublicInstance, computed, getCurrentInstance, ref} from "vue";
 import CustomDialog from "@/components/custom/dialog/CustomSearchsDialog.vue";
 import type {VForm} from "vuetify/components";
 
@@ -14,11 +14,14 @@ const props = defineProps<{
 const isEditable = computed(() => props.edit);
 
 // Dialog 열림 여부
-const dialogRefs = ref<Record<string, ComponentPublicInstance<typeof CustomDialog> | null>>({});
-const openSearchDialog = (field: FormField) => {
+const { proxy } = getCurrentInstance()!;
+const openSearchDialog = async (field: FormField) => {
   if (isEditable.value) {
-    const dialog = dialogRefs.value[field.name];
-    dialog?.open();
+    const rowDialog = proxy?.$refs[`dialog_${field.name}`] as ComponentPublicInstance<typeof CustomDialog>;
+    const dialog = Array.isArray(rowDialog) ? rowDialog[0]?.$?.exposed : rowDialog?.$?.exposed;
+    if(!!dialog){
+      dialog?.open();
+    }
   }
 };
 
@@ -43,16 +46,16 @@ defineExpose({
   validateForm
 });
 </script>
-<!-- 다중 체크박스를 지원 -->
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
-<!-- 자동검증을 위한 form 태그 추가-->
-<!-- form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것.-->
+<!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
+<!-- type 항목: select, search, search_list, password, date, datetime, check, switch, text, slot, hidden, 그 외는 공백처리-->
 <template>
   <v-container>
       <slot name="topBtn" :validateForm="validateForm"/>
       <v-form ref="formRef" lazy-validation="false">
           <v-row class="mb-6">
-              <v-col :cols="12 / colsPerRow" v-for="(field, index) in formFields" :key="index">
+            <template v-for="(field) in formFields">
+              <v-col :cols="12 / colsPerRow" v-if="field.type!=='hidden'">
                 <v-row class="align-center">
                   <v-col cols="12" sm="12" class="pb-sm-1 pb-0 custom-height">
                     <v-select v-if="field.type === 'select'" return-object variant="outlined"
@@ -67,23 +70,26 @@ defineExpose({
                         </span>
                       </template>
                     </v-select>
-                    <v-text-field v-else-if="(field.type === 'search' || field.type === 'search_list')"
-                                  v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled"
-                                  @click="openSearchDialog(field)"
-                                  persistent-placeholder>
-                      <template v-slot:append-inner>
-                        <v-icon icon="mdi-account-search" class="text-right"></v-icon>
-                      </template>
-                      <template v-slot:label>
-                        <span>{{ field.label }}
-                          <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                        </span>
-                      </template>
-                      <CustomDialog :ref="(el) => { if (el && el instanceof Object) dialogRefs[field.name] = el as ComponentPublicInstance<typeof CustomDialog>; }"
+
+                    <div v-else-if="(field.type === 'search' || field.type === 'search_list')">
+                      <CustomDialog :ref="`dialog_${field.name}`"
                                     :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
-                    </v-text-field>
+                      <v-text-field
+                                    v-model="field.value"
+                                    :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                                    :readonly="!isEditable || field.disabled"
+                                    @click="openSearchDialog(field)"
+                                    persistent-placeholder>
+                        <template v-slot:append-inner>
+                          <v-icon icon="mdi-account-search" class="text-right"></v-icon>
+                        </template>
+                        <template v-slot:label>
+                          <span>{{ field.label }}
+                            <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
+                          </span>
+                        </template>
+                      </v-text-field>
+                    </div>
 
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                   v-model="field.value"
@@ -147,11 +153,16 @@ defineExpose({
                         </span>
                       </template>
                     </v-text-field>
+                    <template v-else-if="field.type === `slot`">
+                      <slot :name="field.name" :field="field" />
+                    </template>
                     <!--            공백처리-->
+                    <div v-else-if="field.type==='hidden'"></div>
                     <div v-else></div>
                   </v-col>
                 </v-row>
               </v-col>
+            </template>
               <!--          한줄 버튼 슬롯-->
               <v-col :cols="12 / colsPerRow">
                 <slot name="lineBtn" :validateForm="validateForm"/>
