@@ -151,7 +151,7 @@ const moveItem = (number:number, direction:number) => {
                 </v-data-table>
               </v-row>
             </UiParentCard>
-            <UiParentCard title="사용자 상세정보" :key="selectedEmpId[0]" v-if="!!selectedEmpId">
+            <UiParentCard title="사용자 상세정보" :key="selectedEmpId[0]" v-if="selectedEmpId[0]">
               <template v-slot:default>
                 <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit">
                   <template v-slot:topBtn="{validateForm}">
