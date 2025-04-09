@@ -16,17 +16,17 @@ const PhoneRoutes : RouteRecordRaw = {
         {
             name: '내선번호',
             path: 'extension',
-            component: () => import('@/view/phone/ExtentionList.vue')
+            component: () => import('@/view/phone/ExtensionNew.vue')
         },
         {
             name: 'PSTN',
             path: 'pstn',
-            component: () => import('@/view/phone/PstnList.vue')
+            component: () => import('@/view/phone/PstnNew.vue')
         },
         {
             name: '당겨받기 그룹',
             path: 'pickup/group',
-            component: () => import('@/view/phone/GeneralTab.vue')
+            component: () => import('@/view/phone/PickupGroup.vue')
         },
         {
             name: '과금',
