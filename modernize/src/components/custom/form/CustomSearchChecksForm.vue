@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormField } from '@/types/custom/InputTypes';
-import {type ComponentPublicInstance, computed, ref} from "vue";
+import {type ComponentPublicInstance, computed, getCurrentInstance, ref} from "vue";
 import CustomDialog from "@/components/custom/dialog/CustomSearchsDialog.vue";
 import type {VForm} from "vuetify/components";
 
@@ -14,11 +14,14 @@ const props = defineProps<{
 const isEditable = computed(() => props.edit);
 
 // Dialog 열림 여부
-const dialogRefs = ref<Record<string, ComponentPublicInstance<typeof CustomDialog> | null>>({});
-const openSearchDialog = (field: FormField) => {
+const { proxy } = getCurrentInstance()!;
+const openSearchDialog = async (field: FormField) => {
   if (isEditable.value) {
-    const dialog = dialogRefs.value[field.name];
-    dialog?.open();
+    const rowDialog = proxy?.$refs[`dialog_${field.name}`] as ComponentPublicInstance<typeof CustomDialog>;
+    const dialog = Array.isArray(rowDialog) ? rowDialog[0]?.$?.exposed : rowDialog?.$?.exposed;
+    if(!!dialog){
+      dialog?.open();
+    }
   }
 };
 
@@ -67,23 +70,26 @@ defineExpose({
                         </span>
                       </template>
                     </v-select>
-                    <v-text-field v-else-if="(field.type === 'search' || field.type === 'search_list')"
-                                  v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled"
-                                  @click="openSearchDialog(field)"
-                                  persistent-placeholder>
-                      <template v-slot:append-inner>
-                        <v-icon icon="mdi-account-search" class="text-right"></v-icon>
-                      </template>
-                      <template v-slot:label>
-                        <span>{{ field.label }}
-                          <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                        </span>
-                      </template>
-                      <CustomDialog :ref="(el) => { if (el && el instanceof Object) dialogRefs[field.name] = el as ComponentPublicInstance<typeof CustomDialog>; }"
+
+                    <div v-else-if="(field.type === 'search' || field.type === 'search_list')">
+                      <CustomDialog :ref="`dialog_${field.name}`"
                                     :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
-                    </v-text-field>
+                      <v-text-field
+                                    v-model="field.value"
+                                    :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                                    :readonly="!isEditable || field.disabled"
+                                    @click="openSearchDialog(field)"
+                                    persistent-placeholder>
+                        <template v-slot:append-inner>
+                          <v-icon icon="mdi-account-search" class="text-right"></v-icon>
+                        </template>
+                        <template v-slot:label>
+                          <span>{{ field.label }}
+                            <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
+                          </span>
+                        </template>
+                      </v-text-field>
+                    </div>
 
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                   v-model="field.value"
