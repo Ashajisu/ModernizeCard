@@ -143,12 +143,10 @@ const deleteCheckConfirm = async ()=>{
           <h6 class="text-subtitle-1">💡줌 폰에서 사용되는 PSTN 번호를 관리 할 수 있습니다. </h6>
         </v-row>
         <v-row>
-          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="7" :edit="true">
+          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true">
             <template v-slot:lineBtn="{ validateForm }">
-              <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-              </div>
             </template>
           </CustomSearchChecksForm>
         </v-row>
@@ -161,7 +159,7 @@ const deleteCheckConfirm = async ()=>{
       <!-- PSTN 번호 신규 다이얼로그 -->
               <CustomSlotDialog ref="newDialog" title="PSTN 번호 추가" >
                 <template v-slot:inCard>
-                  <CustomSearchChecksForm ref="formRef" :form-fields="newFields" :cols-per-row="1" :edit="true">
+                  <CustomSearchChecksForm ref="formRef" :form-fields="newFields" :colsPerRow="1" :edit="true">
                     <template v-slot:number="{ field }">
                           <ArrNumber :field="field"/>
                     </template>
@@ -178,7 +176,7 @@ const deleteCheckConfirm = async ()=>{
               <!-- PSTN 번호 편집 다이얼로그 -->
               <CustomSlotDialog ref="detailDialog" title="PSTN 번호 편집" >
                 <template v-slot:inCard>
-                  <CustomSearchChecksForm ref="formRef" :form-fields="pstnFields" :cols-per-row="1" :edit="true">
+                  <CustomSearchChecksForm ref="formRef" :form-fields="pstnFields" :colsPerRow="1" :edit="true">
                     <template v-slot:number="{ field }">
                       <ArrNumber :field="field"/>
                     </template>
