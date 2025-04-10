@@ -45,19 +45,52 @@ const formData = computed(()=> {
 defineExpose({
   validateForm
 });
+
+// 반응형 폭
+const colSettings: Record<number, { sm: number; md: number; lg: number }> = {
+  1: { sm: 12, md: 12, lg: 12 },
+  2: { sm: 12, md: 6, lg: 6 },
+  3: { sm: 12, md: 6, lg: 4 },
+  4: { sm: 12, md: 6, lg: 3 },
+  5: { sm: 12, md: 6, lg: 2 }
+}
+function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }) {
+  const colSetting = colSettings[props.colsPerRow] || colSettings[1]
+
+  const visibleFieldCount = computed(() =>
+      props.formFields.filter((f) => f.type !== 'hidden').length
+  )
+
+  return computed(() => {
+    const result = { sm: 12, md: 12, lg: 12 } // 기본값은 줄바꿈
+    const fields = visibleFieldCount.value
+
+    const calcRemaining = (size: 'sm' | 'md' | 'lg') => {
+      const used = fields * colSetting[size]
+      const remaining = 12 - used
+      return remaining > 0 ? remaining : 12
+    }
+
+    result.sm = calcRemaining('sm')
+    result.md = calcRemaining('md')
+    result.lg = calcRemaining('lg')
+
+    return result
+  })
+}
 </script>
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
 <!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
 <!-- type 항목: select, search, search_list, password, date, datetime, check, switch, text, slot, hidden, 그 외는 공백처리-->
+<!-- colsPerRow 값은 한줄에 나열하고 싶은 필드의 갯수 기준, btn은 포함하지 않음. -->
+<!-- LineBtn 은 내부 버튼을 자동 정렬하므로 추가 <div>는 불필요함. -->
 <template>
   <v-container>
       <slot name="topBtn" :validateForm="validateForm"/>
       <v-form ref="formRef" lazy-validation="false">
-          <v-row class="mb-6">
+          <v-row class="mb-6 align-center">
             <template v-for="(field) in formFields">
-              <v-col :cols="12 / colsPerRow" v-if="field.type!=='hidden'">
-                <v-row class="align-center">
-                  <v-col cols="12" sm="12" class="pb-sm-1 pb-0 custom-height">
+              <v-col v-bind="colSettings[colsPerRow > 5 ? 5 : colsPerRow]" v-if="field.type!=='hidden'" class="pb-sm-1 pb-0 custom-height">
                     <v-select v-if="field.type === 'select'" return-object variant="outlined"
                               v-model="field.value as string"
                               :items="field.options"
@@ -159,13 +192,13 @@ defineExpose({
                     <!--            공백처리-->
                     <div v-else-if="field.type==='hidden'"></div>
                     <div v-else></div>
-                  </v-col>
-                </v-row>
               </v-col>
             </template>
-              <!--          한줄 버튼 슬롯-->
-              <v-col :cols="12 / colsPerRow">
-                <slot name="lineBtn" :validateForm="validateForm"/>
+              <!--          한줄 버튼 슬롯 : 줄 맞춤을 위한 col 폭 반응형-->
+              <v-col v-bind="useButtonColSpan">
+                <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                  <slot name="lineBtn" :validateForm="validateForm"/>
+                </div>
               </v-col>
           </v-row>
       </v-form>
