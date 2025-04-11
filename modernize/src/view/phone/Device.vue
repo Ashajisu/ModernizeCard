@@ -10,6 +10,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { alert, confirm } from '@/common/alertService';
 import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
+import PaginationControl from "@/components/custom/pagination/PaginationControl.vue";
 
 const PhoneStatus = ref(['Online','Offline']);
 const formFields = ref<FormField[]>([
@@ -92,9 +93,8 @@ const onClickSave = async ()=>{
 const itemsPerPage = ref(5);
 const pagination = ref(1);
 const pageCount = computed(() => {
-  return Math.ceil(ZoomPhoneDatatables.length / itemsPerPage.value);
+  return Math.ceil(filteredList.value.length  / itemsPerPage.value);
 });
-
 </script>
 
 <template>
@@ -156,24 +156,13 @@ const pageCount = computed(() => {
               </div>
             </template>
             <template v-slot:bottom>
-              <v-row align="center" justify="space-between" class="pt-2 mt-3 px-3">
-                <v-col cols="auto">
-                  <v-text-field
-                      :model-value="itemsPerPage"
-                      class="pa-2"
-                      label="페이지당 항목 수"
-                      type="number"
-                      min="-1"
-                      max="15"
-                      hide-details
-                      style="max-width: 130px; min-width: 130px;"
-                      @update:model-value="itemsPerPage = parseInt($event, 10)"
-                  />
-                </v-col>
-                <v-col style="margin-right: 160px;">
-                  <v-pagination v-model="pagination" :length="pageCount"></v-pagination>
-                </v-col>
-              </v-row>
+                <PaginationControl
+                    :items-per-page="itemsPerPage"
+                    :pagination="pagination"
+                    :page-count="pageCount"
+                    @update:itemsPerPage="val => itemsPerPage = val"
+                    @update:pagination="val => pagination = val"
+                />
             </template>
           </v-data-table>
         </v-row>
