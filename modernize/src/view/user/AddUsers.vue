@@ -67,7 +67,7 @@ const {
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
               <v-row>
-                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true">
+                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                   <template v-slot:lineBtn="{ validateForm }">
                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                       <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>

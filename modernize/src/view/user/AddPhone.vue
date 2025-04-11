@@ -118,7 +118,7 @@ const moveItem = (number:number, direction:number) => {
         <v-col cols="12" md="12">
             <UiParentCard title="줌 폰 사용자 관리">
               <v-row>
-                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true">
+                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
                   <template v-slot:lineBtn="{ validateForm }">
                       <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                       <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
