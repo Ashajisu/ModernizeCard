@@ -8,10 +8,13 @@ const props = defineProps<{
   formFields: FormField[];
   colsPerRow: number;
   edit: boolean;
+  hideDetails?: boolean;
 }>();
 
 // props.edit 값을 반응형으로 유지
 const isEditable = computed(() => props.edit);
+const hideDetails = props.hideDetails ?? false;  // props.hideDetails가 undefined이면 false로 설정
+
 
 // Dialog 열림 여부
 const { proxy } = getCurrentInstance()!;
@@ -71,13 +74,17 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
       return remaining > 0 ? remaining : 12
     }
 
-    result.sm = calcRemaining('sm')
-    result.md = calcRemaining('md')
-    result.lg = calcRemaining('lg')
+    result.sm = calcRemaining('sm');
+    result.md = calcRemaining('md');
+    result.lg = calcRemaining('lg');
 
     return result
   })
 }
+
+const rules = [
+  (v: string) => !!v || '필수 입력 항목입니다.'
+]
 </script>
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
 <!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
@@ -94,8 +101,9 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                     <v-select v-if="field.type === 'select'" return-object variant="outlined"
                               v-model="field.value as string"
                               :items="field.options"
-                              :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                              :rules="edit && field.required ? rules : []"
                               :readonly="!isEditable || field.disabled"
+                              :hide-details="hideDetails"
                               persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
@@ -109,8 +117,9 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                                     :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
                       <v-text-field
                                     v-model="field.value"
-                                    :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                                    :rules="edit && field.required ? rules : []"
                                     :readonly="!isEditable || field.disabled"
+                                    :hide-details="hideDetails"
                                     @click="openSearchDialog(field)"
                                     persistent-placeholder>
                         <template v-slot:append-inner>
@@ -126,8 +135,10 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
 
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -136,8 +147,10 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                     </v-text-field>
                     <v-text-field v-else-if="field.type === 'date'" color="primary" variant="outlined" type="date"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -146,8 +159,10 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                     </v-text-field>
                     <v-text-field v-else-if="field.type === 'datetime'" color="primary" variant="outlined" type="datetime-local"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder hide-details style="min-width: 200px;">
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder style="min-width: 200px;">
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -162,13 +177,14 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                                   :key="index"
                                   v-model="field.value" multiple
                                   :value="option"
+                                  :rules="edit && field.required ? rules : []"
                                   :readonly="!isEditable || field.disabled"
                                   :label="option">
                       </v-checkbox>
                     </div>
                     <v-switch v-else-if="field.type === 'switch'"  hide-details color="primary" inset
                               v-model="field.value as boolean"
-                              :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                              :rules="edit && field.required ? rules : []"
                               :readonly="!isEditable || field.disabled">
                       <template v-slot:label>
                         <span>{{ field.label }}
@@ -178,8 +194,10 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
                     </v-switch>
                     <v-text-field v-else-if="field.type === 'text'" color="primary" variant="outlined" type="text"
                                   v-model="field.value as boolean"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
