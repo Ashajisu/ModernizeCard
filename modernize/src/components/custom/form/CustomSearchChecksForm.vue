@@ -8,10 +8,13 @@ const props = defineProps<{
   formFields: FormField[];
   colsPerRow: number;
   edit: boolean;
+  hideDetails?: boolean;
 }>();
 
 // props.edit 값을 반응형으로 유지
 const isEditable = computed(() => props.edit);
+const hideDetails = props.hideDetails ?? false;  // props.hideDetails가 undefined이면 false로 설정
+
 
 // Dialog 열림 여부
 const { proxy } = getCurrentInstance()!;
@@ -45,24 +48,62 @@ const formData = computed(()=> {
 defineExpose({
   validateForm
 });
+
+// 반응형 폭
+const colSettings: Record<number, { sm: number; md: number; lg: number }> = {
+  1: { sm: 12, md: 12, lg: 12 },
+  2: { sm: 12, md: 6, lg: 6 },
+  3: { sm: 12, md: 6, lg: 4 },
+  4: { sm: 12, md: 6, lg: 3 },
+  5: { sm: 12, md: 6, lg: 2 }
+}
+function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }) {
+  const colSetting = colSettings[props.colsPerRow] || colSettings[1]
+
+  const visibleFieldCount = computed(() =>
+      props.formFields.filter((f) => f.type !== 'hidden').length
+  )
+
+  return computed(() => {
+    const result = { sm: 12, md: 12, lg: 12 } // 기본값은 줄바꿈
+    const fields = visibleFieldCount.value
+
+    const calcRemaining = (size: 'sm' | 'md' | 'lg') => {
+      const used = fields * colSetting[size]
+      const remaining = 12 - used
+      return remaining > 0 ? remaining : 12
+    }
+
+    result.sm = calcRemaining('sm');
+    result.md = calcRemaining('md');
+    result.lg = calcRemaining('lg');
+
+    return result
+  })
+}
+
+const rules = [
+  (v: string) => !!v || '필수 입력 항목입니다.'
+]
 </script>
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
 <!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
 <!-- type 항목: select, search, search_list, password, date, datetime, check, switch, text, slot, hidden, 그 외는 공백처리-->
+<!-- colsPerRow 값은 한줄에 나열하고 싶은 필드의 갯수 기준, btn은 포함하지 않음. -->
+<!-- LineBtn 은 내부 버튼을 자동 정렬하므로 추가 <div>는 불필요함. -->
 <template>
   <v-container>
       <slot name="topBtn" :validateForm="validateForm"/>
       <v-form ref="formRef" lazy-validation="false">
-          <v-row class="mb-6">
+          <v-row class="mb-6 align-center">
             <template v-for="(field) in formFields">
-              <v-col :cols="12 / colsPerRow" v-if="field.type!=='hidden'">
-                <v-row class="align-center">
-                  <v-col cols="12" sm="12" class="pb-sm-1 pb-0 custom-height">
+              <v-col v-bind="colSettings[colsPerRow > 5 ? 5 : colsPerRow]" v-if="field.type!=='hidden'" class="pb-sm-1 pb-0 custom-height">
                     <v-select v-if="field.type === 'select'" return-object variant="outlined"
                               v-model="field.value as string"
                               :items="field.options"
-                              :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                              :rules="edit && field.required ? rules : []"
                               :readonly="!isEditable || field.disabled"
+                              :hide-details="hideDetails"
                               persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
@@ -76,8 +117,9 @@ defineExpose({
                                     :title="field.label" :single="field.type === 'search'" :items="field.searchObj" :searchField="field.name"  @update:selectedValue="(selectedValue : string[] | string) => { field.value = selectedValue}" />
                       <v-text-field
                                     v-model="field.value"
-                                    :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                                    :rules="edit && field.required ? rules : []"
                                     :readonly="!isEditable || field.disabled"
+                                    :hide-details="hideDetails"
                                     @click="openSearchDialog(field)"
                                     persistent-placeholder>
                         <template v-slot:append-inner>
@@ -93,8 +135,10 @@ defineExpose({
 
                     <v-text-field v-else-if="field.type === 'password'" color="primary" variant="outlined" type="password"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -103,8 +147,10 @@ defineExpose({
                     </v-text-field>
                     <v-text-field v-else-if="field.type === 'date'" color="primary" variant="outlined" type="date"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -113,8 +159,10 @@ defineExpose({
                     </v-text-field>
                     <v-text-field v-else-if="field.type === 'datetime'" color="primary" variant="outlined" type="datetime-local"
                                   v-model="field.value"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder hide-details style="min-width: 200px;">
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder style="min-width: 200px;">
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -129,13 +177,14 @@ defineExpose({
                                   :key="index"
                                   v-model="field.value" multiple
                                   :value="option"
+                                  :rules="edit && field.required ? rules : []"
                                   :readonly="!isEditable || field.disabled"
                                   :label="option">
                       </v-checkbox>
                     </div>
                     <v-switch v-else-if="field.type === 'switch'"  hide-details color="primary" inset
                               v-model="field.value as boolean"
-                              :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
+                              :rules="edit && field.required ? rules : []"
                               :readonly="!isEditable || field.disabled">
                       <template v-slot:label>
                         <span>{{ field.label }}
@@ -145,8 +194,10 @@ defineExpose({
                     </v-switch>
                     <v-text-field v-else-if="field.type === 'text'" color="primary" variant="outlined" type="text"
                                   v-model="field.value as boolean"
-                                  :rules="field.required ? [v => !!v || '필수 입력 항목입니다.'] : []"
-                                  :readonly="!isEditable || field.disabled" persistent-placeholder>
+                                  :rules="edit && field.required ? rules : []"
+                                  :readonly="!isEditable || field.disabled"
+                                  :hide-details="hideDetails"
+                                  persistent-placeholder>
                       <template v-slot:label>
                         <span>{{ field.label }}
                           <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
@@ -159,13 +210,13 @@ defineExpose({
                     <!--            공백처리-->
                     <div v-else-if="field.type==='hidden'"></div>
                     <div v-else></div>
-                  </v-col>
-                </v-row>
               </v-col>
             </template>
-              <!--          한줄 버튼 슬롯-->
-              <v-col :cols="12 / colsPerRow">
-                <slot name="lineBtn" :validateForm="validateForm"/>
+              <!--          한줄 버튼 슬롯 : 줄 맞춤을 위한 col 폭 반응형-->
+              <v-col v-bind="useButtonColSpan">
+                <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                  <slot name="lineBtn" :validateForm="validateForm"/>
+                </div>
               </v-col>
           </v-row>
       </v-form>
@@ -183,15 +234,21 @@ defineExpose({
   font-size: x-small;
 }
 .outlined-checkbox {
-  outline: 1px solid #dfe5ef;
+  outline: 2px solid rgb(229, 234, 239);
   border-radius: 6px;
   position: relative;
   padding: 5px;
   display: flex; /* 가로로 나열 */
   flex-wrap: wrap; /* 공간이 부족하면 자동 줄바꿈 */
 }
-.custom-height {
-  min-height: 50px !important;
-  height: 60px !important;
+.v-theme--DARK_BLUE_THEME .checkbox-label {
+  background-color: rgb(42, 52, 71);
+  color: rgb(234, 239, 244);
 }
+.v-theme--DARK_BLUE_THEME .outlined-checkbox {
+  background-color: rgb(42, 52, 71);
+  color: rgb(234, 239, 244);
+  outline: 1px solid rgb(70, 86, 112);
+}
+
 </style>

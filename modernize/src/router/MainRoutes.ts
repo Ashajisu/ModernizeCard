@@ -7,6 +7,11 @@ const MainRoutes = {
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
         {
+            name: 'Dashboards',
+            path: '/dashboards/modern',
+            component: () => import('@/views/dashboard/modern/index.vue')
+        },
+        {
             name: 'eCommerce',
             path: '/dashboards/ecommerce',
             component: () => import('@/views/dashboard/ecommerce/index.vue')

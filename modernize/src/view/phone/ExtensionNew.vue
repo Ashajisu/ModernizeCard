@@ -44,13 +44,11 @@ const {
           <h6 class="text-subtitle-1">💡 줌 폰에서 사용하는 내선번호를 관리 할 수 있습니다. 내선번호에는 사용자 내선번호, 담겨받기, Shared Group Line, Call Queue 등이 있습니다. ( 조회만 가능 )</h6>
         </v-row>
         <v-row>
-          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true">
+          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="3" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{ validateForm }">
-              <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                 <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-              </div>
             </template>
           </CustomSearchChecksForm>
         </v-row>

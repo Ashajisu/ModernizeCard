@@ -61,7 +61,7 @@ const audioTime = ref(0);
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
+                  <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true" >
                     <template v-slot:lineBtn="{ validateForm }">
                       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                         <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>

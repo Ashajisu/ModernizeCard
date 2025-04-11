@@ -106,10 +106,10 @@ watch(selectedId, (newSelectedId) => {
 <!--        사용자 상세-->
         <div v-else>
           <UiChildCard title="사용자 조직 정보" variant="flat">
-            <CustomSearchChecksForm :formFields="personFields" :colsPerRow="2" :edit="true"/>
+            <CustomSearchChecksForm :formFields="personFields" :colsPerRow="2" :edit="true" :hide-details="true" />
           </UiChildCard>
           <UiChildCard title="사용자 상세 정보" variant="flat" class="border-t-sm">
-            <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false"/>
+            <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false" :hide-details="true"/>
           </UiChildCard>
         </div>
       </template>

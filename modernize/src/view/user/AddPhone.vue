@@ -16,7 +16,6 @@ const formFields = ref<FormField[]>([
   { label: '내선번호', name: 'mobile', type: 'text', value: '', required: false, disabled: false },
   { label: 'PSTN 번호', name: 'pstnNumber', type: 'search', value: '', searchObj:ZoomPhoneDataTables, required: false, disabled: false },
   { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj:ZoomPhoneDataTables, required: false, disabled: false },
-  { label: '', name: '_', type: 'none', value: '', required: false, disabled: false },
 ]);
 const headers = ref<any[]>([
   { title: '부서명', align: 'start', key: 'department' },
@@ -119,12 +118,10 @@ const moveItem = (number:number, direction:number) => {
         <v-col cols="12" md="12">
             <UiParentCard title="줌 폰 사용자 관리">
               <v-row>
-                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true">
+                <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
                   <template v-slot:lineBtn="{ validateForm }">
-                    <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                       <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                       <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                    </div>
                   </template>
                 </CustomSearchChecksForm>
               </v-row>

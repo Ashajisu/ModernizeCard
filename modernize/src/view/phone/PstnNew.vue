@@ -64,7 +64,7 @@ const headers = ref<any[]>([
 const newFields = ref<FormField[]>([
   { label: '제품', name: 'product', type: 'select', value: '', options:productTypes, required: true, disabled: false },
   { label: 'PSTN 번호', name: 'number', type: 'slot', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
-  { label: 'id', name: 'id', type: 'none', value: '',required: false, disabled: true },
+  { label: 'id', name: 'id', type: 'none', value: 'new',required: false, disabled: true },
   { label: 'SIP Group', name: 'sipGroup',  type: 'select', value: '', options:sipGroupTypes, required: true, disabled: false },
 ]);
 const pstnFields = ref<FormField[]>([
@@ -135,6 +135,8 @@ const deleteCheckConfirm = async ()=>{
 }
 </script>
 <!-- ArrNumber : 배열 갯수제한 필요, number 가 배열이면 save 시점에 분해해서 등록해야함.-->
+<!-- 신규 다이얼로그 : 저장시 PSTN 번호 검증 필요.-->
+<!-- 식별자 id를 어떻게 배당할 지 설정해야함. -->
 <template>
   <v-row>
     <v-col cols="12" md="12">
@@ -143,12 +145,10 @@ const deleteCheckConfirm = async ()=>{
           <h6 class="text-subtitle-1">💡줌 폰에서 사용되는 PSTN 번호를 관리 할 수 있습니다. </h6>
         </v-row>
         <v-row>
-          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="7" :edit="true">
+          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{ validateForm }">
-              <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-              </div>
             </template>
           </CustomSearchChecksForm>
         </v-row>
@@ -161,7 +161,7 @@ const deleteCheckConfirm = async ()=>{
       <!-- PSTN 번호 신규 다이얼로그 -->
               <CustomSlotDialog ref="newDialog" title="PSTN 번호 추가" >
                 <template v-slot:inCard>
-                  <CustomSearchChecksForm ref="formRef" :form-fields="newFields" :cols-per-row="1" :edit="true">
+                  <CustomSearchChecksForm ref="formRef" :form-fields="newFields" :colsPerRow="1" :edit="true">
                     <template v-slot:number="{ field }">
                           <ArrNumber :field="field"/>
                     </template>
@@ -178,7 +178,7 @@ const deleteCheckConfirm = async ()=>{
               <!-- PSTN 번호 편집 다이얼로그 -->
               <CustomSlotDialog ref="detailDialog" title="PSTN 번호 편집" >
                 <template v-slot:inCard>
-                  <CustomSearchChecksForm ref="formRef" :form-fields="pstnFields" :cols-per-row="1" :edit="true">
+                  <CustomSearchChecksForm ref="formRef" :form-fields="pstnFields" :colsPerRow="1" :edit="true">
                     <template v-slot:number="{ field }">
                       <ArrNumber :field="field"/>
                     </template>
@@ -207,32 +207,6 @@ const deleteCheckConfirm = async ()=>{
           >
           </v-data-table>
         </v-row>
-
-      <!-- PSTN 번호 삭제 확인 다이얼로그 -->
-<!--      <v-dialog v-model="deleteDialog" max-width="500px">-->
-<!--        <v-card>-->
-<!--          <v-card-title class="text-h5 bg-error text-white">-->
-<!--            PSTN 번호 삭제-->
-<!--          </v-card-title>-->
-<!--          <v-card-text class="pt-4">-->
-<!--            <p v-if="selectedItems.length === 1">-->
-<!--              선택하신 {{ selectedItems[0].number }} 번호가 삭제됩니다.<br>-->
-<!--              사용자 {{ selectedItems[0].user }}로부터 해제되고 삭제됩니다.-->
-<!--            </p>-->
-<!--            <p v-else>-->
-<!--              선택하신 {{ selectedItems.length }}개의 번호가 삭제됩니다.<br>-->
-<!--              해당 번호들이 사용자로부터 해제되고 삭제됩니다.-->
-<!--            </p>-->
-<!--            <p class="mt-2">삭제를 계속 하시겠습니까?</p>-->
-<!--          </v-card-text>-->
-<!--          <v-card-actions>-->
-<!--            <v-spacer></v-spacer>-->
-<!--            <v-btn color="primary" @click="deleteDialog = false">취소</v-btn>-->
-<!--            <v-btn color="error" @click="deletePstnNumbers">확인</v-btn>-->
-<!--          </v-card-actions>-->
-<!--        </v-card>-->
-<!--      </v-dialog>-->
-
       </UiParentCard>
       </v-col>
       </v-row>

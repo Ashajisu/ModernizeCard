@@ -20,7 +20,6 @@ const formFields_admin = ref<FormField[]>([
   { label: 'ID', name: 'id', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
   { label: '구분', name: 'direction', type: 'check', value: '',options: ['인바운드', '아웃바운드'], required: false, disabled: false },
   { label: '유형', name: 'type', type: 'check', value: '',options: ['국제전화', '모바일', '유선', '내선'], required: false, disabled: false },
-  { label: '', name: '', type: 'none', value: '', required: false, disabled: true },
 ]);
 const formFields_user = ref<FormField[]>([
   { label: '발신자 번호', name: 'sender', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
@@ -99,12 +98,10 @@ function copyToClipboard(item : any) {
               <v-row>
                   <CustomSearchsCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
                     <template v-slot:lineBtn="{ validateForm }">
-                      <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                         <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                         <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                         <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
                         <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드"/>
-                      </div>
                     </template>
                   </CustomSearchsCheckForm>
               </v-row>

@@ -105,12 +105,10 @@ const pageCount = computed(() => {
           <h6 class="text-subtitle-1">줌 폰의 디바이스 관리를 할 수 있습니다.</h6>
         </v-row>
         <v-row>
-          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true">
+          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{validateForm}">
-              <div class="d-flex flex-row align-items-center">
                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" class="ml-2" @click="resetSearch">초기화</v-btn>
-              </div>
             </template>
           </CustomSearchChecksForm>
         </v-row>
