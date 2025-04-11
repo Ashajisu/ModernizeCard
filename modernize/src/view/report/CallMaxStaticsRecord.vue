@@ -173,8 +173,8 @@ const pageCount = computed(() => {
                     :items-per-page="itemsPerPage"
                     :pagination="pagination"
                     :page-count="pageCount"
-                    @update:itemsPerPage="val => itemsPerPage = val"
-                    @update:pagination="val => pagination = val"
+                    @update:itemsPerPage="(val: number) => itemsPerPage = val"
+                    @update:pagination="(val: number) => pagination = val"
                 />
               </template>
             </v-data-table>
