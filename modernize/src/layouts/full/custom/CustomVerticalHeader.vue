@@ -40,6 +40,7 @@ const clickChat = (()=>{
 // config iframe
 import { useAuthStore } from "@/stores/auth";
 import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
+import config from "@/config";
 const authStore = useAuthStore();
 </script>
 <!--chat.ts 에서 최근 메세지 개수를 가져와 배지에 띄움-->
@@ -95,7 +96,7 @@ const authStore = useAuthStore();
         <!-- ShoppingCart -->
         <!-- ---------------------------------------------- -->
         <div class="me-2" v-if="customizer.setDashboard">
-            <v-btn variant="plain" color="primary" to="/dashboards/modern" class="custom-hover-primary" size="x-large">
+            <v-btn variant="plain" color="primary" :to="config.mainPage" class="custom-hover-primary" size="x-large">
               <HeaderCards />
             </v-btn>
         </div>

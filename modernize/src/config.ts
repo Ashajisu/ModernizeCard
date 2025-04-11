@@ -13,6 +13,7 @@ export type ConfigProps = {
     setSearchbar : boolean;
     setThemeToggle : boolean;
     setDashboard : boolean;
+    mainPage: string;
 };
 
 const config: ConfigProps = {
@@ -30,6 +31,7 @@ const config: ConfigProps = {
     setSearchbar : true,
     setThemeToggle : false,
     setDashboard : true,
+    mainPage: '/home/dashboard'
 
 };
 
