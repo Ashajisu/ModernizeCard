@@ -230,7 +230,7 @@ const sendSelected = (nodeData: any) => {
 
 </script>
 <!--tree view 는 부모컴포넌트에 position: relative; 설정이 들어가면 드래그좌표가 달라짐.
-그래서 v-card, AppBaseCard, perpect-scroll-bar 내부에 들어가면 안됨.
+그래서 v-card, AppBaseCard, perfect-scroll-bar 내부에 들어가면 안됨.
 -->
 <template>
     <UiChildCard title="조직 정보" variant="flat">
@@ -258,9 +258,37 @@ const sendSelected = (nodeData: any) => {
       <textarea v-model="selectedValue" readonly rows="5" style="width: 100%; margin-top: 10px;"></textarea>
     </div>
 </template>
-<style scoped>
+<!--글씨 크기, 화이트 테마에서의 배경 색상, 다크 테마에서의 배경/텍스트 색상, 선택 및 hover 시 컬러 변화-->
+<style>
 .custom-treeview {
   background: #ffffff;
-  font-size: medium;
+}
+
+.custom-treeview .tui-tree-text{
+  font-size: 14px;
+  padding: 10px;
+}
+
+.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-root > .tui-tree-opened > .tui-tree-content-wrapper .tui-tree-text {
+  color: rgb(234, 239, 244) !important;
+}
+
+.v-theme--DARK_BLUE_THEME .custom-treeview {
+  background-color: rgb(42, 52, 71);
+  color: rgb(234, 239, 244);
+}
+
+.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-text {
+  color: rgb(234, 239, 244);
+}
+
+.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-selected {
+  background-color: rgb(51, 63, 85);
+  color: rgb(255, 255, 255);
+}
+
+.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-content-wrapper:hover {
+  background-color: rgb(51, 63, 85);
+  color: rgb(255, 255, 255);
 }
 </style>
