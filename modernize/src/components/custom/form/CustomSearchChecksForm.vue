@@ -234,15 +234,21 @@ const rules = [
   font-size: x-small;
 }
 .outlined-checkbox {
-  outline: 1px solid #dfe5ef;
+  outline: 2px solid rgb(229, 234, 239);
   border-radius: 6px;
   position: relative;
   padding: 5px;
   display: flex; /* 가로로 나열 */
   flex-wrap: wrap; /* 공간이 부족하면 자동 줄바꿈 */
 }
-.custom-height {
-  min-height: 50px !important;
-  height: 60px !important;
+.v-theme--DARK_BLUE_THEME .checkbox-label {
+  background-color: rgb(42, 52, 71);
+  color: rgb(234, 239, 244);
 }
+.v-theme--DARK_BLUE_THEME .outlined-checkbox {
+  background-color: rgb(42, 52, 71);
+  color: rgb(234, 239, 244);
+  outline: 1px solid rgb(70, 86, 112);
+}
+
 </style>
