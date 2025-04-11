@@ -16,6 +16,62 @@ import {
     AppWindowIcon,
     PhoneIcon,
     CloudComputingIcon,
+    ApertureIcon,
+    Message2Icon,
+    FilesIcon,
+    CircleOffIcon,
+    BoxMultipleIcon,
+    FileTextIcon,
+    FileDotsIcon,
+    EditIcon,
+    BorderHorizontalIcon,
+    BorderInnerIcon,
+    BorderTopIcon,
+    BorderVerticalIcon,
+    BoxIcon,
+    CurrencyDollarIcon,
+    ChartLineIcon,
+    ChartAreaIcon,
+    ChartDotsIcon,
+    ChartArcsIcon,
+    ChartCandleIcon,
+    ChartDonut3Icon,
+    ChartRadarIcon,
+    ShoppingCartIcon,
+    LayoutIcon,
+    HelpIcon,
+    UserCircleIcon,
+    BoxAlignBottomIcon,
+    BoxAlignLeftIcon,
+    StarIcon,
+    AwardIcon,
+    MoodSmileIcon,
+    MailIcon,
+    BasketIcon,
+    CalendarIcon,
+    BorderStyle2Icon,
+    ColumnsIcon,
+    RowInsertBottomIcon,
+    EyeTableIcon,
+    SortAscendingIcon,
+    PageBreakIcon,
+    FilterIcon,
+    BoxModelIcon,
+    ServerIcon,
+    JumpRopeIcon,
+    LayoutKanbanIcon,
+    PhotoAiIcon,
+    SearchIcon,
+    SocialIcon,
+    BinaryIcon,
+    BrandTidalIcon,
+    FileInfoIcon,
+    AddressBookIcon,
+    BellDollarIcon,
+    TicketIcon,
+    FileCheckIcon,
+    CameraIcon,
+    PlayerPlayIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -38,208 +94,193 @@ export interface menu {
 const horizontalItems: menu[] = [
     {
         title: 'Dashboard',
-        icon: HomeIcon,
-        to: '#',
+        icon: ApertureIcon,
+        to: '/home/dashboard',
         children: [
             {
-                title: 'Modern',
+                title: 'Dashboard',
                 icon: CircleIcon,
-                to: '/dashboards/modern'
-            },
-            {
-                title: 'Ecommerce',
-                icon: CircleIcon,
-                to: '/dashboards/ecommerce'
+                to: '/home/dashboard'
             }
         ]
     },
     {
         title: '사용자 및 조직',
         icon: UserPlusIcon,
-        to: '#',
+        to: '/user',
         children: [
             {
                 title: '사용자',
                 icon: CircleIcon,
-                to: '/apps/user/profile/add'
+                to: '/user/profile'
             },
             {
                 title: '조직',
                 icon: CircleIcon,
-                to: '/apps/organization/manage'
+                to: '/user/organization'
             },
             {
                 title: '폰 사용자',
                 icon: CircleIcon,
-                to: '/ecommerce/products'
+                to: '/user/phone'
             }
         ]
     },
     {
         title: '폰',
-        icon: ZoomCodeIcon,
-        to: '#',
+        icon: Message2Icon,
+        to: '/phone',
         children: [
             {
                 title: '디바이스',
                 icon: CircleIcon,
-                to: '/ecommerce/product/detail/1'
+                to: '/phone/device'
             },
             {
                 title: '내선번호',
                 icon: CircleIcon,
-                to: '/ecommerce/productlist'
+                to: '/phone/extension'
             },
             {
                 title: 'PSTN',
                 icon: CircleIcon,
-                to: '/ecommerce/checkout'
+                to: '/phone/pstn'
             },
             {
                 title: '당겨받기 그룹',
                 icon: CircleIcon,
-                to: '/ecommerce/add-product'
+                to: '/phone/pickup/group'
             },
             {
                 title: '과금',
                 icon: CircleIcon,
-                to: '/apps/user/zoom/charging'
+                to: '/phone/billing'
             },
             {
                 title: '녹취',
                 icon: CircleIcon,
-                to: '/apps/user/zoom/Recording'
+                to: '/phone/recording'
             }
         ]
     },
     {
         title: '모니터링',
-        icon: BorderAllIcon,
-        to: '#',
+        icon: FilesIcon,
+        to: '/monitoring',
         children: [
             {
                 title: '일일 누적 통화',
                 icon: CircleIcon,
-                to: '/monitoring/daily-call-stats'
+                to: '/monitoring/daily/call'
             },
             {
                 title: '활성통화',
                 icon: CircleIcon,
-                to: '/monitoring/active-call-stats'
+                to: '/monitoring/active/call'
             },
             {
                 title: '일일 누적 녹취',
                 icon: CircleIcon,
-                to: '/monitoring/daily-recording-stats'
+                to: '/monitoring/daily/recording'
             },
             {
                 title: '활성 녹취',
                 icon: CircleIcon,
-                to: '/monitoring/active-recording-stats'
+                to: '/monitoring/active/recording'
             }
         ]
     },
     {
         title: '통계',
-        icon: BrandAirtableIcon,
-        to: '#',
+        icon: FilesIcon,
+        to: '/report',
         children: [
             {
                 title: '부서별 과금 통계',
                 icon: CircleIcon,
-                to: '/apps/invoice/details/102'
+                to: '/report/dept/billing'
             },
             {
                 title: '부서별 유형 통계',
                 icon: CircleIcon,
-                to: '/apps/invoice/create'
+                to: '/report/dept/call'
             },
             {
                 title: '일자별 수발신 통계',
                 icon: CircleIcon,
-                to: '/apps/invoice/edit/102'
+                to: '/report/daily/call'
             },
             {
                 title: '일자별 수발신 유형별 통계',
                 icon: CircleIcon,
-                to: '/apps/notes'
+                to: '/report/daily/call/type'
             },
             {
                 title: '사용량 통계',
                 icon: CircleIcon,
-                to: '/apps/calendar'
+                to: '/report/usage'
             },
             {
                 title: '전화 통화 이력',
                 icon: CircleIcon,
-                to: '/apps/email'
+                to: '/report/call/history'
             },
             {
                 title: '전화 최대 사용 이력',
                 icon: CircleIcon,
-                to: '/apps/tickets'
+                to: '/report/call/history/maximum'
             }
         ]
     },
     {
         title: '디바이스 현황',
-        icon: FileDescriptionIcon,
-        to: '#',
+        icon: LayoutKanbanIcon,
+        to: '/device',
         children: [
             {
                 title: '폰 디바이스 현황',
                 icon: CircleIcon,
-                to: '/apps/kanban'
+                to: '/device/phone'
             },
             {
                 title: 'SBC 현황',
                 icon: CircleIcon,
-                to: '/pages/pricing'
+                to: '/device/sbc'
             }
         ]
     },
     {
         title: '라이선스',
-        icon: ClipboardIcon,
-        to: '#',
+        icon: UserCircleIcon,
+        to: '/license',
         children: [
             {
                 title: '사용 현황',
                 icon: CircleIcon,
-                to: '/pages/gallery-lightbox'
+                to: '/license/status'
             },
             {
                 title: '사용 내역',
                 icon: CircleIcon,
-                to: '/pages/faq'
+                to: '/license/history'
             }
         ]
     },
     {
         title: '환경설정',
-        icon: SettingsIcon,
-        to: '#',
+        icon: LayoutIcon,
+        to: '/settings',
         children: [
             {
                 title: '메뉴 관리',
                 icon: CircleIcon,
-                to: '/widget-card'
+                to: '/settings/menu'
             },
             {
                 title: '코드관리',
                 icon: CircleIcon,
-                to: '/pages/faq'
-            },
-            {
-                title: 'Extension 번호 관리',
-                icon: PhoneIcon,
-                to: '/env-management/extension-list'
-            },
-            {
-                title: 'PSTN 번호 관리',
-                icon: CloudComputingIcon, 
-                to: '/env-management/pstn-list'
-            },
+                to: '/settings/code'
+            }
         ]
     }
 ];

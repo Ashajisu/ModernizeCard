@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import config from "@/config";
 
 // F5에도 탭 유지 : @pinia-plugin-persistedstate 라이브러리를 설치하고, tabs 상태를 유지하도록 설정 : 불필요
 // 탭전체삭제 : removeAllTabs: 불필요
@@ -7,8 +8,8 @@ export const useTabStore = defineStore({
   id: "tab",
   state: () => ({
     tabs: [] as { name: string; path: string;}[],
-    activeTab: { name: "Dashboard", path: "/dashboards/modern" },
-    defaultTab: { name: "Dashboard", path: "/dashboards/modern" }
+    activeTab: { name: "Dashboard", path: config.mainPage },
+    defaultTab: { name: "Dashboard", path: config.mainPage }
   }),
   actions: {
     setActiveTab(page: { name: string; path: string }){
