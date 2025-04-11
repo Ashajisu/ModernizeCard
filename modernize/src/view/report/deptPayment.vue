@@ -1,295 +1,181 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import {DepartmentCallDatatables} from '@/_mockApis/components/datatable/SampleDataTable';
+import { useTableManager } from "@/common/useTableManager";
+import type {FormField} from "@/types/custom/InputTypes";
+import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
+import UiParentCard from "@/components/shared/UiParentCard.vue";
+import type {departmentCall} from '@/types/apps/SampleType';
+import PaginationControl from '@/components/custom/pagination/PaginationControl.vue';
 
-import type {departmentCall} from '@/types/apps/SampleType'; // 날짜 포맷을 쉽게 다룰 수 있는 라이브러리
-
-const billFrom = ref(false);
-const rules = ref([
-  (v: string) => !!v || 'rule',
-  (v: string) => (v && v.length <= 20) || 'rule must be less than 20 characters'
+const formFields = ref<FormField[]>([
+  { label: '시작일', name:"starttime", type: "datetime", value: "", required: false, disabled: false },
+  { label: '종료일', name:"endtime", type: "datetime", value: "", required: false, disabled: false },
+  { label: "부서명", name: "dept", type: "search_list", value: "", searchObj:DepartmentCallDatatables, required: false, disabled: false },
+  { label: "팀명", name: "team", type: "search_list", value: "",  searchObj:DepartmentCallDatatables, required: false, disabled: false },
 ]);
 
-interface Team {
-  id: number;
-  title: string;
-  children?: Team[];
-}
-
-const headers = [
-  { title: '본부명', align: 'center', key: 'dept' },
-  { title: '부서명', align: 'center', key: 'team'},
-  { title: '유형', align: 'center', key: 'phonecase' },
-  { title: '발신 건수 (Call)', align: 'center', key: 'calltotal' },
+const headers = ref<any[]>([
+  { title: '부서명', align: 'center', key: 'dept' },
+  { title: '팀명', align: 'center', key: 'team'},
+  { title: '유형', align: 'center', key: 'phonecase'},
+  { title: '발신 건수', align: 'center', key: 'calltotal' },
   { title: '총 통화시간', align: 'center', key: 'totaltime' },
-] as const;
+]);
 
-const itemsPerPage = ref(3);
-const pagination = ref(3);
-const pageCount = Math.ceil(DepartmentCallDatatables.length / itemsPerPage.value)
+const deviceFormFields = ref<FormField[]>([
+  { label: "부서명", name: "dept", type: "text", value: "", required: false, disabled: false },
+  { label: "팀명", name: "team", type: "text", value: "", required: false, disabled: false },
+  { label: "유형", name: "phonecase", type: "text", value: "", required: false, disabled: false },
+  { label: "발신 건수", name: "calltotal", type: "search_list", value: "",  required: false, disabled: false },
+  { label: "발신 통화시간", name: "totaltime", type: "search_list", value: "", required: false, disabled: false },
+]);
 
-/*const pageCount = computed(() => {
-  return Math.ceil(DepartmentCallDatatables.length / itemsPerPage.value);
-});*/
-const PhoneStatus = ref(['시간대별','일별', '월별']);
+const identifierField:string = 'deptName';
 
-const selectedItem = ref({
-  date: "",
-  dept: "",
-  team: "",
-  phonecase: "",
-  calltotal: "",
-  totaltime: "",
-});
-
-const selectedItems = ref([]);
-
-const departmentCallDatatables = ref<departmentCall[]>(DepartmentCallDatatables);
-
-// 그룹 내 첫 번째 항목인지 확인
-const isFirstInGroup = (item: departmentCall, index: number) => {
-  const prevItem = departmentCallDatatables.value[index - 1];
-  return !prevItem || prevItem.dept !== item.dept || prevItem.team !== item.team;
-};
-
-const isSumInGroup = (item: departmentCall, index: number) => {
-  const prevItem = departmentCallDatatables.value[index - 1];
-
-  // 이전 항목이 없거나, 이전 항목과 현재 항목의 phonecase 값이 다르면
-  // 현재 항목을 합계 항목으로 처리
-  if (!prevItem || prevItem.phonecase !== item.phonecase) {
-    return true;
-  }
-
-  return false; // 이전 항목과 현재 항목의 phonecase 값이 동일하면 합계 항목이 아님
-};
-
-const selectedTeam: Team[] = [
-  {
-    id: 1,
-    title: '아리시스',
-    children: [
-      { id: 2, title: '영업부',
-        children: [
-          { id: 3, title: '영업 1팀'},
-          { id: 4, title: '영업 2팀'}
-        ]
-      },
-      { id: 5, title: '경영지원부',
-        children: [
-          { id: 6, title: '경영지원팀'}
-        ]
-      },
-      { id: 7, title: '고객지원부',
-        children: [
-          { id: 8, title: '고객지원팀'},
-          { id: 9, title: 'PM팀'}
-        ]
-      }
-    ]
-  },
-];
-
-const icons = [
-  'mdi-plus-box',
-]
-
-const tree = ref<Team[]>([]);
-
-function getIcon () {
-  return icons[Math.floor(Math.random() * icons.length)]
-}
-
-const onClickClose = (selection: Team) => {
-  tree.value = tree.value.filter(item => item.id !== selection.id);
-}
-
-// 트리 구조를 평면 구조로 변환
-function flattenTree(items: Team[]): Team[] {
-  return items.reduce((acc: Team[], item: Team) => {
-    acc.push(item);
-    if (item.children) {
-      acc = acc.concat(flattenTree(item.children));  // 자식 아이템을 재귀적으로 결합
-    }
-    return acc;
-  }, []);
-}
-
-const menu = ref(false);// 메뉴 열기/닫기 상태
-const selectedTitle = ref("");
-function onTreeItemSelected(selection: unknown) {
-  // selection이 Team[] 타입인지 확인
-  const teamSelection = selection as Team[];
-
-  if (teamSelection && teamSelection.length > 0) {
-    // 선택된 아이템의 제목을 텍스트 필드에 표시
-    selectedTitle.value = teamSelection[0].title;  // 선택된 첫 번째 아이템의 제목을 설정
-  }
-}
-
-const currentDate = ref<string>(new Date().toISOString().slice(0, 10));
-const time1 = ref('09:00');
-const time2 = ref('10:00');
+//모듈 호출
+const {
+  onSearch,
+  filteredList,
+} = useTableManager<departmentCall>(DepartmentCallDatatables, formFields, deviceFormFields, identifierField);
 
 const periods = ['시간대별', '일별', '월별', '년별']; // 버튼에 표시할 텍스트 배열
 const selected = ref<string | null>(null); // 현재 선택된 버튼을 추적하는 ref
 
-function select(period : string) {
+
+function zeroPad(num: number): string {
+  return (num < 10 ? '0' : '') + num;
+}
+
+function select(period: string) {
   selected.value = period;
 
-  if (period === '일별') {
-    currentDate.value = new Date().toISOString().slice(0, 10);
-  }else if(period === '월별'){
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = zeroPad(now.getMonth() + 1);
+  const nextmonth = zeroPad(now.getMonth() + 2);
+  const date = zeroPad(now.getDate());
+  const hours = zeroPad(now.getHours());
+  const nexthours = zeroPad(now.getHours() + 1);
+  const minutes = zeroPad(now.getMinutes())
 
-  }else if(period === '년별'){
+  let startField = formFields.value.find(f => f.name === 'starttime');
+  let endField = formFields.value.find(f => f.name === 'endtime');
 
+  if (startField && endField) {
+    let startvalue = '';
+    let endvalue= '';
+    if (period === "시간대별") {
+      startField.type = 'datetime'; // ✅ 여기서 type 변경!
+      endField.type = 'datetime';
+      startvalue = `${year}-${month}-${date} ${hours}:00`;
+      endvalue = `${year}-${month}-${date} ${nexthours}:00`;
+    } else if (period === "일별") {
+      startField.type = 'date'; // ✅ 여기서 type 변경!
+      endField.type = 'date';
+      startvalue = `${year}-${month}-${date}`;
+      endvalue = `${year}-${month}-${date}`;
+    } else if (period === "월별") {
+      startField.type = 'date'; // ✅ 여기서 type 변경!
+      endField.type = 'date';
+      startvalue = `${year}-${month}-01`;
+      endvalue = `${year}-${nextmonth}-01`;
+    } else if (period === "년별") {
+      startField.type = 'date'; // ✅ 여기서 type 변경!
+      endField.type = 'date';
+      startvalue = `${year}-01-01`;
+      endvalue = `${year}-12-31`;
+    }
+
+    startField.value = startvalue;
+    endField.value = endvalue;
   }
 }
+
+// 그룹 내 첫 번째 항목인지 확인
+const isFirstInGroup = (item: departmentCall, index: number) => {
+  const prevItem = filteredList.value[index - 1];
+  return !prevItem || prevItem.dept !== item.dept || prevItem.team !== item.team;
+};
+
+
+const itemsPerPage = ref(10);
+const pagination = ref(1);
+const pageCount = computed(() => {
+  return Math.ceil(filteredList.value.length / itemsPerPage.value);
+});
 
 </script>
 
 <template>
-  <br>
-  <h5 class="text-20 mb-3">부서별 전화 사용량 통계</h5>
-  <h5 class="text-15 mb-7">※ 조회조건</h5>
-  <v-btn
-      v-for="(period, index) in periods"
-      :key="index"
-      :value="period"
-      v-model="selected"
-      :class="{'v-btn--active': selected === period}"
-      @click="select(period)"
-  >
-    {{ period }}
-  </v-btn>
-  <v-card elevation="10" style="height: auto; max-height: 400px;">
-    <v-card-item>
-      <v-row class="d-flex align-center" no-gutters>
-
-      </v-row>
-      <v-row class="d-flex align-center" no-gutters>
-        <!-- 조회일 레이블 -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-label class="font-weight-semibold pb-2">조회일</v-label>
-        </v-col>
-
-        <!-- 첫 번째 DatePicker -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-text-field variant="outlined" hide-details type="date" v-model="currentDate"></v-text-field>
-        </v-col>
-
-        <!-- 첫 번째 TimePicker -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-text-field variant="outlined" hide-details type="time"  v-model="time1"></v-text-field>
-        </v-col>
-
-        <!-- ~ 기호 -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-label>~</v-label>
-        </v-col>
-
-        <!-- 두 번째 DatePicker -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-text-field variant="outlined" hide-details type="date" v-model="currentDate"></v-text-field>
-        </v-col>
-
-        <!-- 두 번째 TimePicker -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-text-field variant="outlined" hide-details type="time" v-model="time2"></v-text-field>
-        </v-col>
-
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <v-container style="display: block; margin-top: 23px;">
-            <v-menu v-model="menu" transition="slide-x-reverse-transition" offset-y>
-              <!-- activator slot에 on과 attrs를 v-bind, v-on으로 전달 -->
-              <template v-slot:activator="{ props }">
-                <v-text-field
-                    v-bind="props"
-                    label="부서 / 팀 선택"
-                    v-model="selectedTitle"
-                    style="min-width:120px; max-width:120px;"
-                    readonly
-                />
-              </template>
-
-              <!-- 트리뷰 컴포넌트 -->
-              <v-treeview
-                  v-model:selected="tree"
-                  :items="selectedTeam"
-                  item-title="title"
-                  item-value="id"
-                  return-object
-                  select-strategy="classic"
-                  activatable
-                  hide-details
-                  style="min-width:220px; max-width:220px;"
-                  @update:selected="onTreeItemSelected"
+  <v-row>
+    <v-col cols="12" md="12">
+      <UiParentCard title="부서별 전화 사용량 통계">
+        <v-row>
+          <v-btn
+              v-for="(period, index) in periods"
+              :key="index"
+              :value="period"
+              v-model="selected"
+              :class="{'v-btn--active': selected === period}"
+              @click="select(period)"
+          >
+            {{ period }}
+          </v-btn>
+        </v-row>
+        <v-row>
+          <v-col>
+            <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+              <CustomSearchChecksForm :formFields="formFields" :colsPerRow="7" :edit="true">
+                <template v-slot:lineBtn="{ validateForm }">
+                  <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                    <v-btn color="grey" variant="outlined" @click=""
+                           style="max-width: 100px; min-width: 100px; min-height: 40px;">엑셀 다운로드
+                    </v-btn>
+                    <v-btn color="primary" flat @click="onSearch(validateForm)"
+                           style="max-width: 100px; min-width: 100px; min-height: 40px;">조회
+                    </v-btn>
+                  </div>
+                </template>
+              </CustomSearchChecksForm>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <h5 class="text-15 mb-2">※ 부서별 과금 통계</h5>
+          <v-data-table
+              class="border rounded-md text-center light scrollable-card"
+              :headers="headers"
+              :items="filteredList"
+              item-key="dept"
+              hide-default-footer
+              fixed-header
+              return-object
+              style="overflow-x: hidden; max-width: 100%;"
+              :items-per-page="itemsPerPage"
+              v-model:page="pagination"
+          >
+            <template v-slot:body="props">
+              <tr v-for="(item, index) in props.items" :key="index">
+                <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.dept }}</td>
+                <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.team }}</td>
+                <td>{{ item.phonecase }}</td>
+                <td>{{ item.calltotal }}</td>
+                <td>{{ item.totaltime }}</td>
+              </tr>
+            </template>
+            <template v-slot:bottom>
+              <PaginationControl
+                  :items-per-page="itemsPerPage"
+                  :pagination="pagination"
+                  :page-count="pageCount"
+                  @update:itemsPerPage="(val: number) => itemsPerPage = val"
+                  @update:pagination="(val: number) => pagination = val"
               />
-            </v-menu>
-          </v-container>
-        </v-col>
-
-        <!-- 엑셀 다운로드 버튼 -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                           style="max-width: 100px; min-width: 100px;">
-                      엑셀 다운로드
-                    </v-btn>-->
-          <v-btn color="grey" variant="outlined" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">엑셀 다운로드</v-btn>
-        </v-col>
-
-        <!-- 조회 버튼 -->
-        <v-col cols="auto" class="d-flex align-center ma-2">
-          <!--          <v-btn block size="large" color="primary" to="/ecommerce/checkout"
-                           style="max-width: 60px; min-width: 60px;">
-                      조회
-                    </v-btn>-->
-          <v-btn color="primary" @click="" style="max-width: 100px; min-width: 100px; min-height: 40px;">조회</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-item>
-  </v-card>
-  <br>
-  <h5 class="text-15 mb-7">※ 부서별 과금 통계</h5>
-  <v-data-table
-      class="border rounded-md text-center light scrollable-card"
-      :headers="headers"
-      :items="departmentCallDatatables"
-      item-key="dept"
-      hide-default-footer
-      fixed-header
-      style="overflow-x: hidden; max-width: 100%;"
-  >
-    <template v-slot:body="props">
-      <tr v-for="(item, index) in props.items" :key="index">
-        <!-- 그룹 내 첫 번째 항목에만 rowspan 적용 -->
-        <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.dept }}</td>
-        <td v-if="isFirstInGroup(item, index)" rowspan="4">{{ item.team }}</td>
-        <td>{{ item.phonecase }}</td>
-        <td>{{ item.calltotal }}</td>
-        <td>{{ item.totaltime }}</td>
-      </tr>
-    </template>
-
-    <template v-slot:bottom>
-      <v-row align="center" justify="space-between" class="pt-2 mt-3 px-3">
-        <v-col cols="auto">
-          <v-text-field
-              :model-value="itemsPerPage"
-              class="pa-2"
-              label="페이지당 항목 수"
-              type="number"
-              min="-1"
-              max="15"
-              hide-details
-              style="max-width: 130px; min-width: 130px;"
-              @update:model-value="itemsPerPage = parseInt($event, 10)"
-          />
-        </v-col>
-        <v-col style="margin-right: 160px;">
-          <v-pagination v-model="pagination" :length="pageCount"></v-pagination>
-        </v-col>
-      </v-row>
-    </template>
-  </v-data-table>
+            </template>
+          </v-data-table>
+        </v-row>
+      </UiParentCard>
+    </v-col>
+  </v-row>
 </template>
