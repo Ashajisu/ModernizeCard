@@ -14,6 +14,7 @@ const formFields = ref<FormField[]>([
   { label: "부서명", name: "dept", type: "search_list", value: "", searchObj:DepartmentCallDatatables, required: false, disabled: false },
   { label: "팀명", name: "team", type: "search_list", value: "",  searchObj:DepartmentCallDatatables, required: false, disabled: false },
 ]);
+
 const headers = ref<any[]>([
   { title: '부서명', align: 'center', key: 'dept' },
   { title: '팀명', align: 'center', key: 'team'},
@@ -39,14 +40,8 @@ const identifierField:string = 'deptName';
 //모듈 호출
 const {
   onSearch,
-  resetSearch,
   filteredList,
-  selectedEmpId,
-  onSelectionChange,
 } = useTableManager<departmentCall>(DepartmentCallDatatables, formFields, deviceFormFields, identifierField);
-
-
-const currentDate = ref<string>();
 
 const periods = ['시간대별', '일별', '월별', '년별']; // 버튼에 표시할 텍스트 배열
 const selected = ref<string | null>(null); // 현재 선택된 버튼을 추적하는 ref
