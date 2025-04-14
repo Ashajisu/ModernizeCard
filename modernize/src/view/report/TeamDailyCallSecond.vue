@@ -33,7 +33,7 @@ const deviceFormFields = ref<FormField[]>([
   { label: "수신 통화시간", name: "inTotaltime", type: "search_list", value: "", required: false, disabled: false },
 ]);
 
-const identifierField:string = 'deptName';
+const identifierField:string = 'teamDailyCallSecond';
 
 //모듈 호출
 const {
@@ -55,11 +55,10 @@ function select(period: string) {
   const now = new Date();
   const year = now.getFullYear();
   const month = zeroPad(now.getMonth() + 1);
-  const nextmonth = zeroPad(now.getMonth() + 2);
+  const lastDay = zeroPad(new Date(year, now.getMonth() + 1, 0).getDate());
   const date = zeroPad(now.getDate());
   const hours = zeroPad(now.getHours());
   const nexthours = zeroPad(now.getHours() + 1);
-  const minutes = zeroPad(now.getMinutes())
 
   let startField = formFields.value.find(f => f.name === 'starttime');
   let endField = formFields.value.find(f => f.name === 'endtime');
@@ -81,7 +80,7 @@ function select(period: string) {
       startField.type = 'date'; // ✅ 여기서 type 변경!
       endField.type = 'date';
       startvalue = `${year}-${month}-01`;
-      endvalue = `${year}-${nextmonth}-01`;
+      endvalue = `${year}-${month}-${lastDay}`;
     } else if (period === "년별") {
       startField.type = 'date'; // ✅ 여기서 type 변경!
       endField.type = 'date';
@@ -124,9 +123,9 @@ const pageCount = computed(() => {
           </v-btn>
         </v-row>
         <v-row>
-          <v-col>
+          <v-col cols="12">
             <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-              <CustomSearchChecksForm :formFields="formFields" :colsPerRow="7" :edit="true">
+              <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true">
                 <template v-slot:lineBtn="{ validateForm }">
                   <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn color="grey" variant="outlined" @click=""
