@@ -1,5 +1,6 @@
 import { createVuetify } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css';
+import { mdi } from 'vuetify/iconsets/mdi'; // Vuetify 아이콘 인식을 위한 추가
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 //DragScroll
@@ -28,6 +29,15 @@ export default createVuetify({
         VTreeview
     },
     directives,
+
+    icons: {     //전역 sort icon 적용
+        defaultSet: 'mdi',
+        sets: { mdi },
+        aliases: {
+            sortAsc: 'mdi-triangle-small-up',
+            sortDesc: 'mdi-triangle-small-down',
+        },
+    },
 
     theme: {
         defaultTheme: 'BLUE_THEME',
