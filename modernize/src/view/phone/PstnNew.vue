@@ -172,8 +172,8 @@ const deleteCheckConfirm = async ()=>{
                 </template>
               </CustomSlotDialog>
 
-              <v-btn flat color="primary" variant="outlined" @click="openNewDialog"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
-              <v-btn flat color="error" variant="outlined" @click="deleteCheckConfirm"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
+              <v-btn color="primary" prepend-icon="mdi-plus" variant="outlined" @click="openNewDialog">신규등록</v-btn>
+              <v-btn class="ml-2" color="error" prepend-icon="mdi-minus" variant="outlined" @click="deleteCheckConfirm">삭제</v-btn>
 
               <!-- PSTN 번호 편집 다이얼로그 -->
               <CustomSlotDialog ref="detailDialog" title="PSTN 번호 편집" >
@@ -188,7 +188,7 @@ const deleteCheckConfirm = async ()=>{
                   <v-btn flat color="primary" variant="flat" @click="onClickSave">저장 </v-btn>
                 </template>
               </CustomSlotDialog>
-              <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)">편집 </v-btn>
+              <v-btn class="ml-2" color="warning" prepend-icon="mdi-pencil" variant="outlined" @click="handleEdit">편집</v-btn>
             </div>
           </v-col>
           <v-col>

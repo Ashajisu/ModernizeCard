@@ -18,7 +18,7 @@
                     class="date-picker"
                     style="max-width: 200px"
                 />
-                <v-btn color="primary" class="ml-2" @click="fetchData"> 조회 </v-btn>
+              <v-btn color="primary" flat @click="fetchData"> 조회 </v-btn>
             </v-col>
         </v-row>
         

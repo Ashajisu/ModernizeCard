@@ -46,9 +46,9 @@ const {
         <v-row>
           <CustomSearchChecksForm :formFields="formFields" :colsPerRow="3" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{ validateForm }">
-                <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+                <v-btn color="primary" @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                <v-btn class="ml-2" variant="outlined" @click="">엑셀 다운로드</v-btn>
             </template>
           </CustomSearchChecksForm>
         </v-row>
