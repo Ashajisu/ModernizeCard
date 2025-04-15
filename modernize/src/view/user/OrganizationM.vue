@@ -57,7 +57,7 @@ watch(selectedValue, (newSelect:any) => {
           </UiChildCard>
         </div>
 <!--        사용자 상세-->
-        <div v-if="selectedValue?.code.charAt(0) === 'u'">
+        <div v-if="selectedValue?.user !==null">
           <UiChildCard title="사용자 상세 정보" variant="flat" class="border-t-sm">
             <CustomSearchChecksForm :formFields="userFields" :colsPerRow="2" :edit="false" :hide-details="true"/>
           </UiChildCard>

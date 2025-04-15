@@ -302,14 +302,14 @@ export const initTree = (
         tree.on("move", (eventData: any) => {
             updateChildIndexes(eventData.newParentId);
             updateChildIndexes(eventData.originalParentId);
+            const nodeData = tree.getNodeData(eventData.nodeId);
+            selectedValue.value = { ...nodeData } as FlatItem;
         });
 
         // 'select' 이벤트 리스너
         tree.on('select', (eventData: any) => {
             const nodeData = tree.getNodeData(eventData.nodeId);
-            // console.log('select:',nodeData);
-            selectedValue.value = { ...nodeData } as FlatItem; // 자동으로 부모컴포넌트에 바인딩.
-            // emit('update:selectedValue', nodeData);
+            selectedValue.value = { ...nodeData } as FlatItem;
         });
 
         return tree;
