@@ -419,14 +419,26 @@ export const updateGroupDetailFields = (
     const found = tableList.find((item) => item[identifierField] === selectedId);
     // console.log('found:',found);
     if(!!found){
-        groupFields.forEach((field:FormField) => {
-            field.value = found[field.name] ?? "";
-        });
         const user:UserItem|undefined|null = found?.user;
         if (!!user) {
+            //사용자인 경우: 사용자정보, 조직정보 출력
             // console.log('updateUserDetailFields:',user);
             userFields.forEach((field:FormField) => {
                 field.value = user[field.name] ?? "";
+            });
+            const parent:FlatItem|undefined = tableList.find((item) => item[identifierField] === found?.parentCode);
+            if(parent){
+                groupFields.forEach((field:FormField) => {
+                    field.value = parent[field.name] ?? "";
+                });
+            }
+        }else {
+            //조직인 경우: 사용자정보 초기화, 조직정보 출력
+            userFields.forEach((field: FormField) => {
+                field.value = "";
+            });
+            groupFields.forEach((field:FormField) => {
+                field.value = found[field.name] ?? "";
             });
         }
     }
