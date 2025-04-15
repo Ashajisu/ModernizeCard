@@ -14,6 +14,7 @@ export type FlatItem = {
     index: number;        // 정렬 순서
     activeStatus: boolean; // 사용 여부
     user: UserItem | null;  // 사용자 정보 (사용자일 경우 UserItem 객체, 그렇지 않으면 빈 객체)
+    icon?: string;          // mdi icon 디자인 (없는 경우, 하위개체가 있으면 mdi-account-multiple-outline, 하위개체가 없으면 mdi-account )
     // 인덱스 시그니처 추가
     [key: string]: any;
 };
@@ -27,6 +28,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 1,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -37,6 +39,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 1,
         index: 1,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -47,6 +50,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 2,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -57,6 +61,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 2,
         index: 1,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -67,6 +72,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 2,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -77,6 +83,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 3,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -87,6 +94,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 3,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -97,6 +105,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 3,
         index: 0,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -107,6 +116,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 3,
         index: 1,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -117,6 +127,7 @@ export const FlatTreeData:FlatItem[] = [
         level: 3,
         index: 2,
         activeStatus: true,
+        icon:'mdi-account-multiple-outline',
         user: null
     },
     {
@@ -241,7 +252,7 @@ export const initTree = (
                     '</button>' +
                     '</button>' +
                     '<span class="tui-tree-text tui-js-tree-text">' +
-                    '<span class="tui-tree-ico tui-ico-folder"></span>' +
+                    '<span class="mdi mdi-account-multiple-outline" style="margin-right: 8px; font-size: 20px"></span>' +
                     '{{title}} ' +
                     '</span>' +
                     '</div>' +
@@ -249,8 +260,8 @@ export const initTree = (
                 leafNode:
                     '<div class="tui-tree-content-wrapper" style="padding-left: {{indent}}px">' +
                     '<span class="tui-tree-text tui-js-tree-text">' +
-                    '<span class="tui-tree-ico tui-ico-file"></span>' +
-                    '{{title}}' +
+                    '<span class="mdi mdi-account {{icon}}" style="margin-right: 8px; font-size: 20px"></span>' +
+                    '{{title}}'+
                     '</span>' +
                     '</div>'
             }

@@ -63,7 +63,7 @@ const resetConfirm = async ()=>{
 
 .custom-treeview .tui-tree-text{
   font-size: 14px;
-  padding: 10px;
+  padding: 5px;
 }
 
 .v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-root > .tui-tree-opened > .tui-tree-content-wrapper .tui-tree-text {
