@@ -50,7 +50,7 @@ watch(selectedValue, (newSelect:any) => {
         <div>
           <UiChildCard title="조직 상세 정보" variant="flat">
             <div class="d-flex justify-end">
-                <span v-if="isDirty" class="text-error ma-2" > {{ changedCodeList }}변경사항을 저장하세요. </span>
+                <span v-if="isDirty" class="text-error ma-2" > 변경사항을 저장하세요. </span>
                 <v-btn color="primary" flat @click="onSave" :disabled="!isDirty">저장</v-btn>
             </div>
             <CustomSearchChecksForm :formFields="groupFields" :colsPerRow="2" :edit="false" :hide-details="true"/>

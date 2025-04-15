@@ -21,9 +21,9 @@ watch(search, (newSearch:string) => {
 const resetConfirm = async ()=>{
     console.log('reset before: ', tree);
   if(await confirm('저장하지 않은 변경사항이 있습니다. 리셋하시겠습니까?')){
+    resetFlat(); //데이터 재 할당
     tree = initTree(treeContainer); //화면만 새로 그림.
     console.log('reset after: ', tree);
-    resetFlat();
   }
 }
 

@@ -484,7 +484,7 @@ export const setFlat = (code:string, index:number, level:number, parentCode:stri
 
 // DB 에서 FlatTreeData 를 다시 호출해 지금까지의 변경사항을 초기화.
 export const resetFlat = ()=>{
-    //임시로 리로드 시킴.
+    FlatTreeData.splice(0, FlatTreeData.length, ...initialFlatTreeData);
     changedCodeList.value = []; //초기화
     setDirty(false);
 }
