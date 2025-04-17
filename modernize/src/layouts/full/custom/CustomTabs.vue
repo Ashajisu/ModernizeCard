@@ -30,9 +30,9 @@ watch(() => tabStore.activeTab,(newTab) => {
             <v-btn @click.stop="tabStore.removeTab(tab.path)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
               <XIcon stroke-width="1.5" width="12" />
             </v-btn>
-          </v-tab>
-          <v-tab>
-            <v-btn class="px-0 py-0 align-center text-center" @click.stop="tabStore.refreshTab()"><v-icon>mdi-refresh</v-icon></v-btn>
+            <v-btn @click.stop="tabStore.refreshTab()" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
+              <ReloadIcon stroke-width="1.5" width="12" />
+            </v-btn>
           </v-tab>
       </v-tabs>
       <slot/>
