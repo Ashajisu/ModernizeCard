@@ -39,7 +39,7 @@
             style="max-width: 200px"
             label="조회 종료일"
         ></v-text-field>
-        <v-btn color="primary" class="ml-2" @click="getLicenseData"> 조회 </v-btn>
+        <v-btn color="primary" flat @click="getLicenseData"> 조회 </v-btn>
       </v-col>
     </v-row>
 
