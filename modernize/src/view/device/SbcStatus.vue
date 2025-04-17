@@ -4,6 +4,7 @@ import { ref } from "vue";
 import SystemView from '../../views/apps/kanban/SystemView.vue';
 import CallView from '../../views/apps/kanban/CallView.vue';
 import AlarmView from '../../views/apps/kanban/AlarmView.vue';
+import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // 선택된 SBC 정보
 const selectedServer = ref<{id: number; name: string; descirpiton: string; icon: string} | null > (null);
@@ -52,16 +53,10 @@ const addSbc = () => {
 </script>
 
 <template>
-
-  <v-card class="pa-1">
-    <v-card-title class="text-h4 font-weight-bold d-flex align-left"> SBC 현황 </v-card-title>
-    <v-card-title class="text-h6 font-weight-bold d-flex align-left">줌 폰과 연동되어 있는 SBC 장비를 모니터링 할 수 있습니다.</v-card-title>
-
-  </v-card>
-
-
-  <br><br>
-  <v-container>
+<UiParentCard title="SBC 현황">
+  <v-row class="mb-6 mx-2">
+    <h6 class="text-subtitle-1">줌 폰과 연동되어 있는 SBC 장비를 모니터링 할 수 있습니다.</h6>
+  </v-row>
     <!-- SBC 목록 -->
     <v-row>
       <v-col v-for="sbc in sbcList" :key="sbc.id" cols="4">
@@ -128,8 +123,5 @@ const addSbc = () => {
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
-  <br>
-
-
+</UiParentCard>
 </template>
