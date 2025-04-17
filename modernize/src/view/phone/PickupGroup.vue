@@ -45,7 +45,7 @@ const groupFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options:[], required: false, disabled: false },
   { label: '그룹 내선번호', name: 'groupExtensionNumber', type: 'search', value: '', searchObj:GroupDatatables, required: false, disabled: false },
   { label: '벨울림 지연', name: 'bellRingDelay', type: 'select', value: '', options: ['0초', '5초', '10초'], required: false, disabled: false },
-  { label: '그룹 구성원', name: 'groupNumbers', type: 'text', value: '', required: true, disabled: true },
+  { label: '그룹 구성원', name: 'groupNumbers', type: 'text', value: '', required: false, disabled: false },
   { label: 'manage', name: 'manage', type: 'slot', value: '', required: false, disabled: false }
 ]);
 
@@ -71,18 +71,16 @@ const {
 // 엑셀 다운로드 처리 : ?? 사용자 안내창 없음.
 const downloadExcel = async () => {
   try {
-    const response = await axios({
-      url: 'http://localhost:5173/api/excel/download',
-      method: 'GET',
-      responseType: 'blob'
+    const response = await fetch('http://localhost:8080/api/excel/download',{
+      method: 'GET'
     });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'group_data.xlsx');
-    document.body.appendChild(link);
-    link.click();
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'group_data.xlsx';
+    a.click();
+    a.remove();
   }catch(error){
     console.error("엑셀 다운로드 실패:", error);
   }
@@ -100,7 +98,7 @@ const uploadExcel = async () => {
   formData.append("file", selectedFile.value);
 
   try{
-    const response = await axios.post("http://localhost:5173/api/excel/upload", formData, {
+    const response = await axios.post("http://localhost:8080/api/excel/upload", formData, {
       headers: {"Content-Type" : "multipart/form-data"}
     });
 
@@ -142,9 +140,78 @@ const filteredUserList = computed(() => {
     );
   });
 })
+
+
+const newGroupDialog = ref<InstanceType<typeof CustomSlotDialog> | null >(null);
+const formRef = ref(); //유효성 검사용 ref
+
+//신규등록 모달 창 띄울때 초기화
+const resetGroupFormFields = () => {
+  groupFields.value.forEach(field => {
+    if (field.type !== 'slot' && !field.disabled){
+      field.value = '';
+    }
+  });
+};
+
+const editGroupDialog = ref<InstanceType<typeof CustomSlotDialog> | null>(null);
+const editFormRef = ref();
+
+//편집 모달창 세팅
+const openEditDialog = () => {
+  if (!selectedItem.value){
+    alert('편집 항목을 선택해 주세요.');
+    return;
+  }
+  const item = selectedItem.value;
+  groupFields.value.forEach(field => {
+    if(field.name in item){
+      field.value = String(item[field.name as keyof typeof item] ?? '');
+    }
+  });
+  editGroupDialog.value?.open();
+};
+
 </script>
 <template>
   <v-row>
+    <!--신규등록 모달 -->
+    <CustomSlotDialog title="새 그룹 등록" ref="newGroupDialog">
+      <template v-slot:inCard>
+        <CustomSearchChecksForm ref="formRef" :form-fields="groupFields" :cols-per-row="2" :edit="true">
+        </CustomSearchChecksForm>
+      </template>
+      <template v-slot:btn>
+        <v-btn color="primary" @click="async () => {
+                const validateForm = await formRef.value?.validateForm;
+                if(validateForm){
+                  await onSave(validateForm);
+                  newGroupDialog?.close();
+                }else{
+                  alert('입력값을 확인해주세요.');
+                }
+              }">저장</v-btn>
+      </template>
+    </CustomSlotDialog>
+
+    <!--편집 모달 -->
+    <CustomSlotDialog title="그룹 편집" ref="editGroupDialog">
+      <template v-slot:inCard>
+        <CustomSearchChecksForm ref="editFormRef" :form-fields="groupFields" :cols-per-row="2" :edit="true">
+        </CustomSearchChecksForm>
+      </template>
+      <template v-slot:btn>
+        <v-btn color="primary" @click="async () => {
+                const validateForm = await editFormRef.value?.validateForm;
+                if(validateForm){
+                  await onSave(validateForm);
+                  editGroupDialog?.close();
+                }else{
+                  alert('입력값을 확인해 주세요');
+                }
+              }">저장</v-btn>
+      </template>
+    </CustomSlotDialog>
     <v-col cols="12" md="12">
       <UiParentCard title="당겨받기 관리">
         <v-row class="mb-6 mx-2">
@@ -161,7 +228,8 @@ const filteredUserList = computed(() => {
         <v-row>
           <v-col>
             <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-              <v-btn flat color="primary" variant="outlined" @click="onNew"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
+              <v-btn flat color="primary" variant="outlined" @click="() => { resetGroupFormFields();
+              ($refs.newGroupDialog as any)?.open();}"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
               <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0])"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
             </div>
           </v-col>
@@ -188,8 +256,8 @@ const filteredUserList = computed(() => {
               <v-row>
                 <v-col>
                   <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                    <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)" >편집</v-btn>
-                    <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
+                    <v-btn flat color="primary" variant="outlined" @click="openEditDialog" >편집</v-btn>
+<!--                    <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>-->
                   </div>
                 </v-col>
                 <v-col>
