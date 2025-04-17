@@ -488,7 +488,7 @@ export const resetFlat = ()=>{
     changedCodeList.value = []; //초기화
     setDirty(false);
 }
-// DB에 변경사항만 전달.
+// 변경된 데이터를 리스트로 반환
 const getChangedItems = (codes:string[])=>{
     let changedItemList: {code:string, index:number, level:number, activeStatus:boolean}[] = [];
     changedCodeList.value.forEach((code:string)=>{
@@ -504,11 +504,14 @@ const getChangedItems = (codes:string[])=>{
     });
     return changedItemList;
 }
-// changedCodeList 의 데이터를 찾아서 changedItemList 를 만든 후 saveFlat 호출.
+//
 export const onSave = async () => {
     const items = getChangedItems(changedCodeList.value);
     console.log('onSave: ',items);
     // const result:number = await apiSave(items);
+    initialFlatTreeData=cloneDeep(FlatTreeData); //변경사항을 복사본으로 저장.
+    resetFlat();
+
     const result=1;
     if(result>0){
         await alert(`업데이트되었습니다.`);
