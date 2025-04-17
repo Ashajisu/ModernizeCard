@@ -201,6 +201,35 @@ const quickLink: quickLinksType[] = [
 // Search Data
 // 
 const searchSugg: searchType[] = [
+    // 제작된 페이지
+    { title: 'Dashboard', href: '/home/dashboard' },
+    { title: '사용자', href: '/user/profile' },
+    { title: '조직', href: '/user/organization' },
+    { title: '폰 사용자', href: '/user/phone' },
+    { title: '디바이스', href: '/phone/device' },
+    { title: '내선번호', href: '/phone/extension' },
+    { title: 'PSTN', href: '/phone/pstn' },
+    { title: '당겨받기 그룹', href: '/phone/pickup/group' },
+    { title: '과금', href: '/phone/billing' },
+    { title: '녹취', href: '/phone/recording' },
+    { title: '일일 누적 통화', href: '/monitoring/daily/call' },
+    { title: '활성통화', href: '/monitoring/active/call' },
+    { title: '일일 누적 녹취', href: '/monitoring/daily/recording' },
+    { title: '활성 녹취', href: '/monitoring/active/recording' },
+    { title: '부서별 과금 통계', href: '/report/dept/billing' },
+    { title: ' 부서별 유형 통계', href: '/report/dept/call' },
+    { title: '일자별 수발신 통계', href: '/report/daily/call' },
+    { title: '일자별 수발신 유형별 통계', href: '/report/daily/call/type' },
+    { title: '사용량 통계', href: '/report/usage' },
+    { title: '전화 통화 이력', href: '/report/call/history' },
+    { title: '전화 최대 사용 이력', href: '/report/call/history/maximum' },
+    { title: '폰 디바이스 현황', href: '/device/phone' },
+    { title: 'SBC 현황', href: '/device/sbc' },
+    { title: '사용 현황', href: '/license/status' },
+    { title: '사용 내역', href: '/license/history' },
+    { title: '메뉴 관리', href: '/settings/menu' },
+    { title: '코드관리', href: '/settings/code' },
+    // 템플릿 페이지 참조용
     {
         title: 'Dashboard',
         href: '/dashboards/modern'

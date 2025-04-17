@@ -6,8 +6,10 @@ import { ref, computed } from 'vue';
 // 검색어 searchQuery 를 기준으로 searchSugg 필터링한 filteredSugg 출력
 const searchQuery = ref('');
 const filteredSugg = computed(() => {
+  const query = (searchQuery.value || '').toLowerCase();
   return searchSugg.filter(item =>
-      item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      item.title.toLowerCase().includes(query) ||
+      item.href.toLowerCase().includes(query)
   );
 });
 
