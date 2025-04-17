@@ -2,12 +2,15 @@
 import {computed} from "vue";
 import config from "@/config";
 
-const logoFiles = import.meta.glob<{ default : string }>("@/assets/images/logos/*.svg", { eager: true });
-const defaultPath = '/src/assets/images/logos/logo-icon.svg';
+const props = defineProps<{
+  theme: "dark" | "light";
+}>()
+
+const logoFiles = import.meta.glob<{ default : string }>("@/assets/images/logos/*.{svg,png}", { eager: true });
 
 const logoSrc = computed(() => {
-  const logoPath = `/src/assets/images/logos/${config.siteName}_logo_icon.svg`;
-  return logoFiles[logoPath]?.default || logoFiles[defaultPath]?.default || '';
+  const logoPath = `/src/assets/images/logos/${config.siteName}_${props.theme}`;
+  return logoFiles[`${logoPath}.png`]?.default || logoFiles[`${logoPath}.svg`]?.default ||"";
 });
 </script>
 
