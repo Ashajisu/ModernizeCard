@@ -51,18 +51,18 @@ import proUser1 from '@/assets/images/svgs/icon-account.svg';
 import proUser2 from '@/assets/images/svgs/icon-inbox.svg';
 import proUser3 from '@/assets/images/svgs/icon-tasks.svg';
 const profileDD: profileType[] = [
-    {
-        avatar: proUser1,
-        title: 'My Profile',
-        subtitle: 'Account settings',
-        href: '/pages/account-settings'
-    },
-    {
-        avatar: proUser2,
-        title: 'FAQ',
-        subtitle: 'Frequently asked questions',
-        href: '/pages/faq'
-    },
+    // {
+    //     avatar: proUser1,
+    //     title: 'My Profile',
+    //     subtitle: 'Account settings',
+    //     href: '/pages/account-settings'
+    // },
+    // {
+    //     avatar: proUser2,
+    //     title: 'FAQ',
+    //     subtitle: 'Frequently asked questions',
+    //     href: '/pages/faq'
+    // },
     // {
     //     avatar: proUser1,
     //     title: 'My Profile',
