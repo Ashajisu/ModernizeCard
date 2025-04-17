@@ -97,7 +97,7 @@ const tabStore = useTabStore();
                         </v-btn>
                     </div>
                 </v-container>
-                <CustomFooter/>
+                <CustomFooter :theme="customizer.actTheme.startsWith('DARK_')? 'dark':'light'"/>
             </v-main>
         </v-app>
     </v-locale-provider>
