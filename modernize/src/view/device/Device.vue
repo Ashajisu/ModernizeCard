@@ -1,8 +1,9 @@
 <script setup lang="ts">
 
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import { DeviceDatatables } from '@/_mockApis/components/datatable/DeviceTable';
 import UiParentCard from "@/components/shared/UiParentCard.vue";
+import PaginationControl from "@/components/custom/pagination/PaginationControl.vue";
 
 const selectedDate = ref(new Date().toISOString().substr(0, 10));
 
@@ -27,22 +28,6 @@ const headers = ref([
 ]);
 
 
-const selectedItem = ref({
-  deviceName: "",
-  user: "",
-  extensionNumber: "",
-  pstnNumber: "",
-  status: "",
-  model: "",
-  macAddress: "",
-  firmware: "",
-  publicAddress: "",
-  privateAddress: ""
-})
-
-const itemsPerPage = ref(3);
-const pagination = ref(1);
-
 const showDashboard = ref(false);
 const showDataTable = ref(false);
 
@@ -53,12 +38,29 @@ const fetchData = () => {
 };
 
 
-const toggleDataTable = (title:string) => {
-    if(title === '오프라인 수량'){
-      showDataTable.value = !showDataTable.value;
-    }
-};
+const selectedStatus = ref("");
+const itemsPerPage = ref(5);
+const pagination = ref(1);
 
+const filteredDeviceList = computed(() => {
+  return DeviceDatatables.filter(device => device.status === selectedStatus.value);
+});
+
+const pageCount = computed(() => {
+  return Math.ceil(filteredDeviceList.value.length / itemsPerPage.value);
+});
+
+const toggleDataTable = (title:string) => {
+  if(title === '오프라인 수량'){
+    selectedStatus.value = "Offline";
+    showDataTable.value = true;
+  } else if(title === '온라인 수량'){
+    selectedStatus.value = "Online";
+    showDataTable.value = true;
+  }else{
+    showDataTable.value = false;
+  }
+};
 </script>
 
 <template>
@@ -89,7 +91,7 @@ const toggleDataTable = (title:string) => {
         <!--전체 전화기 등록 수량 -->
         <v-row class="mb-4">
           <v-col cols="4">
-            <v-card class="pa-6 text-center">
+            <v-card class="pa-10 text-center">
               <div class="text-grey-darken-2 text-subtitle-1">전체 전화기 등록 수량</div>
               <div class="text-h3 font-weight-bold">130</div>
               <v-btn icon variant="text" class="mt-2">
@@ -104,7 +106,7 @@ const toggleDataTable = (title:string) => {
               <div class="text-center text-grey-darken-2 text-subtitle-1">제조사 별 현황</div>
               <v-divider></v-divider>
               <v-row>
-                <v-col cols="6">
+                <v-col cols="6"><br>
                   <div class="text-blue font-weight-bold">Poly</div>
                   <div class="d-flex justify-space-between">
                     <span class="text-grey">E350</span>
@@ -115,7 +117,7 @@ const toggleDataTable = (title:string) => {
                     <span class="text-orange font-weight-bold">25</span>
                   </div>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="6"><br>
                   <div class="text-blue font-weight-bold">Avaya</div>
                   <div class="d-flex justify-space-between">
                     <span class="text-grey">J159</span>
@@ -149,9 +151,15 @@ const toggleDataTable = (title:string) => {
 
       <v-row v-if="showDataTable">
         <v-col cols="12">
-          <v-data-table :headers="headers" :items="DeviceDatatables" item-key="deviceName"
-                        class="border rounded-md text-center mt-6" hide-default-footer>
+          <v-data-table :headers="headers" :items="filteredDeviceList" item-key="deviceName"
+                        class="border rounded-md text-center mt-6" hide-default-footer
+          :items-per-page="itemsPerPage"
+          v-model:page = "pagination">
           </v-data-table>
+          <PaginationControl :items-per-page="itemsPerPage" :pagination="pagination" :page-count="pageCount"
+                             @update:itemsPerPage="val => itemsPerPage = val"
+                             @update:pagination="val => pagination = val">
+          </PaginationControl>
         </v-col>
       </v-row>
   </UiParentCard>
