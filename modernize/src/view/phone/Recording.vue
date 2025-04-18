@@ -106,26 +106,9 @@ const audioTime = ref(0);
 
                   <!--                  다운로드 -->
                   <template v-slot:item.download="{ item }">
-                    <v-btn icon="mdi-eye" @click="( ($refs as Record<string, any>)[`downloadDialog-${item.id}`]?.open() )">
+                    <v-btn :href="item.play" download icon="mdi-eye">
                       <v-icon icon="mdi-cloud-download" />
                     </v-btn>
-                    <CustomSlotDialog :ref="`downloadDialog-${item.id}`" title="다운로드">
-                      <template v-slot:inCard>
-                        <v-row>
-                          <v-col>
-                            <span>파일 다운로드 경로를 지정해 주세요. </span>
-                          </v-col>
-                        </v-row>
-                        <v-row class="align-center">
-                          <v-col cols="12">
-                            <v-file-input></v-file-input>
-                          </v-col>
-                        </v-row>
-                      </template>
-                      <template v-slot:btn>
-                        <v-btn color="primary" variant="flat">저장</v-btn>
-                      </template>
-                    </CustomSlotDialog>
                   </template>
 
                   <!--                  상세정보 -->

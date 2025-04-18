@@ -170,7 +170,7 @@ const RecordingDataTables : RecordingItem[] = [
         startTime: "2025-03-15T18:01",
         endTime: "2025-03-15T18:01",
         duration: "00:02:26",
-        play: '/public/assets/audio/PartOfYourWorld.wav',
+        play: '/public/assets/audio/recording.mp4',
         download: "연결",
         id: "1",
     },
@@ -185,7 +185,7 @@ const RecordingDataTables : RecordingItem[] = [
         startTime: "2025-03-15T18:01",
         endTime: "2025-03-15T18:01",
         duration: "00:00:25",
-        play: '',
+        play: '/public/assets/audio/fOfOImeRTmyulCXGN350hQ.wav',
         download: "미응답",
         id: "2",
     },
@@ -207,52 +207,45 @@ const RecordingDataTables : RecordingItem[] = [
 ];
 
 const RecordChatExample: RecordChat = {
-    recordingId: "31c08cb6255848b2b8630ec90c1e59e4",
-    recordingStart: "2025-03-25T01:22:58Z",
-    recordingEnd: "2025-03-25T01:23:12Z",
-    userId: "821095720921",
+    recordingId: "98c5bde553bd4594ace4ea6765ae0359",
+    recordingStart: "2025-04-17T08:53:46Z",
+    recordingEnd: "2025-04-17T08:53:53Z",
+    userId: "8131",
     chatHistory: [
         {
-            text: "안녕하세요.",
-            ts: "00:00:00.730",
-            end_ts: "00:00:01.900",
-            userId: "821095720921",
-            username: "821095720921"
+            text: "그니까",
+            ts: "00:00:00.000",
+            end_ts: "00:00:00.730",
+            userId: "82221778100",
+            username: "82221778100"
         },
         {
-            text: "반갑습니다.",
-            ts: "00:00:04.990",
-            end_ts: "00:00:06.520",
-            userId: "821095720921",
-            username: "821095720921"
+            text: "주식회사 아리시스입니다.",
+            ts: "00:00:00.920",
+            end_ts: "00:00:02.830",
+            userId: "82221778100",
+            username: "82221778100"
         },
         {
-            text: "무엇으 도와드릴까요?",
-            ts: "00:00:08.980",
-            end_ts: "00:00:09.750",
-            userId: "821095720921",
-            username: "821095720921"
+            text: "경영지원부는 일반 영업부서.",
+            ts: "00:00:03.210",
+            end_ts: "00:00:05.639",
+            userId: "82221778100",
+            username: "82221778100"
         },
         {
-            text: "회의 시작했나요?",
-            ts: "00:00:10.000",
-            end_ts: "00:00:10.940",
+            text: "이번 기술직.",
+            ts: "00:00:05.640",
+            end_ts: "00:00:06.930",
             userId: "8131",
             username: "박종승"
         },
         {
-            text: "네, 하고 있습니다.",
-            ts: "00:00:10.970",
-            end_ts: "00:00:12.640",
-            userId: "821095720921",
-            username: "821095720921"
-        },
-        {
-            text: "감사합니다",
-            ts: "00:00:12.640",
-            end_ts: "00:00:14.720",
-            userId: "8131",
-            username: "박종승"
+            text: "아니 이.",
+            ts: "00:00:06.939",
+            end_ts: "00:00:07.379",
+            userId: "82221778100",
+            username: "82221778100"
         }
     ]
 };
