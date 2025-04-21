@@ -74,7 +74,6 @@ const headers = ref([
             <template v-slot:item.moduleStatus="{ item }">
             </template>
             <template v-slot:item.serviceStatus="{ item }">
-
             </template>
           </v-data-table>
         </v-card>

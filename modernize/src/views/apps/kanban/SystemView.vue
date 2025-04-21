@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
-import { ref, onMounted } from "vue";
+import {ref, onMounted, computed} from "vue";
 import {Chart} from "chart.js";
+import PaginationControl from "@/components/custom/pagination/PaginationControl.vue";
 
 const selectedTab = ref("tab1");
 
@@ -75,6 +76,10 @@ onMounted(() => {
     }
   });
 });
+
+const itemsPerPage = ref(5);
+const pagination = ref(1);
+
 
 </script>
 
@@ -152,7 +157,9 @@ onMounted(() => {
 
         <!-- 모듈 상태 테이블 -->
         <v-card class="mt-5">
-          <v-data-table :headers="headers" :items="modules" density="compact">
+          <v-data-table :headers="headers" :items="modules" density="compact" hide-default-footer
+          :items-per-page="itemsPerPage"
+          v-model:page="pagination">
             <template v-slot:item.moduleStatus="{ item }">
               <v-chip :color="item.moduleStatus === 'Up' ? 'lightgreen' : 'red'" dark>
                 {{ item.moduleStatus === 'Up' ? '⇧ Up' : '⇩ Down' }}
@@ -163,9 +170,11 @@ onMounted(() => {
                 {{ item.serviceStatus === 'Up' ? '⇧ Up' : '⇩ Down' }}
               </v-chip>
             </template>
-
-
           </v-data-table>
+          <PaginationControl :items-per-page="itemsPerPage" :pagination="pagination" :page-count="Math.ceil(modules.length / itemsPerPage)"
+            @update:itemsPerPage="val => itemsPerPage = val"
+            @update:pagination="val => pagination = val">
+          </PaginationControl>
         </v-card>
       </v-window-item>
     </v-window>

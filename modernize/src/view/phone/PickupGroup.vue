@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { GroupDatatables} from '@/_mockApis/components/datatable/GroupTable';
-import { ref, computed } from 'vue';
-import axios from 'axios';
+import {ref, computed} from 'vue';
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
@@ -9,15 +8,8 @@ import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import { useTableManager } from "@/common/useTableManager";
 import type {Datatables} from "@/types/components/datatables/groupIndex";
-import { alert, confirm } from '@/common/alertService';
-
-interface Group {
-  group: string;
-  department: string;
-  groupExtensionNumber: string;
-  bellRingDelay: string;
-  groupNumbers: string;
-}
+import { alert} from '@/common/alertService';
+import PaginationControl from "@/components/custom/pagination/PaginationControl.vue";
 
 const userList = ref([
   {id : 1, username: '박OO', extension: '101', group: '경영지원팀'},
@@ -60,55 +52,12 @@ const {
   selectedItem,
   onSelectionChange,
   edit,
-  handleEdit,
-  onNew,
   onSave,
   onDelete,
   onExcelSave,
   updateUserFields
 } = useTableManager<Datatables>(GroupDatatables, formFields, groupFields, identifierField);
 
-// 엑셀 다운로드 처리 : ?? 사용자 안내창 없음.
-const downloadExcel = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/api/excel/download',{
-      method: 'GET'
-    });
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'group_data.xlsx';
-    a.click();
-    a.remove();
-  }catch(error){
-    console.error("엑셀 다운로드 실패:", error);
-  }
-};
-
-// 엑셀 업로드 처리 : ?? 업로드인데 파일입력창이 안뜸.
-const selectedFile = ref(null);
-const uploadExcel = async () => {
-  if(!selectedFile.value){
-    alert("파일을 선택하세요.");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("file", selectedFile.value);
-
-  try{
-    const response = await axios.post("http://localhost:8080/api/excel/upload", formData, {
-      headers: {"Content-Type" : "multipart/form-data"}
-    });
-
-    console.log("업로드 성공 : ", response.data);
-    alert("엑셀 업로드 성공!");
-  } catch(error){
-    console.error("엑셀 업로드 실패 : ", error);
-    alert("엑셀 업로드 실패!");
-  }
-}
 
 //그룹 추가
 const manageDialog = ref(false);
@@ -172,6 +121,18 @@ const openEditDialog = () => {
   editGroupDialog.value?.open();
 };
 
+const itemsPerPage = ref(5);
+const pagination = ref(1);
+const pageCount = computed(() => {
+  return Math.ceil(filteredList.value.length / itemsPerPage.value);
+});
+
+const memberPagination = ref(1);
+const memberItemsPerPage = ref(5);
+const memberPageCount = computed(() => {
+  return Math.ceil(filteredUserList.value.length / memberItemsPerPage.value);
+});
+
 </script>
 <template>
   <v-row>
@@ -218,7 +179,7 @@ const openEditDialog = () => {
           <h6 class="text-subtitle-1">줌 폰 시스템에서 당겨받기 그룹 및 구성원 관리를 할 수 있습니다.</h6>
         </v-row>
         <v-row>
-          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
+          <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4.5" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{ validateForm }">
                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
@@ -235,17 +196,27 @@ const openEditDialog = () => {
           </v-col>
           <v-col>
             <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-              <v-btn color="grey" variant="outlined" @click="downloadExcel">엑셀 다운로드</v-btn>
+              <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
               <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드"/>
             </div>
           </v-col>
         </v-row>
         <v-row>
-          <v-data-table items-per-page="5" :headers="headers" :items="filteredList" item-value="id"
+          <v-data-table :headers="headers" :items="filteredList" item-value="id"
                         select-strategy="single" show-select class="border rounded-md"
                         v-model="selectedEmpId"
+                        :items-per-page="itemsPerPage"
+                        v-model:page="pagination"
                         @update:model-value="onSelectionChange"
+                        hide-default-footer
           >
+            <template v-slot:bottom>
+            <PaginationControl :items-per-page="itemsPerPage" :pagination="pagination" :page-count="pageCount"
+            @update:itemsPerPage="(val:number) => itemsPerPage = val"
+            @update:pagination="(val:number) => pagination = val">
+
+            </PaginationControl>
+            </template>
           </v-data-table>
         </v-row>
       </UiParentCard>
@@ -257,7 +228,6 @@ const openEditDialog = () => {
                 <v-col>
                   <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                     <v-btn flat color="primary" variant="outlined" @click="openEditDialog" >편집</v-btn>
-<!--                    <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>-->
                   </div>
                 </v-col>
                 <v-col>
@@ -270,7 +240,7 @@ const openEditDialog = () => {
 
             <!-- 관리 버튼 및 모달 -->
             <template v-slot:manage="{field}">
-              <v-btn flat color="warning" variant="outlined" :disabled="!edit" @click="( $refs.manageDialog as any )?.open()">관리</v-btn>
+              <v-btn flat color="warning" variant="outlined" @click="( $refs.manageDialog as any )?.open()">관리</v-btn>
               <CustomSlotDialog ref="manageDialog" title="당겨받기 구성원 관리">
                 <template v-slot:inCard>
                   <v-text-field
@@ -287,7 +257,16 @@ const openEditDialog = () => {
                       v-model="selectedUser" :items="filteredUserList"
                       return-object
                       item-value="id"
-                      show-select item-key="id">
+                      show-select item-key="id"
+                      :items-per-page="memberItemsPerPage"
+                      v-model:page="memberPagination"
+                      hide-default-footer>
+                    <template v-slot:bottom>
+                      <PaginationControl :items-per-page="memberItemsPerPage" :pagination="memberPagination" :page-count="memberPageCount"
+                                         @update:itemsPerPage="(val:number) => memberItemsPerPage = val"
+                                         @update:pagination="(val:number) => memberPagination = val">
+                      </PaginationControl>
+                    </template>
                   </v-data-table>
                 </template>
                 <template v-slot:btn>
