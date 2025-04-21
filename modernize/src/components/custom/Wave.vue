@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { createWaveSurferWithRegions } from '@/plugins/Wavesufer';
+import {onMounted, ref} from 'vue';
+import {createWaveSurferWithOptions, options} from '@/plugins/Wavesufer';
+import { useTheme } from 'vuetify';
 
+const theme = useTheme();
 // Props 정의
 const props = defineProps({
   url: {
@@ -14,12 +16,13 @@ const props = defineProps({
 // 이벤트 정의
 const emit = defineEmits(['update:audioTime']);
 
-
 // 음성파일로 파형 및 오디오 생성
 const notFound = ref<boolean>(false);
 onMounted(() => {
   if(!!props.url){
-    const wavesurfer = createWaveSurferWithRegions(props.url);
+    options.progressColor = theme.themes.value[theme.name.value]?.colors?.primary;
+    options.url = props.url;
+    const wavesurfer = createWaveSurferWithOptions(options);
 
     // 초 단위의 시간 currentTime 를 부모로 전달
     wavesurfer.on('timeupdate', (currentTime) => {

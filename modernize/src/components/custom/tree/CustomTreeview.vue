@@ -56,36 +56,30 @@ const resetConfirm = async ()=>{
   </div>
 </template>
 <!--글씨 크기, 화이트 테마에서의 배경 색상, 다크 테마에서의 배경/텍스트 색상, 선택 및 hover 시 컬러 변화-->
-<style>
+<style lang="scss">
 .custom-treeview {
-  background: #ffffff;
+  background-color: rgb(var(--v-theme-surface));
 }
-
 .custom-treeview .tui-tree-text{
   font-size: 14px;
   padding: 5px;
+  color: rgb(var(--v-theme-textPrimary));
 }
 
-.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-root > .tui-tree-opened > .tui-tree-content-wrapper .tui-tree-text {
-  color: rgb(234, 239, 244) !important;
+.custom-treeview .tui-tree-selected > .tui-tree-content-wrapper{
+  background-color: rgb(var(--v-theme-primary), 0.1);
+  //background-color: rgb(var(--v-theme-primary));
+  border-radius: 7px;
 }
-
-.v-theme--DARK_BLUE_THEME .custom-treeview {
-  background-color: rgb(42, 52, 71);
-  color: rgb(234, 239, 244);
+.custom-treeview .tui-tree-selected > .tui-tree-content-wrapper .tui-tree-text{
+  color: rgb(var(--v-theme-primary));
+  //color: white;
 }
-
-.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-text {
-  color: rgb(234, 239, 244);
+.custom-treeview .tui-tree-content-wrapper:hover {
+  background-color: rgb(var(--v-theme-lightprimary), 0.2);
+  color: rgb(var(--v-theme-primary));
 }
-
-.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-selected {
-  background-color: rgb(51, 63, 85);
-  color: rgb(255, 255, 255);
-}
-
-.v-theme--DARK_BLUE_THEME .custom-treeview .tui-tree-content-wrapper:hover {
-  background-color: rgb(51, 63, 85);
-  color: rgb(255, 255, 255);
+.custom-treeview .tui-tree-content-wrapper .tui-tree-text:hover {
+  color: rgb(var(--v-theme-primary));
 }
 </style>

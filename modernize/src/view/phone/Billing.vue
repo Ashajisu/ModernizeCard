@@ -110,7 +110,7 @@ function copyToClipboard(item : any) {
                               select-strategy="single" class="border rounded-md"
                               >
                   <template v-slot:item.id="{ item }">
-                    <v-btn icon="mdi-eye" variant="text" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )">
+                    <v-btn icon="mdi-eye" variant="text" @click="( ($refs as Record<string, any>)[`detailDialog-${item.id}`]?.open() )" class="custom-btn">
                       <FileDescriptionIcon/>
       <!--              팝업 : 콜 상세정보 -->
                       <CustomSlotDialog :ref="`detailDialog-${item.id}`" title="콜 상세 정보" width="500">
@@ -132,5 +132,8 @@ function copyToClipboard(item : any) {
     </v-row>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+.custom-btn:hover{
+  color: rgb(var(--v-theme-primary));
+}
 </style>

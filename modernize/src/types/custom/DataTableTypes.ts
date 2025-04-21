@@ -42,11 +42,13 @@ type ZoomPhoneItem = {
 type RecordingItem = {
     type: string;       // 유형 (전수, 선택 등)
     direction: string;  // 구분 (인바운드, 아웃바운드)
-    sender: string;     // 발신자 번호
-    receiver: string;   // 수신자 번호
+    caller_number: string;     // 발신자 번호
+    callee_number: string;   // 수신자 번호
     department: string; // 부서
     team: string;       // 팀
-    username: string;       // 사용자
+    caller_name: string;       // 발신자 이름
+    callee_name: string;       // 수신자 이름
+    owner: string; //사용자이름
     startTime: string;  // 통화 시작 시간
     endTime: string;    // 통화 종료 시간
     duration: string;   // 통화 시간
