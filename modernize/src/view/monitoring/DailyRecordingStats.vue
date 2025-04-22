@@ -1,4 +1,4 @@
-<!-- src/views/monitoring/DailyCallStats.vue -->
+<!-- src/views/monitoring/DailyRecordingStats.vue -->
 <template>
     <v-card class="pa-5">
         <v-card-title class="text-h4 font-weight-bold"> 일일 누적 녹취 건수 </v-card-title>
@@ -137,6 +137,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useTheme } from 'vuetify';
 import VueApexCharts from 'vue3-apexcharts';
+import { alert } from '@/common/alertService';
 
 // 상태 관리
 const theme = useTheme();
@@ -150,7 +151,7 @@ const lastUpdatedTime = ref('2025-03-06 10:00:00');
 // 바 차트 데이터
 const timeLabels = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
 
-/* 바 차트트 목 데이터 */
+/* 바 차트 목 데이터 */
 const chartData = {
     outbound: [2, 5, 22, 38, 45, 45, 25, 3, 28],
     inbound: [6, 23, 48, 63, 58, 42, 5, 8, 42],
@@ -292,9 +293,17 @@ const barChartOptions = computed(() => ({
 }));
 
 // 데이터 조회 함수
-const fetchData = () => {
-    // API 호출 로직 구현
-    console.log('데이터 조회:', selectedDate.value);
+const fetchData = async () => {
+    try {
+        // API 호출 로직 구현
+        console.log('데이터 조회:', selectedDate.value);
+        // --- 공통 alert 사용 ---
+        await alert('조회가 완료되었습니다.');
+    } catch (error) {
+        console.error('데이터 조회 중 오류 발생:', error);
+        // --- 공통 alert 사용 (에러) ---
+        await alert('데이터 조회 중 오류가 발생했습니다.'); 
+    }
 };
 
 onMounted(() => {
