@@ -10,12 +10,11 @@
                     <v-card-title class="text-body-1 font-weight-bold text-medium-emphasis">
                         최종 업데이트 시간 : {{ lastUpdatedTime }}
                     </v-card-title>
-                    <v-btn size="large" @click="getcurrenttime" icon>
+                    <v-btn size="large" @click="getcurrenttime" icon color="" :loading="false">
                         <IconRefresh size="30" />
                     </v-btn>
                 </div>
             </v-col>
-           
         </v-row>
 
         <!-- 날짜 선택 -->
@@ -131,10 +130,12 @@ import { useTheme } from 'vuetify';
 import VueApexCharts from 'vue3-apexcharts';
 import { IconRefresh } from '@tabler/icons-vue';
 import {OutboundCallDatatables,CurrentCallDataTables,ExtensionCallDataTables} from '@/_mockApis/components/datatable/ActiveCallstatsDataTable';
+// alert만 import하고 CustomSlotDialog는 제거
+import { alert } from '@/common/alertService';
 
 // 상태 관리
 const theme = useTheme();
-const selectedDate = ref(new Date().toISOString().substr(0, 10));
+// detailDialog 및 selectedItem 관련 코드 제거
 const selectedTypes = ref(['outbound', 'inbound', 'internal']);
 const totalCalls = ref(684);
 const outboundCalls = ref(471);
@@ -191,13 +192,9 @@ const donutChart = {
     series: [44, 55, 41]
 };
 
-// 데이터 조회 함수
-const fetchData = () => {
-    // API 호출 로직 구현
-    console.log('데이터 조회:', selectedDate.value);
-};
-// 2025-03-06 10:00:00 포멧으로 현재날짜 가져오기기
-const getcurrenttime = () => {
+// 데이터 조회 및 현재 시간 업데이트 함수
+const getcurrenttime = async () => {
+    // 현재 시간 업데이트
     const now = new Date();
     const year = now.getFullYear();
     const month = ('0' + (now.getMonth() + 1)).slice(-2);
@@ -207,7 +204,17 @@ const getcurrenttime = () => {
     const seconds = ('0' + now.getSeconds()).slice(-2);
 
     lastUpdatedTime.value = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    console.log('현재시간: ', lastUpdatedTime.value);
+    
+    // 데이터 새로고침 로직 추가
+    try {
+        // API 호출 로직 구현
+        console.log('최신 데이터 조회:', lastUpdatedTime.value);
+        // 성공적으로 데이터를 가져왔다면 알림 표시
+        await alert('최신 데이터로 업데이트 되었습니다.');
+    } catch (error) {
+        console.error('데이터 조회 중 오류 발생:', error);
+        await alert('데이터 업데이트 중 오류가 발생했습니다.', 'error');
+    }
 };
 
 /* 테이블 관련 */
@@ -243,13 +250,12 @@ const headers = ref([
     { title: '수신자', align: 'start' as const, key: 'receiver' },
     { title: '통화시간', align: 'start' as const, key: 'callDuration' },
     { title: '통화녹음', align: 'center' as const, key: 'recordType', sortable: false },
-])
+]);
 /*페이지 카운트*/
 const pageCount = computed(() => Math.ceil(itemsDataCount.value / itemsPerPage.value));
 
-/* 테이블 관련 끝 */
 onMounted(() => {
-    fetchData();
+    // 초기 데이터 로드
     getcurrenttime();
 });
 </script>
