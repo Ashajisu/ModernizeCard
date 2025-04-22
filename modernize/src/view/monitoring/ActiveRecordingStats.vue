@@ -213,7 +213,7 @@ const getcurrenttime = async () => {
         await alert('최신 데이터로 업데이트 되었습니다.');
     } catch (error) {
         console.error('데이터 조회 중 오류 발생:', error);
-        await alert('데이터 업데이트 중 오류가 발생했습니다.', 'error');
+        await alert('데이터 업데이트 중 오류가 발생했습니다.');
     }
 };
 
