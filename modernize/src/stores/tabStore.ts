@@ -43,13 +43,16 @@ export const useTabStore = defineStore({
         this.addTab(this.defaultTab);
       }
     },
-    refreshTab() {
-      if (!this.activeTab) return;
-      const tab = this.tabs.find(t => t.path === this.activeTab.path);
+    refreshTab(path: string) {
+      const tab = this.tabs.find(t => t.path === path);
       if (!tab) return;
-      this.removeTab(tab.path);
-      setTimeout(() => this.addTab(tab), 10);
-      //requestAnimationFrame, nextTick 은 제대로 동작하지 않음.
+
+      this.removeTab(path);
+
+      setTimeout(() => {
+        this.addTab(tab);
+        this.setActiveTab(tab); // 혹은 this.activeTab = tab;
+      }, 10);
     },
     removeAllTabs(){
       this.tabs = [];

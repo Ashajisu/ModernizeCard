@@ -162,92 +162,158 @@ const RecordingDataTables : RecordingItem[] = [
     {
         type: "유선",
         direction: "아웃바운드",
-        sender: "308151",
-        receiver: "010-XXXX-XXXX",
+        caller_number: "8131",
+        callee_number: "+82215889999",
         department: "고객지원본부",
         team: "기술1팀",
-        username: "박○○",
+        owner: "박○○",
+        caller_name: "박○○",
+        callee_name:"82215889999",
         startTime: "2025-03-15T18:01",
         endTime: "2025-03-15T18:01",
         duration: "00:02:26",
-        play: '/public/assets/audio/recording.mp4',
+        play: '/public/assets/audio/jM9ZLs9mQnqnONVfbMytdQ.wav',
         download: "연결",
-        id: "1",
+        id: "12c81c9c8c674565a985dbdd33d652fa",
     },
     {
         type: "내선",
         direction: "인바운드",
-        sender: "010-XXXX-XXXX",
-        receiver: "308153",
+        caller_number: "8131",
+        callee_number: "+82221778100",
         department: "고객지원본부",
         team: "SPM팀",
-        username: "최○○",
+        owner: "최○○",
+        caller_name: "최○○",
+        callee_name: "82221778100",
         startTime: "2025-03-15T18:01",
         endTime: "2025-03-15T18:01",
         duration: "00:00:25",
         play: '/public/assets/audio/fOfOImeRTmyulCXGN350hQ.wav',
         download: "미응답",
-        id: "2",
+        id: "98c5bde553bd4594ace4ea6765ae0359",
     },
     {
         type: "모바일",
         direction: "인바운드",
-        sender: "02-XXXX-XXXX",
-        receiver: "308153",
+        caller_number: "02-XXXX-XXXX",
+        callee_number: "308153",
         department: "고객지원본부",
         team: "SPM팀",
-        username: "최○○",
+        owner:"엄○○",
+        caller_name: "xxx",
+        callee_name: "엄○○",
         startTime: "2024-01-05T10:01",
         endTime: "2024-01-05T10:02",
         duration: "00:00:58",
         play: '/public/assets/audio/test.wav',
         download: "연결",
-        id: "3",
+        id: "a2005990cf824105976dbecbb73e6c5c",
     },
 ];
 
-const RecordChatExample: RecordChat = {
-    recordingId: "98c5bde553bd4594ace4ea6765ae0359",
-    recordingStart: "2025-04-17T08:53:46Z",
-    recordingEnd: "2025-04-17T08:53:53Z",
-    userId: "8131",
-    chatHistory: [
-        {
-            text: "그니까",
-            ts: "00:00:00.000",
-            end_ts: "00:00:00.730",
-            userId: "82221778100",
-            username: "82221778100"
-        },
-        {
-            text: "주식회사 아리시스입니다.",
-            ts: "00:00:00.920",
-            end_ts: "00:00:02.830",
-            userId: "82221778100",
-            username: "82221778100"
-        },
-        {
-            text: "경영지원부는 일반 영업부서.",
-            ts: "00:00:03.210",
-            end_ts: "00:00:05.639",
-            userId: "82221778100",
-            username: "82221778100"
-        },
-        {
-            text: "이번 기술직.",
-            ts: "00:00:05.640",
-            end_ts: "00:00:06.930",
-            userId: "8131",
-            username: "박종승"
-        },
-        {
-            text: "아니 이.",
-            ts: "00:00:06.939",
-            end_ts: "00:00:07.379",
-            userId: "82221778100",
-            username: "82221778100"
-        }
-    ]
-};
+const RecordChatExample: RecordChat[] = [
+    {
+        recordingId: "98c5bde553bd4594ace4ea6765ae0359",
+        recordingStart: "2025-04-17T08:53:46Z",
+        recordingEnd: "2025-04-17T08:53:53Z",
+        userId: "8131",
+        chatHistory: [
+            {
+                text: "그니까",
+                ts: "00:00:00.000",
+                end_ts: "00:00:00.730",
+                userId: "82221778100",
+                username: "82221778100"
+            },
+            {
+                text: "주식회사 아리시스입니다.",
+                ts: "00:00:00.920",
+                end_ts: "00:00:02.830",
+                userId: "82221778100",
+                username: "82221778100"
+            },
+            {
+                text: "경영지원부는 일반 영업부서.",
+                ts: "00:00:03.210",
+                end_ts: "00:00:05.639",
+                userId: "82221778100",
+                username: "82221778100"
+            },
+            {
+                text: "이번 기술직.",
+                ts: "00:00:05.640",
+                end_ts: "00:00:06.930",
+                userId: "8131",
+                username: "박종승"
+            },
+            {
+                text: "아니 이.",
+                ts: "00:00:06.939",
+                end_ts: "00:00:07.379",
+                userId: "82221778100",
+                username: "82221778100"
+            }
+        ]
+    },
+    {
+        recordingId: "12c81c9c8c674565a985dbdd33d652fa",
+        recordingStart: "2025-04-17T08:11:32Z",
+        recordingEnd: "2025-04-17T08:11:39Z",
+        userId: "8131",
+        chatHistory: [
+            {
+                text: "감사합니다",
+                ts: "00:00:01.300",
+                end_ts: "00:00:02.110",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+            {
+                text: "국민의 평생금융파트너 table.",
+                ts: "00:00:04.170",
+                end_ts: "00:00:07.299",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+        ]
+    },
+    {
+        recordingId: "a2005990cf824105976dbecbb73e6c5c",
+        recordingStart: "2025-04-17T08:11:32Z",
+        recordingEnd: "2025-04-17T08:11:39Z",
+        userId: "8131",
+        chatHistory: [
+            {
+                text: "안녕하세요",
+                ts: "00:00:00.000",
+                end_ts: "00:00:01.110",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+            {
+                text: "아리시스 연구개발팀, 엄지수입니다.",
+                ts: "00:00:01.110",
+                end_ts: "00:00:04.170",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+            {
+                text: "다시 전화드릴게요.",
+                ts: "00:00:04.170",
+                end_ts: "00:00:06.299",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+            {
+                text: "자세한 문의사항은 메일로 남겨주세요.",
+                ts: "00:00:07.299",
+                end_ts: "00:00:10.000",
+                userId: "82215889999",
+                username: "82215889999"
+            },
+        ]
+    },
+];
 
 export { UsernameList, UserDataTables, ZoomPhoneDataTables, RecordingDataTables, RecordChatExample };

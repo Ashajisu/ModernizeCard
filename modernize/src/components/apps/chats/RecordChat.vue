@@ -4,13 +4,13 @@ import {RecordChatExample} from "@/_mockApis/custom/ZoomData";
 
 // 부모에서 전달받은 audioTime
 const props = defineProps({
-  audioTime: Number
+  audioTime: Number,
+  chatId: String,
 });
 
 // 채팅 가져오기
 const chatDetail: any = computed(() => {
-    console.log(RecordChatExample);
-  return RecordChatExample;
+  return RecordChatExample.find(stt => stt.recordingId === props.chatId);
 });
 
 // computed 로 audioTime 을 포맷
@@ -82,6 +82,7 @@ const isCurrentText = (ts: string, end_ts: string) => {
 </template>
 <style lang="scss" scoped>
 .highlight{
-    background-color: rgba(191, 0, 255, 0.2) !important;
+  color: rgb(var(--v-theme-primary)) !important;
+  background-color: rgb(var(--v-theme-lightprimary)) !important;
 }
 </style>

@@ -30,7 +30,7 @@ watch(() => tabStore.activeTab,(newTab) => {
             <v-btn @click.stop="tabStore.removeTab(tab.path)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
               <XIcon stroke-width="1.5" width="12" />
             </v-btn>
-            <v-btn @click.stop="tabStore.refreshTab()" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
+            <v-btn @click.stop="tabStore.refreshTab(tab.path)" icon size="x-small" style="--v-btn-height: 8px;" class="ma-1">
               <ReloadIcon stroke-width="1.5" width="12" />
             </v-btn>
           </v-tab>
@@ -38,15 +38,22 @@ watch(() => tabStore.activeTab,(newTab) => {
       <slot/>
   </div>
 </template>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 :deep(.v-tab__slider) {
   color: rgb(var(--v-theme-primary)) !important;
 }
-button.v-tab--selected {
+.custom-tabs .v-tab--selected {
   :deep(.v-btn__content) {
     color: rgb(var(--v-theme-primary)) !important;
   }
+  background-color: rgb(var(--v-theme-primary), 0.1);
 }
+.custom-tabs .v-tab {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  height: 40px;
+}
+
 .custom-tabs .v-tabs-bar {
   justify-content: flex-start !important; /* 탭을 왼쪽 정렬 */
 }

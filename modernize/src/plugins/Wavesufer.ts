@@ -17,7 +17,7 @@ export const options:WaveSurferOptions & Record<string, any> = {
     /** Stretch the waveform to the full height */
     normalize: true,
     /** The color of the waveform */
-    waveColor: 'violet',
+    waveColor: '#00000099',
     /** The color of the progress mask */
     progressColor: 'purple',
     /** The color of the play pack cursor */
