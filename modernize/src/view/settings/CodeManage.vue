@@ -26,7 +26,7 @@ const headers = ref<any[]>([
   { title: '사용', align: 'center', key: 'usingcode' },
   { title: '기타코드 #1', align: 'center', key: 'etccode1' },
   { title: '기타코드 #2', align: 'center', key: 'etccode2' },
-  { title: '수정', value: 'actions', align: 'center',  sortable: false },
+  { title: '변경', value: 'actions', align: 'center',  sortable: false },
 ]);
 
 const deviceFormFields = ref<FormField[]>([
@@ -560,6 +560,7 @@ const pageCount1 = computed(() => {
           <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{validateForm}">
               <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+              <v-btn flat color="primary" variant="outlined" @click="()=>{ onNew(); }"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
             </template>
           </CustomSearchChecksForm>
         </v-row>
