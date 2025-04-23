@@ -96,7 +96,7 @@ function copyToClipboard(item : any) {
                 </h6>
               </v-row>
               <v-row>
-                  <CustomSearchsCheckForm :formFields="formFields" :colsPerRow="4" :edit="true">
+                  <CustomSearchsCheckForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
                     <template v-slot:lineBtn="{ validateForm }">
                         <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                         <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>

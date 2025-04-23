@@ -223,32 +223,23 @@ const rules = [
   </v-container>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .checkbox-label{
-  color: rgb(42, 53, 71);
   position: absolute;
   top: -12px; /* outline 위로 위치 */
   left: 5%;
   background-color: white; /* 배경색 */
   padding: 0 5px; /* 여백 추가 */
   font-size: x-small;
+  color: rgb(var(--v-theme-textPrimary));
+  background-color: rgb(var(--v-theme-surface));
 }
 .outlined-checkbox {
-  outline: 2px solid rgb(229, 234, 239);
+  outline: 1px solid rgb(var(--v-theme-inputBorder));
   border-radius: 6px;
   position: relative;
   padding: 5px;
   display: flex; /* 가로로 나열 */
   flex-wrap: wrap; /* 공간이 부족하면 자동 줄바꿈 */
 }
-.v-theme--DARK_BLUE_THEME .checkbox-label {
-  background-color: rgb(42, 52, 71);
-  color: rgb(234, 239, 244);
-}
-.v-theme--DARK_BLUE_THEME .outlined-checkbox {
-  background-color: rgb(42, 52, 71);
-  color: rgb(234, 239, 244);
-  outline: 1px solid rgb(70, 86, 112);
-}
-
 </style>
