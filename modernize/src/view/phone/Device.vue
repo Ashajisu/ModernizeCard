@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 다른사람 페이지를 컴포넌트로 수정할 수 있는지 확인중.
 import {ref, watch, computed} from 'vue';
 import { ZoomPhoneDatatables } from '@/_mockApis/components/datatable/SampleDataTable';
 import type { ZoomPhone } from '@/types/apps/SampleType';
@@ -71,6 +70,19 @@ const deviceRestart = async () => {
   }
 }
 
+const changBtn = ref(false)
+
+// select 여부 확인
+const isSelected = computed(() => {
+  const val = selectedEmpId.value
+  return Array.isArray(val) ? val.length > 0 : val != null
+})
+
+// select 시 편집, 재시작 버튼 활성화
+watch(isSelected, (newVal) => {
+  changBtn.value = newVal
+}, { immediate: true })
+
 const deployment = async () => {
   const allocationTypeField = deviceFormFields.value.find(f => f.name === 'allocationType');
   const allocationValueField = deviceFormFields.value.find(f => f.name === 'allocationValue');
@@ -107,8 +119,8 @@ const pageCount = computed(() => {
         <v-row>
           <CustomSearchChecksForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
             <template v-slot:lineBtn="{validateForm}">
-                <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
-                <v-btn color="primary" variant="outlined" class="ml-2" @click="resetSearch">초기화</v-btn>
+              <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+              <v-btn color="primary" variant="outlined" class="ml-2" @click="resetSearch">초기화</v-btn>
             </template>
           </CustomSearchChecksForm>
         </v-row>
@@ -125,13 +137,13 @@ const pageCount = computed(() => {
                   </CustomSearchChecksForm>
                 </template>
                 <template v-slot:btn>
-                      <v-btn flat color="primary" variant="flat" @click="onClickSave">저장 </v-btn>
+                  <v-btn flat color="primary" variant="flat" @click="onClickSave">저장 </v-btn>
                 </template>
               </CustomSlotDialog>
               <v-btn flat color="primary" variant="outlined" @click="()=>{ onNew(); }"><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록 </v-btn>
               <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0])"><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제 </v-btn>
-              <v-btn flat color="primary" variant="outlined" @click="()=>{ handleEdit(true); }">편집</v-btn>
-              <v-btn flat color="error" variant="outlined" @click="deviceRestart">재시작</v-btn>
+              <v-btn v-if="changBtn" flat color="primary" variant="outlined"  @click="()=>{ handleEdit(true); }">편집</v-btn>
+              <v-btn v-if="changBtn" flat color="error" variant="outlined" @click="deviceRestart">재시작</v-btn>
             </div>
           </v-col>
           <v-col>
@@ -156,13 +168,13 @@ const pageCount = computed(() => {
               </div>
             </template>
             <template v-slot:bottom>
-                <PaginationControl
-                    :items-per-page="itemsPerPage"
-                    :pagination="pagination"
-                    :page-count="pageCount"
-                    @update:itemsPerPage="(val: number) => itemsPerPage = val"
-                    @update:pagination="(val: number) => pagination = val"
-                />
+              <PaginationControl
+                  :items-per-page="itemsPerPage"
+                  :pagination="pagination"
+                  :page-count="pageCount"
+                  @update:itemsPerPage="(val: number) => itemsPerPage = val"
+                  @update:pagination="(val: number) => pagination = val"
+              />
             </template>
           </v-data-table>
         </v-row>
