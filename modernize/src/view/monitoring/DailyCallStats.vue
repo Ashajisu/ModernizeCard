@@ -137,6 +137,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useTheme } from 'vuetify';
 import VueApexCharts from 'vue3-apexcharts';
+import { alert } from '@/common/alertService';
 
 // 상태 관리
 const theme = useTheme();
@@ -292,9 +293,15 @@ const barChartOptions = computed(() => ({
 }));
 
 // 데이터 조회 함수
-const fetchData = () => {
-    // API 호출 로직 구현
-    console.log('데이터 조회:', selectedDate.value);
+const fetchData = async () => {
+    try {
+        // API 호출 로직 구현
+        console.log('데이터 조회:', selectedDate.value);
+        await alert('조회가 완료되었습니다.');
+    } catch (error) {
+        console.error('데이터 조회 중 오류 발생:', error);
+        await alert('데이터 조회 중 오류가 발생했습니다.');
+    }
 };
 
 onMounted(() => {
