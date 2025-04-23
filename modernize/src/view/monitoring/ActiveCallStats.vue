@@ -131,11 +131,10 @@ import { useTheme } from 'vuetify';
 import VueApexCharts from 'vue3-apexcharts';
 import { IconRefresh } from '@tabler/icons-vue';
 import {OutboundCallDatatables,CurrentCallDataTables,ExtensionCallDataTables} from '@/_mockApis/components/datatable/ActiveCallstatsDataTable';
+import { alert } from '@/common/alertService';
 
 // 상태 관리
 const theme = useTheme();
-const selectedDate = ref(new Date().toISOString().substr(0, 10));
-const selectedTypes = ref(['outbound', 'inbound', 'internal']);
 const totalCalls = ref(684);
 const outboundCalls = ref(471);
 const inboundCalls = ref(213);
@@ -191,13 +190,9 @@ const donutChart = {
     series: [44, 55, 41]
 };
 
-// 데이터 조회 함수
-const fetchData = () => {
-    // API 호출 로직 구현
-    console.log('데이터 조회:', selectedDate.value);
-};
-// 2025-03-06 10:00:00 포멧으로 현재날짜 가져오기기
-const getcurrenttime = () => {
+// 데이터 조회 및 현재 시간 업데이트 함수 (alert 적용)
+const getcurrenttime = async () => {
+    // 현재 시간 업데이트
     const now = new Date();
     const year = now.getFullYear();
     const month = ('0' + (now.getMonth() + 1)).slice(-2);
@@ -207,7 +202,22 @@ const getcurrenttime = () => {
     const seconds = ('0' + now.getSeconds()).slice(-2);
 
     lastUpdatedTime.value = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    console.log('현재시간: ', lastUpdatedTime.value);
+    
+    // 데이터 새로고침 로직 추가
+    try {
+        // API 호출 로직 구현 (현재는 콘솔 로그)
+        console.log('최신 데이터 조회:', lastUpdatedTime.value);
+        // 테이블 데이터도 여기서 업데이트해야 함 (예: getTableData 호출 등)
+        // 예시: 현재 선택된 테이블 기준으로 데이터 다시 로드
+        getTableData(selectedTableTitle.value); 
+
+        // --- 공통 alert 사용 ---
+        await alert('최신 데이터로 업데이트 되었습니다.');
+    } catch (error) {
+        console.error('데이터 조회 중 오류 발생:', error);
+        // --- 공통 alert 사용 (에러) ---
+        await alert('데이터 업데이트 중 오류가 발생했습니다.');
+    }
 };
 
 /* 테이블 관련 */
@@ -249,7 +259,7 @@ const pageCount = computed(() => Math.ceil(itemsDataCount.value / itemsPerPage.v
 
 /* 테이블 관련 끝 */
 onMounted(() => {
-    fetchData();
     getcurrenttime();
+    getTableData(selectedTableTitle.value);
 });
 </script>
