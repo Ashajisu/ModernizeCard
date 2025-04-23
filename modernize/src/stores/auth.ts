@@ -31,6 +31,14 @@ export const useAuthStore = defineStore({
             localStorage.removeItem('user');
             router.push('/');
         },
+        // JWT 토큰 존재 여부 확인
+        getToken() {
+            return this.user?.token || null;
+        },
+        // 인증 상태 확인
+        isLoggedIn() {
+            return !!this.getToken();
+        },
         async fetchUserConfig() {
             try {
                 //시스템 관리자가 개인별/부서별/본부별 부여한 기능버튼영역 config 정보 호출 : 미구현
