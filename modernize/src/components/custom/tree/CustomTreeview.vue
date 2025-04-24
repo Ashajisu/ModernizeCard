@@ -69,6 +69,14 @@ const resetConfirm = async ()=>{
   padding: 5px;
   color: rgb(var(--v-theme-textPrimary));
 }
+// 오픈/클로즈 아이콘은 스프라이트 이미지를 사용하는 방식이므로 두께,색상 등은 조절 불가. 확대는 가능하나 이미지 깨짐.
+.custom-treeview .tui-tree-content-wrapper .tui-tree-toggle-btn .tui-ico-tree{
+  //transform: scale(1.3);
+}
+.custom-treeview .tui-tree-opened > .tui-tree-content-wrapper .tui-tree-text{
+  color: rgb(var(--v-theme-textPrimary));
+  font-weight: 400;
+}
 
 .custom-treeview .tui-tree-selected > .tui-tree-content-wrapper{
   background-color: rgb(var(--v-theme-primary), 0.1);
