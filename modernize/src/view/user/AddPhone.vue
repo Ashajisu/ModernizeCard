@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import {computed, type ComputedRef, ref} from "vue";
+import {computed, type ComputedRef, ref, onMounted} from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import { ZoomPhoneDataTables } from "@/_mockApis/custom/ZoomData";
 import type { ZoomPhoneItem } from "@/types/custom/DataTableTypes";
@@ -8,6 +8,7 @@ import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import { useTableManager } from "@/common/useTableManager";
 import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
+import { apiClient } from "@/data/Axios"
 
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부', '연구개발'], required: false, disabled: false },
@@ -54,7 +55,18 @@ const functionHeaders = ref<any[]>([
   { title: '발신번호', key: 'OBNumber', sortable: false, maxWidth: "200px"},
   { title: '', key: 'upDown', sortable: false, maxWidth: "150px"},
 ]);
+// mockApi 로 데이터 불러오기.
+const phones = ref<ZoomPhoneItem[]>([]); // 사용자 데이터를 저장할 변수
+onMounted(async () => {
+  // 초기화 또는 초기 작업 수행
+  try {
+    phones.value = await apiClient.get("/zoom/phone/users");
+    console.log("사용자 데이터:", phones.value);
+  }catch (e){
+    console.error("데이터 로드 중 오류 발생:", e);
+  }
 
+});
 //모듈 호출
 const {
   onSearch,
@@ -68,8 +80,7 @@ const {
   onSave,
   onDelete,
   onExcelSave
-} = useTableManager<ZoomPhoneItem>(ZoomPhoneDataTables, formFields, userFields);
-
+} = useTableManager<ZoomPhoneItem>(phones, formFields, userFields);
 //기능키 관리 : Zoom Phone Basic 사용자는 사용할 수 없음
 const keyOptions = ['Line','Speed Dial', 'Call Park', 'BLF', 'Intercom', 'Zoom Meeting'];
 

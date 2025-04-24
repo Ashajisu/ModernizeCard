@@ -16,23 +16,17 @@ const teamOptionsMap: Record<string, string[]> = {
 };
 
 export function useTableManager<T extends Record<string, any>>(
-    initialData: T[],
+    tableList: Ref<T[]> = ref([]), // 기본값 빈배열인 원본 데이터
     formFields: Ref<FormField[]>,   // 검색 필드
     detailFields?: Ref<FormField[]> | null,    // 상세정보 필드
     identifierField: string = "employeeId"  // 테이블 식별자 필드
 ) {
-    // 📌 테이블 데이터
-    // shallowRef 사용시 내부 값 변경에 대해서는 반응하지 않는 단점이 있음.
-    // ref 를 데이터를 담아 초기화하면 UnwrapRef 처리되어 타입문제가 생기는 단점이 있음.-> 마운트 시점에 초기 데이터 주입
-    const tableList: Ref<T[]> = ref([]);
-    onMounted(() => {
-        tableList.value = initialData.map(item => ({ ...item })) as T[];
-    });
+
     // 📌 검색어 상태
     const search = ref<Record<string, any>>({});
 
     // 부서옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
-    const hasDepartment = initialData[0] && Object.prototype.hasOwnProperty.call(initialData[0], "department");
+    const hasDepartment = tableList.value[0] && Object.prototype.hasOwnProperty.call(tableList.value[0], "department");
     if (hasDepartment) {
         const targetField = formFields.value.find(f => f.name === "department");
         if (targetField) {

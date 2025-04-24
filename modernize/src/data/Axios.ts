@@ -15,7 +15,15 @@ const api = axios.create({
     },
     withCredentials: true,
 });
-
+async function handleMockDataNull(data:any): Promise<void> {
+    const errorMessage = '데이터를 불러올 수 없습니다.';
+    const isNullOrEmpty = data === null || (typeof data === "object" && Object.keys(data).length === 0);
+    if (isNullOrEmpty) {
+        await alert(errorMessage);
+        return Promise.reject(new Error(errorMessage));
+    }
+    return Promise.resolve();
+}
 function handleRedirect(response:AxiosResponse<any,any>): Promise<void> {
     const redirectLocation = response.status === 302 ? response.headers.location : null;
     if (redirectLocation.includes('/login')) {
@@ -65,7 +73,6 @@ async function handleServerError(): Promise<void> {
     return Promise.reject(new Error('서버 오류'));
 }
 
-
 // 요청 인터셉터: Authorization 헤더 추가
 api.interceptors.request.use((config) => {
     const authStore = useAuthStore();
@@ -89,8 +96,6 @@ api.interceptors.request.use((config) => {
 axios.interceptors.response.use(
     async response => {
         console.log('[Response]', response);
-        // 백엔드가 준비되지 않았을 때 mockData로 응답 대체
-        response = await fetchMockData(response) ?? response;
 
         // 응답데이터 검증 핸들러 병렬 호출 : 하나라도 예외상황인 경우 `Promise.reject` 호출, 즉시 요청 흐름은 중단 됨.
         await Promise.all([
@@ -102,9 +107,9 @@ axios.interceptors.response.use(
     },
     async error => {
         console.error('[Error]', error);
-        const authStore = useAuthStore();
             //예상되는 에러 직접 처리
             const status = error.response?.status;
+            // 백엔드가 준비되지 않았을 때 400 코드에 대해 mockData로 응답 대체
             if (status === 401) await handleUnauthorized();
             else if (status === 403) await handleForbidden();
             else if (status === 404) await handleNotFound();
@@ -119,6 +124,13 @@ axios.interceptors.response.use(
 // 인터셉터에 의해 headers 자동 설정 됨.
 export const apiClient = {
     get: async (url: string, params?: any) => {
+        if (!isBackendReady) { // 백엔드 준비 상태 체크
+            const mockResponse = mockData[url]?.GET; // Mock 데이터에서 URL과 메서드 매칭
+            await handleMockDataNull(mockResponse.data); // 데이터가 없으면 예외 처리
+            return mockResponse.data; // Mock 데이터 반환
+        }
+
+        // 실제 API 호출
         const response = await api.get(url, { params });
         return response.data;
     },
@@ -142,21 +154,5 @@ export const apiClient = {
     },
 };
 
-
-async function fetchMockData(response:AxiosResponse<any,any>): Promise<AxiosResponse<any, any> | undefined> {
-    // mockData에서 데이터 매핑
-    if (!isBackendReady) {
-        const method = response.config.method?.toUpperCase() as "GET" | "POST" | "PUT" | "PATCH" | "DELETE"?? "GET"; //인식불가 method 명은 GET 요청.
-        const url = response.config.url??"";
-        const mockResponse = mockData[url!]?.[method!];
-        if(mockResponse){
-            console.log(`[Mock Response] ${method} ${url}:`, mockResponse);
-            return { ...response,  status: 200,  data: mockResponse };
-        }else{
-            return { ...response,  status: 400,  data: null };
-        }
-    }
-    return undefined;
-}
 
 export default apiClient;

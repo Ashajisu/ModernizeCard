@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
 import { UserDataTables } from "@/_mockApis/custom/ZoomData";
 import type { UserItem } from "@/types/custom/DataTableTypes";
@@ -8,8 +8,21 @@ import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksF
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { useTableManager } from "@/common/useTableManager";
 import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
+import { apiClient } from "@/data/Axios"
 
-//검색
+// mockApi 로 데이터 불러오기.
+const users = ref<UserItem[]>([]); // 사용자 데이터를 저장할 변수
+onMounted(async () => {
+  // 초기화 또는 초기 작업 수행
+  try {
+    users.value = await apiClient.get("/zoom/users");
+    console.log("사용자 데이터:", users.value);
+  }catch (e){
+    console.error("데이터 로드 중 오류 발생:", e);
+  }
+});
+
+//검색 : api 호출된 데이터 동적으로 반영 - computed 는 읽기 전용이므로 반환값을 수정할 수 없음.
 const formFields = ref<FormField[]>([
   { label: '부서명', name: 'department', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
   { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], required: false, disabled: false },
@@ -46,7 +59,8 @@ const userFields = ref<FormField[]>([
   { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: '', options: ['Phone Pro', 'Power', 'Phone Pro, Power'], required: false, disabled: false },
 ]);
 
-//모듈 호출
+// `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
+//모듈 호출 : 기존코드 동일
 const {
   onSearch,
   resetSearch,
@@ -59,13 +73,17 @@ const {
   onSave,
   onDelete,
   onExcelSave
-} = useTableManager<UserItem>(UserDataTables, formFields, userFields);
+} = useTableManager<UserItem>(users, formFields, userFields);
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
     <v-row>
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
+              <v-row>
+                <p> {{ JSON.stringify(users)}}</p>
+                <p> {{ JSON.stringify(filteredList)}}</p>
+              </v-row>
               <v-row>
                 <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                   <template v-slot:lineBtn="{ validateForm }">
