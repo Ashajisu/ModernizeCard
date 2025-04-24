@@ -10,6 +10,7 @@ import Wave from "@/components/custom/Wave.vue";
 import RecordChat from "@/components/apps/chats/RecordChat.vue";
 import { useTableManager } from "@/common/useTableManager";
 import type { RecordingItem } from "@/types/custom/DataTableTypes";
+import CustomSearchsCheckForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 
 const formFields = ref<FormField[]>([
   { label: '발신자 번호', name: 'caller_number', type: 'search', value: '', searchObj:RecordingDataTables, required: false, disabled: false },
@@ -61,15 +62,21 @@ const audioTime = ref(0);
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true" >
+                  <CustomSearchCheckForm :formFields="formFields" :colsPerRow="4" :edit="true" :hide-details="true">
                     <template v-slot:lineBtn="{ validateForm }">
                       <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                         <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                         <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                        <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
                       </div>
                     </template>
                   </CustomSearchCheckForm>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                        <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                  </div>
                 </v-col>
               </v-row>
               <v-row>

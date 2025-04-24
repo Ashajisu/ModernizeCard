@@ -2,7 +2,7 @@
 import UiChildCard from "@/components/shared/UiChildCard.vue";
 import {ref, onMounted, watch} from "vue";
 import { confirm} from "@/common/alertService";
-import { initTree, openAllNodes, closeAllNodes, searching, resetFlat } from '@/components/custom/tree/treeService';
+import { initTree, openAllNodes, closeAllNodes, searching, resetFlat, isDirty } from '@/components/custom/tree/treeService';
 // DOM 요소 참조
 const treeContainer = ref<HTMLElement | null>(null);
 let tree: any = null;
@@ -19,12 +19,16 @@ watch(search, (newSearch:string) => {
 });
 
 const resetConfirm = async ()=>{
-    console.log('reset before: ', tree);
-  if(await confirm('저장하지 않은 변경사항이 있습니다. 리셋하시겠습니까?')){
+    console.log('check isDirty, reset before : ', isDirty.value, tree);
+    // 변경사항이 있는 경우, 확인창 표시
+    if(isDirty.value && !await confirm('저장하지 않은 변경사항이 있습니다. 리셋하시겠습니까?')){
+          return;
+    }
+
+    // 리셋 동작
     resetFlat(); //데이터 재 할당
     tree = initTree(treeContainer); //화면만 새로 그림.
-    console.log('reset after: ', tree);
-  }
+    console.log('check isDirty, reset after: ', isDirty.value, tree);
 }
 
 </script>
@@ -64,6 +68,14 @@ const resetConfirm = async ()=>{
   font-size: 14px;
   padding: 5px;
   color: rgb(var(--v-theme-textPrimary));
+}
+// 오픈/클로즈 아이콘은 스프라이트 이미지를 사용하는 방식이므로 두께,색상 등은 조절 불가. 확대는 가능하나 이미지 깨짐.
+.custom-treeview .tui-tree-content-wrapper .tui-tree-toggle-btn .tui-ico-tree{
+  //transform: scale(1.3);
+}
+.custom-treeview .tui-tree-opened > .tui-tree-content-wrapper .tui-tree-text{
+  color: rgb(var(--v-theme-textPrimary));
+  font-weight: 400;
 }
 
 .custom-treeview .tui-tree-selected > .tui-tree-content-wrapper{
