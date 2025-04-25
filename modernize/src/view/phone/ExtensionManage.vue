@@ -5,6 +5,7 @@ import type { FormField } from '@/types/custom/InputTypes';
 import type { ExtensionItem } from "@/types/custom/DataTableTypes";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import { useTableManager } from "@/common/useTableManager";
+import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
 
 //데이터 정보
 const ExtensionList:ExtensionItem[] = [
@@ -35,6 +36,20 @@ const {
   resetSearch,
   filteredList,
 } = useTableManager<ExtensionItem>(ExtensionList, formFields,null,'number');
+
+// 엑셀 다운로드 기능 수정
+const handleExcelDownload = async (validateForm: () => Promise<File | null>): Promise<boolean> => {
+  console.log("ExcelUploadDialogBtn save prop 호출됨");
+  const file = await validateForm(); // ExcelUploadForm의 유효성 검사 및 파일 가져오기
+  if (file) {
+    // TODO: 실제 엑셀 업로드 로직 구현 (파일 처리)
+    console.log("업로드할 파일:", file);
+    // 성공 시 true 반환하여 다이얼로그 닫기
+    return true;
+  }
+  // 실패 시 false 반환
+  return false;
+};
 </script>
 <template>
   <v-row>
@@ -48,7 +63,7 @@ const {
             <template v-slot:lineBtn="{ validateForm }">
                 <v-btn color="primary" @click="onSearch(validateForm)">조회</v-btn>
                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                <v-btn class="ml-2" variant="outlined" @click="">엑셀 다운로드</v-btn>
+                <ExcelUploadDialogBtn class="ml-2" :save="handleExcelDownload" />
             </template>
           </CustomSearchChecksForm>
         </v-row>
