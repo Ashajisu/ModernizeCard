@@ -21,7 +21,7 @@ const PhoneRoutes : RouteRecordRaw = {
         {
             name: 'PSTN',
             path: 'pstn',
-            component: () => import('@/view/phone/PstnNew.vue')
+            component: () => import('@/view/phone/PstnManage.vue')
         },
         {
             name: '당겨받기 그룹',
