@@ -8,77 +8,53 @@
       <v-col cols="6">
         <v-card-title class="text-body-1 font-weight-bold text-medium-emphasis"> 최종 업데이트 시간 : {{ lastUpdatedTime }} </v-card-title>
       </v-col>
-      <v-col cols="6" class="d-flex align-center justify-end">
-        <v-select
-            v-model="selectedOption"
-            :items="options"
-            label="제품 선택"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="mr-2"
-            style="max-width: 200px"
-        ></v-select>
-        <v-text-field
-            type="date"
-            v-model="startDate"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="date-picker mr-2"
-            style="max-width: 200px"
-            label="조회 시작일"
-        ></v-text-field>
-        <v-text-field
-            type="date"
-            v-model="endDate"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="date-picker"
-            style="max-width: 200px"
-            label="조회 종료일"
-        ></v-text-field>
-        <v-btn color="primary" flat @click="getLicenseData"> 조회 </v-btn>
+      <v-col cols="6">
+        <CustomSearchChecksForm
+          :form-fields="formFields"
+          :cols-per-row="3"
+          :edit="true"
+          hide-details
+        >
+          <template #lineBtn="{ validateForm }">
+            <v-btn color="primary" variant="flat" @click="getLicenseData(validateForm)">조회</v-btn>
+          </template>
+        </CustomSearchChecksForm>
       </v-col>
     </v-row>
 
     <!-- 라이센스 사용 현황 타이틀 -->
     <v-row>
       <v-col cols="12">
-        <div class="text-h6 mb-4">Workplace 라이센스 사용 현황 (조회기간 2024.01 ~ 2024.12)</div>
+        <div class="text-h6 mb-4">{{ selectedOption }} 라이센스 사용 현황 (조회기간 {{ displayDateRange }})</div>
       </v-col>
     </v-row>
 
     <!-- 라이센스 사용 현황 테이블 -->
-    <v-table class="license-table">
-      <thead>
-      <tr>
-        <th class="text-center">년도</th>
-        <th class="text-center">월</th>
-        <th class="text-center">Enterprise</th>
-        <th class="text-center">Business</th>
-        <th class="text-center">Basic</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(item, index) in licenseData" :key="index" :class="{ 'grey lighten-4': index % 2 === 0 }">
-        <td class="text-center">{{ item.year }}</td>
-        <td class="text-center">{{ item.month }}</td>
-        <td class="text-center">{{ item.enterprise }}</td>
-        <td class="text-center">{{ item.business }}</td>
-        <td class="text-center">{{ item.basic }}</td>
-      </tr>
-      </tbody>
-    </v-table>
+    <v-data-table
+      :headers="headers"
+      :items="licenseData"
+      :items-per-page="10"
+      class="license-table"
+    ></v-data-table>
 
-
+    <!-- 알림 다이얼로그 -->
+    <CustomSlotDialog ref="notificationDialog" title="알림">
+      <template #inCard>
+        <div class="pa-4">{{ dialogMessage }}</div>
+      </template>
+      <template #btn>
+        <v-btn color="primary" variant="flat" @click="notificationDialog.close()">확인</v-btn>
+      </template>
+    </CustomSlotDialog>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useTheme } from 'vuetify';
+import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
+import CustomSlotDialog from '@/components/custom/dialog/CustomSlotDialog.vue';
+import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 
 // 상태 관리
 const theme = useTheme();
@@ -87,6 +63,43 @@ const endDate = ref(new Date().toISOString().slice(0, 10)); // 오늘 날짜
 const lastUpdatedTime = ref('2025.01.24 10:00:00');
 const selectedOption = ref('Workplace');
 const options = ref(['Workplace', 'Phone', 'Rooms', 'Webinar']);
+const notificationDialog = ref<any>(null);
+const dialogMessage = ref('');
+
+// 검색 폼 필드 정의
+const formFields = ref([
+  {
+    name: 'product',
+    label: '제품 선택',
+    type: 'select',
+    value: selectedOption.value,
+    options: options.value,
+    required: false
+  },
+  {
+    name: 'startDate',
+    label: '조회 시작일',
+    type: 'date',
+    value: startDate.value,
+    required: false
+  },
+  {
+    name: 'endDate',
+    label: '조회 종료일',
+    type: 'date',
+    value: endDate.value,
+    required: false
+  }
+]);
+
+// 테이블 헤더 정의
+const headers = ref([
+  { title: '년도', key: 'year', align: 'center' as const },
+  { title: '월', key: 'month', align: 'center' as const },
+  { title: 'Enterprise', key: 'enterprise', align: 'center' as const },
+  { title: 'Business', key: 'business', align: 'center' as const },
+  { title: 'Basic', key: 'basic', align: 'center' as const }
+]);
 
 // 라이센스 데이터
 const licenseData = ref([
@@ -100,22 +113,43 @@ const licenseData = ref([
   { year: 2024, month: '08', enterprise: '48/50 (2024.08.22)', business: '127/130 (2024.08.30)', basic: '21 (2024.08.15)' }
 ]);
 
+// 표시할 날짜 범위 계산
+const displayDateRange = computed(() => {
+  const start = new Date(formFields.value[1].value).toISOString().slice(0, 7).replace('-', '.');
+  const end = new Date(formFields.value[2].value).toISOString().slice(0, 7).replace('-', '.');
+  return `${start} ~ ${end}`;
+});
+
 // 데이터 조회 함수
 const fetchData = () => {
   // API 호출 로직 구현
-  console.log('데이터 조회:', startDate.value, endDate.value, selectedOption.value);
+  console.log('데이터 조회:', formFields.value[1].value, formFields.value[2].value, formFields.value[0].value);
   // 여기서 실제 API 호출 후 licenseData 를 업데이트
 };
+
 onMounted(() => {
   fetchData();
 });
 
-const getLicenseData = () => {
-  // API 호출 로직 구현
-  console.log('데이터 조회:', startDate.value, endDate.value, selectedOption.value);
-  // 여기서 실제 API 호출 후 licenseData 를 업데이트
-  window.alert('@@@ 데이터 조회 기능 버튼 구현 예정입니다.');
+// 공통 알림 다이얼로그 표시 함수
+const showNotification = (message: string) => {
+  dialogMessage.value = message;
+  notificationDialog.value.open();
 };
+
+const getLicenseData = async (validateForm: () => Promise<any>) => {
+  const formData = await validateForm();
+  if (formData) {
+    // API 호출 로직 구현
+    console.log('데이터 조회:', formData);
+    // 여기서 실제 API 호출 후 licenseData 를 업데이트
+    
+    // 공통 알림 다이얼로그 사용
+    showNotification('데이터 조회 기능 구현 예정입니다.');
+  }
+};
+
+
 </script>
 
 <style scoped>
