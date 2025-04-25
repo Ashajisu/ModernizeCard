@@ -21,7 +21,7 @@
         <!-- 날짜 선택 -->
         <v-row>
             <v-col cols="12" align="center">
-                <div class="text-h6">일일 누적 통화 건수</div>
+                <div class="text-h6">활성 통화 건수</div>
             </v-col>
         </v-row>
 
@@ -83,7 +83,7 @@
 
             <!-- 도넛 차트 -->
             <v-col cols="12" md="3">
-                    <div class="text-center text-h6 mb-2">일일 누적 통화</div>
+                    <div class="text-center text-h6 mb-2">활성 통화</div>
                     <apexchart type="donut" height="300" :options="donutchartOptions" :series="donutChart.series"></apexchart>
             </v-col>
         </v-row>
