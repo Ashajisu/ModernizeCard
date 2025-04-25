@@ -11,7 +11,7 @@
       <v-col cols="6" class="d-flex align-center justify-end">
         <v-text-field
             type="date"
-            v-model="selectedDate"
+            v-model="formFields[0].value"
             density="compact"
             variant="outlined"
             hide-details
@@ -332,6 +332,16 @@
         </div>
       </v-expand-transition>
     </v-card>
+    
+    <!-- 알림 다이얼로그 -->
+    <CustomSlotDialog ref="notificationDialog" title="알림">
+      <template #inCard>
+        <div class="pa-4">{{ dialogMessage }}</div>
+      </template>
+      <template #btn>
+        <v-btn color="primary" variant="flat" @click="notificationDialog.close()">확인</v-btn>
+      </template>
+    </CustomSlotDialog>
   </v-card>
 </template>
 
@@ -339,12 +349,26 @@
 import { ref, computed, onMounted, reactive } from 'vue';
 import { useTheme } from 'vuetify';
 import VueApexCharts from 'vue3-apexcharts';
+import CustomSlotDialog from '@/components/custom/dialog/CustomSlotDialog.vue';
 
 // 상태 관리
 const theme = useTheme();
 const selectedDate = ref(new Date().toISOString().slice(0, 10));
 const selectedTypes = ref(['outbound', 'inbound', 'internal']);
 const lastUpdatedTime = ref('2025-03-06 10:00:00');
+const notificationDialog = ref<any>(null);
+const dialogMessage = ref('');
+
+// 검색 폼 필드 정의 (직접 연결을 위한 데이터 구조)
+const formFields = ref([
+  {
+    name: 'selectedDate',
+    label: '조회 날짜',
+    type: 'date',
+    value: selectedDate.value,
+    required: false
+  }
+]);
 
 // 퍼센티지 계산 함수
 const calculatePercentage = (used: number, total: number) => {
@@ -594,17 +618,25 @@ const getStorageChartOptions = () => {
   };
 };
 
+// 공통 알림 다이얼로그 표시 함수
+const showNotification = (message: string) => {
+  dialogMessage.value = message;
+  notificationDialog.value.open();
+};
+
 // 데이터 조회 함수
 const fetchData = () => {
   // API 호출 로직 구현
-  console.log('데이터 조회:', selectedDate.value);
+  console.log('데이터 조회:', formFields.value[0].value);
 };
 
 const getDailyLicenseStatus = () => {
   // API 호출 로직 구현
-  console.log('데이터 조회:', selectedDate.value);
-  window.alert("@@@ 조회 버튼은 아직 API 연동이 안되었습니다.")
-}
+  console.log('데이터 조회:', formFields.value[0].value);
+  
+  // 공통 알림 다이얼로그 사용
+  showNotification('조회 버튼은 아직 API 연동이 안되었습니다.');
+};
 
 onMounted(() => {
   fetchData();
