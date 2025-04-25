@@ -16,7 +16,7 @@ const PhoneRoutes : RouteRecordRaw = {
         {
             name: '내선번호',
             path: 'extension',
-            component: () => import('@/view/phone/ExtensionNew.vue')
+            component: () => import('@/view/phone/ExtensionManage.vue')
         },
         {
             name: 'PSTN',
