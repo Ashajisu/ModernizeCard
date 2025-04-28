@@ -1,19 +1,19 @@
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import type { Ref } from "vue";
 import type {FormField} from "@/types/custom/InputTypes";
 import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
 
-// 부서 맵
-const deptOptions = ['기술팀', '영업팀', '고객지원본부', '연구개발'];
+// 📌 부서 맵 : 차후 api 로 호출할 예정
+const deptOptions = ref<string[]>(['기술팀', '영업팀', '고객지원본부', '연구개발']);
 
-// 팀 옵션 맵
-const teamOptionsMap: Record<string, string[]> = {
+// 📌 팀 옵션 맵 : 차후 api 로 호출할 예정
+const teamOptionsMap: Ref<Record<string, string[]>> = ref({
     '기술팀': ['기술2팀', '기술1팀', '기술지원팀'],
     '영업팀': ['영업1팀', '영업2팀'],
-    '고객지원본부': ['SPM팀'],
+    '고객지원본부': ['SPM 팀'],
     '연구개발': ['연구개발팀']
-};
+});
 
 export function useTableManager<T extends Record<string, any>>(
     tableList: Ref<T[]> = ref([]), // 기본값 빈배열인 원본 데이터
@@ -22,47 +22,58 @@ export function useTableManager<T extends Record<string, any>>(
     identifierField: string = "employeeId"  // 테이블 식별자 필드
 ) {
 
-    // 📌 검색어 상태
-    const search = ref<Record<string, any>>({});
-
-    // 부서옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
-    const hasDepartment = tableList.value[0] && Object.prototype.hasOwnProperty.call(tableList.value[0], "department");
-    if (hasDepartment) {
-        const targetField = formFields.value.find(f => f.name === "department");
-        if (targetField) {
-            targetField.options = deptOptions;
-        }
-        if (detailFields?.value) {
-            const detailField = detailFields.value.find(f => f.name === "department");
-            if (detailField) {
-                detailField.options = deptOptions;
-            }
-        }
-    }
-
-    // 부서 변경 시 팀 옵션 자동 업데이트 (formFields & detailFields 둘 다 처리)
-    const updateTeamOptions = (fields: Ref<FormField[]>,) => {
-        watch(
-            () => fields.value.find(field => field.name === 'department')?.value,
-            (newDepartment: any) => {
-                const teamField = fields.value.find(field => field.name === 'team');
-                if (teamField) {
-                    teamField.options = teamOptionsMap[newDepartment || ''] || [];
+    // ✅ 필드 옵션 자동 업데이트
+    const updateFieldsOptions = (fields: Ref<FormField[]>, fieldName: string, options: any[]) => {
+        watch ( options,
+            () => {
+                const targetField = fields.value.find(f => f.name === fieldName);
+                if (targetField) {
+                    targetField.options = options;
                 }
-            }
+            },
+            { deep: true, immediate: true }
         );
     };
-    updateTeamOptions(formFields);  // 검색 필드 감시
-    // ✅ 상세정보 필드가 있을 경우에만 실행
-    if (detailFields) {
-        updateTeamOptions(detailFields);
+    // ✅ 부서 변경 시 팀 옵션 자동 업데이트
+    const updateTeamOptions = (fields: Ref<FormField[]>, deptFieldName:string, targetFieldName:string, optionsMap: Ref<Record<string, string[]>>) => {
+        watch(() => fields.value.find(field => field.name === deptFieldName)?.value,
+            (newDepartment: any) => {
+                const teamField = fields.value.find(field => field.name === targetFieldName);
+                if (teamField) {
+                    teamField.options = optionsMap.value[newDepartment || ''] || [];
+                }
+            },
+            { deep: true, immediate: true } // 깊은 감지 및 즉시 초기화
+        );
+    };
+    // ✅ 검색목록 자동 업데이트
+    const updateFieldsSearchObj = (fields: Ref<FormField[]>, fieldTypes: string[], options: Ref<any[]>) => {
+        watch(tableList,
+            (newVal) => {
+                if(newVal.length >0){
+                    const searchFields = fields.value.filter(f => fieldTypes.includes(f.type)); // search 필드 필터
+                    searchFields.forEach(field => {
+                        field.searchObj = options.value;
+                        console.log( "updateFieldsSearchObj", field.name, field.searchObj);
+                    });
+                }
+            },
+            { deep: true, immediate: true } // 깊은 감지 및 즉시 초기화
+        );
     }
-    // ✅ formFields 변경 시 다시 watch 걸어주기
-    watch(formFields, () => {
-        updateTeamOptions(formFields);
-    }, { deep: true, immediate: true });
 
+    // 호출
+    updateFieldsOptions(formFields,"department",deptOptions.value);
+    updateTeamOptions(formFields, "department", "team", teamOptionsMap);
+    updateFieldsSearchObj(formFields, ["search", "search_list"], tableList);
+    if (detailFields) {
+        updateFieldsOptions(detailFields, "department", deptOptions.value);
+        updateTeamOptions(detailFields, "department", "team", teamOptionsMap);
+        updateFieldsSearchObj(detailFields, ["search", "search_list"], tableList);
+    }
 
+    // 📌 검색어 상태
+    const search = ref<Record<string, any>>({});
 
     // ✅ 검색 기능
     const onSearch = async (validateForm: any) => {
