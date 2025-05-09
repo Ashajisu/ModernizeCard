@@ -1,0 +1,15 @@
+### 로그인 테스트: 성공
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "info@wrappixel.com",
+  "password": "admin123"
+}
+
+### 토큰 로그인 테스트: 성공
+
+GET http://localhost:8080/auth/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb2hkb2VAZXhhbXBsZS5jb20iLCJhdXRoICI6IlJPTEVfVVNFUiIsImlhdCI6MTc0Njc1Mjg5MSwiZXhwIjoxNzQ2ODM5MjkxfQ.gdn7gNd5AnRxloNe8e8NeFrCvyMnLf9dBr8FyHlHdThH4oZuwDjhE8Y5MDPjt-6Yr1n0RfW4JhcJjGNt5N_MQA
