@@ -76,14 +76,14 @@ async function handleServerError(): Promise<void> {
 // 요청 인터셉터: Authorization 헤더 추가
 api.interceptors.request.use((config) => {
     const authStore = useAuthStore();
-    if (config.url?.includes('/auth/login')) {
+    // if (config.url?.includes('/auth/login')) {
         // 로그인 요청(Content-Type 동적 설정)
-        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        if (config.data && typeof config.data === 'object') {
+        // config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        // if (config.data && typeof config.data === 'object') {
             // JSON 데이터를 URL-Encoded 데이터로 변환 - Spring Security 6의 기본 폼 데이터를 기반으로 한 로그인 요청에 사용함. 중첩 객체 및 배열 지원하지 않음. key-value 구조만 처리가능.
-            config.data = new URLSearchParams(config.data).toString();
-        }
-    }
+            // config.data = new URLSearchParams(config.data).toString();
+        // }
+    // }
 
     if (authStore.user?.token) {
         config.headers.Authorization = `Bearer ${authStore.user.token}`;

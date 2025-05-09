@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { router } from '@/router';
 import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
-// import {getAuthData} from "@/data/Axios";
+import { apiClient } from "@/data/Axios";
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
 // const apiUrl = `/api`;
 
 export const useAuthStore = defineStore({
@@ -17,10 +17,23 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username: string, password: string) {
-            const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { username, password });
 
+            const user = await fetchWrapper.post(`${baseUrl}/users/authenticate`, { username, password });
             // update pinia state
             this.user = user;
+
+            //test JWT
+            await apiClient.post(`${baseUrl}/auth/login`, { username, password }).then( response => {
+                console.log(response);
+                const token = response?.token; // JWT 토큰 추출
+                if (token) {
+                    // 로컬 저장소에 토큰 저장
+                    localStorage.setItem('token', token);
+                    this.user.token = token // 사용자 상태에 토큰 추가
+                    console.log(token);
+                }
+            });
+
             // store user details and jwt in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
             // redirect to previous url or default to home page
