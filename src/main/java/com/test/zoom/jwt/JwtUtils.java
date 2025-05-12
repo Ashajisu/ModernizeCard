@@ -38,12 +38,6 @@ public class JwtUtils {
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
     }
 
-//    /** 빈생성 주입 후 암호를 디코드해서 주입함**/
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
-//    }
-
     private static Date createDateFromMillis(long millis) {
         return new Date(millis);
     }
@@ -52,7 +46,6 @@ public class JwtUtils {
         long currentTimeMillis = System.currentTimeMillis();
         Date issuedAt = createDateFromMillis(currentTimeMillis);
         Date expiration = createDateFromMillis(currentTimeMillis + EXPIRATION_TIME);
-
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authoriString)
@@ -68,13 +61,10 @@ public class JwtUtils {
                 .build()
                 .parseClaimsJws(token)
                 .getBody(); // payload 데이터 가져오기
-
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                                                             .map(SimpleGrantedAuthority::new)
                                                             .collect(Collectors.toList());
-
         User principal = new User(claims.getSubject(), "", authorities);
-
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 

@@ -1,4 +1,4 @@
-package com.test.zoom.config;
+package com.test.zoom.init;
 
 import com.test.zoom.entity.Auth;
 import com.test.zoom.entity.User;

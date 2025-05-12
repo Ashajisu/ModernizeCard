@@ -5,7 +5,7 @@ import {useAuthStore} from "@/stores/auth";
 import { alert } from "@/common/alertService";
 import {mockData} from "@/_mockApis/mockData";
 
-const isBackendReady = false; // 백엔드 준비 여부를 나타내는 플래그 (임시)
+const isBackendReady = true; // 백엔드 준비 여부를 나타내는 플래그 (임시)
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -25,7 +25,7 @@ async function handleMockDataNull(data:any): Promise<void> {
     return Promise.resolve();
 }
 function handleRedirect(response:AxiosResponse<any,any>): Promise<void> {
-    const redirectLocation = response.status === 302 ? response.headers.location : null;
+    const redirectLocation = response.status === 302 ? response.headers.location : '';
     if (redirectLocation.includes('/login')) {
             router.push('/auth/login');
             return Promise.reject(new Error('로그인 페이지로 이동합니다.'));
@@ -55,22 +55,26 @@ async function handleDataNull(response: AxiosResponse<any,any>): Promise<void> {
     }
     return Promise.resolve();
 }
-async function handleUnauthorized(): Promise<void> {
+async function handleUnauthorized(error:any): Promise<void> {
     await alert('세션이 만료되었습니다. 다시 로그인하세요.');
     router.push('/auth/login'); // 로그인 화면으로 리다이렉트
-    return Promise.reject(new Error('인증이 필요합니다. 로그인 페이지로 이동합니다.'));
+    error.message('인증이 필요합니다. 로그인 페이지로 이동합니다.');
+    return Promise.reject(error);
 }
-async function handleForbidden(): Promise<void> {
+async function handleForbidden(error:any): Promise<void> {
     await alert('이 작업을 수행할 권한이 없습니다.');
-    return Promise.reject(new Error('권한이 없습니다.'));
+    error.message('권한이 없습니다.');
+    return Promise.reject(error);
 }
-async function handleNotFound(): Promise<void> {
+async function handleNotFound(error:any): Promise<void> {
     router.push('/not-found');
-    return Promise.reject(new Error('페이지를 찾을 수 없습니다.'));
+    error.message('페이지를 찾을 수 없습니다.');
+    return Promise.reject(error);
 }
-async function handleServerError(): Promise<void> {
+async function handleServerError(error:any): Promise<void> {
     await alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-    return Promise.reject(new Error('서버 오류'));
+    error.message('서버 오류');
+    return Promise.reject(error);
 }
 
 // 요청 인터셉터: Authorization 헤더 추가
@@ -110,10 +114,10 @@ axios.interceptors.response.use(
             //예상되는 에러 직접 처리
             const status = error.response?.status;
             // 백엔드가 준비되지 않았을 때 400 코드에 대해 mockData로 응답 대체
-            if (status === 401) await handleUnauthorized();
-            else if (status === 403) await handleForbidden();
-            else if (status === 404) await handleNotFound();
-            else if (status === 500) await handleServerError();
+            if (status === 401) await handleUnauthorized(error);
+            else if (status === 403) await handleForbidden(error);
+            else if (status === 404) await handleNotFound(error);
+            else if (status === 500) await handleServerError(error);
 
         return Promise.reject(error);// 예기치 못한 에러
     }

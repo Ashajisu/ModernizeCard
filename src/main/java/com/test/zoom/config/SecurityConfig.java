@@ -58,22 +58,6 @@ public class SecurityConfig {
     }
     //------------------------------------------------------------------------------------------------------- 빈 등록.
 
-    //서버메모리에 임의의 사용자를 등록함
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.withUsername(Db.user.getUserName())
-//                .password(passwordEncoder().encode(Db.user.getAuthName().toString())) // BCrypt로 암호화
-//                .roles(Db.user.getAuthName().name())
-//                .build();
-//        UserDetails me = User.withUsername(Db.me.getUserName())
-//                .password(passwordEncoder().encode(Db.me.getAuthName().toString()))
-//                .roles(Db.me.getAuthName().name())
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, me);
-//    }
-
-
     private final UserRepository userRepository;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -83,7 +67,6 @@ public class SecurityConfig {
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = new JwtAuthenticationEntryPoint();
     }
-
 
     /** i-2. JPA 조회를 통해 사용자를 확인함.**/
     @Bean
@@ -116,8 +99,7 @@ public class SecurityConfig {
                         .requestMatchers("/zoom/**").authenticated()
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/check/login").permitAll()
-//                        .anyRequest().authenticated() // 그외 모든 엔드포인트 인증필요
-                        .anyRequest().permitAll() // 그외 모든 엔드포인트 인증불필요
+                        .anyRequest().authenticated()
                 )
         //B. rest 방식 : id/pw 로그인 후 JWT 반환 필터 & 로그인을 제외한 모든 요청에서 JWT 검증하는 필터 & 세션 미사용 :
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
@@ -125,18 +107,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
-        //A. 세션 사용
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                )
-        //A. formLogin 사용 : 시큐리티에서 사용자 확인하도록 구성. x-www-form-urlencoded 타입의 requestParam 이 있어야 검증 가능
-//                .formLogin(login -> login
-//                        .loginPage("/")
-//                        .loginProcessingUrl("/login")
-//                        .successHandler((request, response, authentication)
-//                                -> onAuthenticationSuccess(response,authentication)).permitAll()
-//                );
-
         return http.build();
     }
 
@@ -144,7 +114,6 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:5173");  // Vue 허용
-        configuration.addAllowedOrigin("http://localhost:5177");  // Vue 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setMaxAge(3600L);
@@ -154,37 +123,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    /** A. formLogin 사용시, 성공 후 리다이렉트 없이 JSON 데이터를 전달하기 위해 성공핸들러를 재 정의함.
-     * 주의 - 리다이렉트 하지 않기! **/
-//    public void onAuthenticationSuccess(HttpServletResponse response, Authentication authentication) throws IOException {
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        response.setContentType("application/json;charset=UTF-8");
-//        System.out.println("onAuthenticationSuccess: " + authentication);
-//
-//        // 인증된 사용자 정보을 User 엔티티로 변환한 뒤 JSON 으로 반환함.
-//        User securityUser = (User) authentication.getPrincipal();
-//        String securityAuth = securityUser.getAuthorities().toArray()[0].toString().replace("ROLE_","");
-//
-//        com.test.zoom.entity.User user = new com.test.zoom.entity.User();
-//        user.setUserName(securityUser.getUsername());
-//        user.setPassword(securityUser.getPassword());
-//        user.setAuthName(Auth.valueOf(securityAuth));
-//
-//        String jsonResponse = new ObjectMapper().writeValueAsString(user);
-//        System.out.println("onAuthenticationSuccess: " + jsonResponse);
-//        response.getWriter().write(jsonResponse);
-//        response.getWriter().flush();
-//    }
-
-    /** B. rest 사용시, 성공 후 리다이렉트 없이 JSON 데이터를 전달하기 위해 성공핸들러를 재 정의함.
-     * 주의 - 리다이렉트 하지 않기! **/
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        // 인증 성공 시 JWT 반환
-        String token = JwtUtils.generateToken(authResult);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
-        response.getWriter().flush();
-    }
-    //-------------------------------------------------------------------------------------- 로그인 성공후 리다이렉트 안함.
 }

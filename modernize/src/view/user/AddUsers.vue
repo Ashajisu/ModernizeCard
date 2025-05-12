@@ -55,7 +55,7 @@ const users = ref<UserItem[]>([]); // 사용자 데이터를 저장할 변수
 onMounted(async () => {
   // 초기화 또는 초기 작업 수행
   try {
-    setUsers(await apiClient.get("/zoom/users"))
+    setUsers(await apiClient.get("/zoom/users",{userId:""}))
   }catch (e){
     console.error("데이터 로드 중 오류 발생:", e);
   }
@@ -81,11 +81,11 @@ const {
     <v-row>
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
-                <v-row>
-                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>
-                    <p>{{ JSON.stringify(users) }}</p>
-                    <p>{{ JSON.stringify(filteredList) }}</p>
-                </v-row>
+<!--                <v-row>-->
+<!--                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>-->
+<!--                    <p>{{ JSON.stringify(users) }}</p>-->
+<!--                    <p>{{ JSON.stringify(filteredList) }}</p>-->
+<!--                </v-row>-->
                 <v-row>
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
