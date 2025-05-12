@@ -28,7 +28,6 @@ export const useAuthStore = defineStore({
                 const token = response?.token; // JWT 토큰 추출
                 if (token) {
                     // 로컬 저장소에 토큰 저장
-                    localStorage.setItem('token', token);
                     this.user.token = token // 사용자 상태에 토큰 추가
                     console.log(token);
                 }

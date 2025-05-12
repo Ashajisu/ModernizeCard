@@ -48,14 +48,14 @@ const userFields = ref<FormField[]>([
 
 const setUsers = (userList: UserItem[])=>{
   users.value = userList;
-  console.log("사용자 데이터:", users.value);
+  // console.log("사용자 데이터:", users.value);
 }
 // mockApi 로 데이터 불러오기.
 const users = ref<UserItem[]>([]); // 사용자 데이터를 저장할 변수
 onMounted(async () => {
   // 초기화 또는 초기 작업 수행
   try {
-    setUsers(await apiClient.get("/zoom/users",{userId:""}))
+    setUsers(await apiClient.get("/zoom/users"))
   }catch (e){
     console.error("데이터 로드 중 오류 발생:", e);
   }

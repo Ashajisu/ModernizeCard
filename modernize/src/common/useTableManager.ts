@@ -5,14 +5,15 @@ import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
 
 // 📌 부서 맵 : 차후 api 로 호출할 예정
-const deptOptions = ref<string[]>(['기술팀', '영업팀', '고객지원본부', '연구개발']);
+const deptOptions = ref<string[]>(['경영지원팀', '영업본부', '사업지원팀', '고객지원본부', '개발연구소']);
 
 // 📌 팀 옵션 맵 : 차후 api 로 호출할 예정
 const teamOptionsMap: Ref<Record<string, string[]>> = ref({
-    '기술팀': ['기술2팀', '기술1팀', '기술지원팀'],
-    '영업팀': ['영업1팀', '영업2팀'],
-    '고객지원본부': ['SPM 팀'],
-    '연구개발': ['연구개발팀']
+    '영업본부': ['영업1팀', '영업2팀','영업3팀'],
+    '고객지원본부': ['기술1팀','기술2팀','PM팀','SPM 팀','상주팀(국민권익위원회)','상주팀(다산콜재단)','상주팀(유안타증권)','상주팀(경찰청 민원)'],
+    '사업지원팀': ['팀장'],
+    '경영지원팀': [],
+    '개발연구소': []
 });
 
 export function useTableManager<T extends Record<string, any>>(
@@ -54,7 +55,7 @@ export function useTableManager<T extends Record<string, any>>(
                     const searchFields = fields.value.filter(f => fieldTypes.includes(f.type)); // search 필드 필터
                     searchFields.forEach(field => {
                         field.searchObj = options.value;
-                        console.log( "updateFieldsSearchObj", field.name, field.searchObj);
+                        // console.log( "updateFieldsSearchObj", field.name, field.searchObj);
                     });
                 }
             },
