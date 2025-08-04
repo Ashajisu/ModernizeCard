@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import UiParentCard from '@/components/shared/UiParentCard.vue';
-import BookTable from '@/components/dashboard/BookTable.vue';
+// import BookTable from '@/components/dashboard/BookTable.vue';
 import CommentTable from '@/components/dashboard/CommentTable.vue';
-import RegisterComment from "@/components/dashboard/RegisterComment.vue";
+// import RegisterComment from "@/components/dashboard/RegisterComment.vue";
 import BookCards from "@/components/dashboard/BookCards.vue";
 
 </script>
