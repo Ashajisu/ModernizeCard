@@ -28,4 +28,11 @@ public class DataController {
         List<CardTransaction> list = cardRepository.findAll();
         return ResponseEntity.ok(Map.of("list", list));
     }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save")
+    public ResponseEntity<CardTransaction> saveTransaction(@RequestBody CardTransaction dto) {
+        CardTransaction saved = cardRepository.save(dto);
+        return ResponseEntity.ok(saved);
+    }
 }

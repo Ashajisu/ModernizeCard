@@ -4,6 +4,7 @@ type searchDialogType = {
 };
 
 export type SHCardItem = {
+    id: string;
     transactionDate: string;
     cardType: string;
     usedCard: string;
