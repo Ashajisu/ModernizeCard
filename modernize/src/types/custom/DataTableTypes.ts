@@ -3,6 +3,20 @@ type searchDialogType = {
     sub: object;
 };
 
+export type SHCardItem = {
+    transactionDate: string;
+    cardType: string;
+    usedCard: string;
+    merchantName: string;
+    approvalNumber: string;
+    amount: string;
+    purchaseType: string;
+    usageType: string;
+    currency: string;
+    paymentDate: string;
+    [key: string]: string;
+};
+
 type UserItem = {
     department: string; // 부서명
     team: string; // 팀명

@@ -2,7 +2,7 @@
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import { onMounted, ref } from "vue";
 import type { FormField } from '@/types/custom/InputTypes';
-import type { UserItem } from "@/types/custom/DataTableTypes";
+import type { SHCardItem } from "@/types/custom/DataTableTypes";
 import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
 import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 import { useTableManager } from "@/common/useTableManager";
@@ -19,43 +19,42 @@ const formFields = ref<FormField[]>([
 ]);
 //테이블헤더
 const headers = ref<any[]>([
-  { title: "부서명", align: "start", key: "department" },
-  { title: "팀명", align: "start", key: "team" },
-  { title: "사용자명", align: "start", key: "username" },
-  { title: "사원번호", align: "start", key: "employeeId" },
-  { title: "직위", align: "center", key: "position" },
-  { title: "메일주소", align: "center", key: "email" },
-  { title: "줌 라이센스", align: "end", key: "zoomLicense" },
-  { title: "줌폰 라이센스", align: "end", key: "phoneLicense" },
+    { title: "거래일", align: "start", key: "transactionDate" },
+    { title: "카드구분", align: "start", key: "cardType" },
+    { title: "이용카드", align: "start", key: "usedCard" },
+    { title: "가맹점명", align: "start", key: "merchantName" },
+    { title: "승인번호", align: "center", key: "approvalNumber" },
+    { title: "금액", align: "end", key: "amount" },
+    { title: "매입구분", align: "center", key: "purchaseType" },
+    { title: "이용구분", align: "center", key: "usageType" },
+    { title: "거래통화", align: "center", key: "currency" },
+    { title: "결제일", align: "center", key: "paymentDate" }
 ]);
 //상세정보
 const userFields = ref<FormField[]>([
-  { label: '사용자명', name: 'username', type: 'text', value: '', placeholder: '이름 입력', required: true, disabled: false },
-  { label: '사원번호', name: 'employeeId', type: 'text', value: '', placeholder: '사원번호 입력', required: true, disabled: false },
-  { label: '부서명', name: 'department',  type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], placeholder: undefined, required: true, disabled: false },
-  { label: '팀명', name: 'team', type: 'select', value: '', options: ['기술2팀', '기술1팀', '기술지원팀'], placeholder: undefined, required: true, disabled: false },
-  { label: '직위', name: 'position', type: 'text', value: '', placeholder: '직위 입력', required: true, disabled: false },
-  { label: '메일주소', name: 'email', type: 'text', value: '', placeholder: 'example@domain.com', required: true, disabled: false },
-  { label: '전화번호', name: 'phone', type: 'text', value: '', placeholder: '02-0000-0000', required: true, disabled: false },
-  { label: '내선번호', name: 'mobile', type: 'text', value: '', placeholder: '0000', required: false, disabled: false },
-  { label: '입사일자', name: 'hireDate', type: 'date', value: '', placeholder: 'YYYY-MM-DD', required: true, disabled: false },
-  { label: '재직상태', name: 'employmentStatus', type: 'select', value: '', options: ['재직', '퇴사', '휴직'], placeholder: undefined, required: true, disabled: false },
-  { label: '사용자 권한', name: 'userRole', type: 'select', value: '', options: ['사용자', '관리자', '슈퍼 관리자'], placeholder: undefined, required: true, disabled: false },
-  { label: '사용유무', name: 'activeStatus', type: 'select', value: '', options: ['Y', 'N'], placeholder: undefined, required: true, disabled: false },
-  { label: '줌 라이센스', name: 'zoomLicense', type: 'select', value: '', options: ['WorkplaceBiz', 'Basic', '...'], placeholder: undefined, required: true, disabled: false },
-  { label: '줌폰 라이센스', name: 'phoneLicense', type: 'select', value: '', options: ['Phone Pro', 'Power', 'Phone Pro, Power'], placeholder: undefined, required: false, disabled: false },
+    { label: '거래일', name: 'transactionDate', type: 'date', value: '', required: true, disabled: false },
+    { label: '카드구분', name: 'cardType', type: 'text', value: '', placeholder: '체크(신용)', required: true, disabled: false },
+    { label: '이용카드', name: 'usedCard', type: 'text', value: '', placeholder: '본인509*', required: true, disabled: false },
+    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: true, disabled: false },
+    { label: '승인번호', name: 'approvalNumber', type: 'text', value: '', placeholder: '승인번호 입력', required: true, disabled: false },
+    { label: '금액', name: 'amount', type: 'money', value: '', placeholder: '금액 입력', required: false, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: false, disabled: false },
+    { label: '이용구분', name: 'usageType', type: 'text', value: '', placeholder: '사용자명 입력', required: false, disabled: false },
+    { label: '거래통화', name: 'currency', type: 'money', value: '', placeholder: '0,000', required: false, disabled: false },
+    { label: '결제일', name: 'paymentDate', type: 'date', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
 ]);
 
-const setUsers = (userList: UserItem[])=>{
+const setUsers = (userList: SHCardItem[])=>{
   users.value = userList;
-  // console.log("사용자 데이터:", users.value);
+  console.log("사용자 데이터:", users.value);
 }
 // mockApi 로 데이터 불러오기.
-const users = ref<UserItem[]>([]); // 사용자 데이터를 저장할 변수
+const users = ref<SHCardItem[]>([]); // 사용자 데이터를 저장할 변수
 onMounted(async () => {
   // 초기화 또는 초기 작업 수행
   try {
-    setUsers(await apiClient.get("/zoom/users"))
+    const response = await apiClient.get("/card/list");
+    setUsers(response.list);
   }catch (e){
     console.error("데이터 로드 중 오류 발생:", e);
   }
@@ -74,7 +73,15 @@ const {
   onSave,
   onDelete,
   onExcelSave
-} = useTableManager<UserItem>(users, formFields, userFields);
+} = useTableManager<SHCardItem>(users, formFields, userFields);
+
+function formatMoney(value: any) {
+    if (value === null || value === undefined || value === '') return '';
+    const number = parseInt(value.toString().replace(/[^0-9]/g, ''));
+    const result = isNaN(number) ? '' : number.toLocaleString(); // 12,345 형식
+    console.log(result);
+    return result;
+}
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -126,6 +133,13 @@ const {
                         v-model="selectedEmpId"
                         @update:model-value="onSelectionChange"
                     >
+                        <!-- amount 컬럼 커스텀 렌더링 -->
+                        <template #item.amount="{ item }">
+                            {{ formatMoney(item.amount) }}
+                        </template>
+                        <template #item.currency="{ item }">
+                            {{ formatMoney(item.currency) }}
+                        </template>
                     </v-data-table>
                 </v-row>
             </UiParentCard>

@@ -10,12 +10,12 @@ CREATE TABLE users (
 
 CREATE TABLE card_transactions (
                                    id INT AUTO_INCREMENT PRIMARY KEY,
-                                   transaction_date DATE NOT NULL,
+                                   transaction_date DATETIME NOT NULL,
                                    card_type VARCHAR(20),
                                    used_card VARCHAR(50),
                                    merchant_name VARCHAR(100),
                                    approval_number VARCHAR(30),
-                                   amount DECIMAL(15, 2),
+                                   amount BIGINT,
                                    purchase_type VARCHAR(20),
                                    usage_type VARCHAR(20),
                                    currency VARCHAR(10),
