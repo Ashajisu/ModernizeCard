@@ -228,7 +228,7 @@ const rules = [
   position: absolute;
   top: -12px; /* outline 위로 위치 */
   left: 5%;
-  background-color: white; /* 배경색 */
+  //background-color: white; /* 배경색 */
   padding: 0 5px; /* 여백 추가 */
   font-size: x-small;
   color: rgb(var(--v-theme-textPrimary));
