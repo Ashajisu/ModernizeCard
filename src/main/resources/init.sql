@@ -19,5 +19,8 @@ CREATE TABLE card_transactions (
                                    purchase_type VARCHAR(20),
                                    usage_type VARCHAR(20),
                                    currency VARCHAR(10),
-                                   payment_date DATE
+                                   payment_date DATE,
+                                   deleted BOOLEAN DEFAULT FALSE
+
+
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;

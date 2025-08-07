@@ -25,7 +25,7 @@ public class DataController {
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
     public ResponseEntity<Map <String, List<CardTransaction>>> getCardTransactionList() {
-        List<CardTransaction> list = cardRepository.findAll();
+        List<CardTransaction> list = cardRepository.findAllByDeleted(false);
         return ResponseEntity.ok(Map.of("list", list));
     }
 
@@ -34,5 +34,15 @@ public class DataController {
     public ResponseEntity<CardTransaction> saveTransaction(@RequestBody CardTransaction dto) {
         CardTransaction saved = cardRepository.save(dto);
         return ResponseEntity.ok(saved);
+    }
+
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete")
+    public ResponseEntity<CardTransaction> deleteTransaction(@RequestBody CardTransaction dto) {
+        int deletedCnt = cardRepository.updateDeletedById(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
     }
 }

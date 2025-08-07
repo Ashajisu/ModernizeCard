@@ -4,7 +4,6 @@ import { onMounted, ref } from 'vue';
 import type { FormField } from '@/types/custom/InputTypes';
 import type { SHCardItem } from '@/types/custom/DataTableTypes';
 import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
-import CustomSlotDialog from '@/components/custom/dialog/CustomSlotDialog.vue';
 import { useTableManager } from '@/common/useTableManager';
 import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 import { apiClient } from '@/data/Axios';
@@ -84,6 +83,19 @@ const saveToServer = async (validateForm: any) => {
         throw error;
     }
 };
+
+const deleteToServer = async (id: string) => {
+    try {
+        const response = await apiClient.post('/card/delete', { id : id});
+        if (response.status === 200) {
+            console.log('서버 삭제:', response);
+            return id;
+        }
+    } catch (error) {
+        console.error('서버 저장 실패:', error);
+        throw error;
+    }
+};
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -111,7 +123,7 @@ const saveToServer = async (validateForm: any) => {
                             <v-btn flat color="primary" variant="outlined" @click="onNew"
                                 ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록
                             </v-btn>
-                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0])"
+                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], deleteToServer)"
                                 ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제
                             </v-btn>
                         </div>
@@ -128,11 +140,11 @@ const saveToServer = async (validateForm: any) => {
                         items-per-page="5"
                         :headers="headers"
                         :items="filteredList"
-                        item-value="employeeId"
                         select-strategy="single"
                         show-select
                         class="border rounded-md"
                         v-model="selectedEmpId"
+                        :item-value="identifierField"
                         @update:model-value="onSelectionChange"
                     >
                         <!-- amount 컬럼 커스텀 렌더링 -->
@@ -160,10 +172,6 @@ const saveToServer = async (validateForm: any) => {
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <!--                                        <CustomSlotDialog ref="passwordDialog" title="패스워드초기화" />-->
-                                        <!--                                        <v-btn color="grey" variant="outlined" @click="($refs.passwordDialog as any)?.open()"-->
-                                        <!--                                            >패스워드초기화</v-btn-->
-                                        <!--                                        >-->
                                         <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm))"
                                             >저장</v-btn
                                         >

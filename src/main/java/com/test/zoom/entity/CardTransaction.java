@@ -43,4 +43,7 @@ public class CardTransaction {
 
     @Column(name = "payment_date")
     private LocalDate paymentDate;
+
+    @Column(name = "deleted")
+    private boolean deleted;
 }

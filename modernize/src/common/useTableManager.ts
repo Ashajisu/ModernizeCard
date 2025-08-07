@@ -210,9 +210,12 @@ export function useTableManager<T extends Record<string, any>>(
 
 
     // ✅ 삭제 기능
-    const onDelete = async (selected: string) => {
+    const onDelete = async (selected: string, func?: Function|null) => {
         const index = tableList.value.findIndex((item) => item[identifierField] === selected);
         if (index !== -1 && await confirm("삭제 하시겠습니까?")) {
+            if (func) {
+                const deleted = await func(selected);
+            }
             const removed = tableList.value.splice(index, 1);
             if (removed[0]) {
                 await alert(`${removed[0][identifierField]}이 삭제되었습니다.`);
