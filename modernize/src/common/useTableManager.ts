@@ -180,11 +180,19 @@ export function useTableManager<T extends Record<string, any>>(
         }
     };
 
-    const onExcelSave = async (validateForm: () => Promise<File | null>): Promise<boolean> => {
+    const onExcelSave = async (validateForm: () => Promise<File | null>, func?:Function | null): Promise<boolean> => {
         const file = await validateForm();
         if(!file){ return false; }
+        const parsed:T[] = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
 
-        const data:T[] = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
+        let data:T[] = [];
+        if(!parsed){ return false; }
+        if(func && typeof func === 'function'){
+            data = await func(parsed);
+            // console.log(data);
+        }else {
+            data = parsed;
+        }
 
         if (Array.isArray(data) && data.length > 0) {
             let addedCount = 0;

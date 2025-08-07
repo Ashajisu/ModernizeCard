@@ -4,7 +4,8 @@ import ExcelUploadForm from './ExcelUploadForm.vue';
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 interface Props {
-  save: (validateForm: () => Promise<File | null>) => Promise<any>;
+  save: any;
+  db: any;
   title?: string;
 }
 const props = defineProps<Props>();
@@ -12,7 +13,7 @@ const dialog = ref<boolean>(false);
 const excelForm = ref<any>(null);
 const saveExcel = async () => {
   if (excelForm.value) {
-    const result = await props.save(excelForm.value?.validateForm);
+    const result = await props.save(excelForm.value?.validateForm, props.db);
     if (result) {
       dialog.value = false;
     }

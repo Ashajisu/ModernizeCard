@@ -45,4 +45,11 @@ public class DataController {
         }
         return ResponseEntity.ok().build() ;
     }
+
+    /*카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList")
+    public ResponseEntity<List<CardTransaction>> saveTransaction(@RequestBody List<CardTransaction> dto) {
+        List<CardTransaction> saved = cardRepository.saveAll(dto);
+        return ResponseEntity.ok(saved);
+    }
 }

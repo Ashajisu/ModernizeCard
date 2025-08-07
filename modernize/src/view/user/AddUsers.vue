@@ -96,6 +96,18 @@ const deleteToServer = async (id: string) => {
         throw error;
     }
 };
+
+const excelSaveToServer = async (data: any) => {
+    const list = Array.isArray(data) ? data : [data];
+    try {
+        const response = await apiClient.post('/card/saveList', list);
+        console.log('excel 서버 저장:');
+        return response;
+    } catch (error) {
+        console.error('excel 서버 저장 실패:', error);
+        throw error;
+    }
+};
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -131,7 +143,7 @@ const deleteToServer = async (id: string) => {
                     <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                            <ExcelUploadDialogBtn :save="onExcelSave" title="엑셀 업로드" />
+                            <ExcelUploadDialogBtn :save="onExcelSave" :db="excelSaveToServer" title="엑셀 업로드" />
                         </div>
                     </v-col>
                 </v-row>
