@@ -193,7 +193,7 @@ const rules = [
                       </template>
                     </v-switch>
                     <v-text-field v-else-if="field.type === 'text'" color="primary" variant="outlined" type="text"
-                                  v-model="field.value as boolean"
+                                  v-model="field.value as string"
                                   :rules="edit && field.required ? rules : []"
                                   :readonly="!isEditable || field.disabled"
                                   :hide-details="hideDetails"
