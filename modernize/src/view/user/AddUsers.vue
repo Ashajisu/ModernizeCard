@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { onMounted, ref } from "vue";
+import UiParentCard from '@/components/shared/UiParentCard.vue';
+import { onMounted, ref } from 'vue';
 import type { FormField } from '@/types/custom/InputTypes';
-import type { SHCardItem } from "@/types/custom/DataTableTypes";
-import CustomSearchChecksForm from "@/components/custom/form/CustomSearchChecksForm.vue";
-import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
-import { useTableManager } from "@/common/useTableManager";
-import ExcelUploadDialogBtn from "@/common/excel/ExcelUploadDialogBtn.vue";
-import { apiClient } from "@/data/Axios";
+import type { SHCardItem } from '@/types/custom/DataTableTypes';
+import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
+import CustomSlotDialog from '@/components/custom/dialog/CustomSlotDialog.vue';
+import { useTableManager } from '@/common/useTableManager';
+import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
+import { apiClient } from '@/data/Axios';
 
 //검색
 const formFields = ref<FormField[]>([
-  { label: 'd', name: 'd', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
-  { label: '아이디', name: 'id', type: 'text', value: '', required: false, disabled: false },
-  { label: '사원번호', name: 'employeeId',  type: 'search', value: '',searchObj:[], required: false, disabled: false },
-  { label: '사용자명', name: 'username',  type: 'search_list', value: '', searchObj:[], required: false, disabled: false }
+    { label: 'd', name: 'd', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
+    { label: '아이디', name: 'id', type: 'text', value: '', required: false, disabled: false },
+    { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj: [], required: false, disabled: false },
+    { label: '사용자명', name: 'username', type: 'search_list', value: '', searchObj: [], required: false, disabled: false }
 ]);
 //테이블헤더
 const headers = ref<any[]>([
-    { title: "아이디", align: "start", key: "id" },
-    { title: "거래일", align: "start", key: "transactionDate" },
-    { title: "카드구분", align: "start", key: "cardType" },
-    { title: "이용카드", align: "start", key: "usedCard" },
-    { title: "가맹점명", align: "start", key: "merchantName" },
-    { title: "승인번호", align: "center", key: "approvalNumber" },
-    { title: "금액", align: "end", key: "amount" },
-    { title: "매입구분", align: "center", key: "purchaseType" },
-    { title: "이용구분", align: "center", key: "usageType" },
-    { title: "거래통화", align: "center", key: "currency" },
-    { title: "결제일", align: "center", key: "paymentDate" }
+    { title: '아이디', align: 'start', key: 'id' },
+    { title: '거래일', align: 'start', key: 'transactionDate' },
+    { title: '카드구분', align: 'start', key: 'cardType' },
+    { title: '이용카드', align: 'start', key: 'usedCard' },
+    { title: '가맹점명', align: 'start', key: 'merchantName' },
+    { title: '승인번호', align: 'center', key: 'approvalNumber' },
+    { title: '금액', align: 'end', key: 'amount' },
+    { title: '매입구분', align: 'center', key: 'purchaseType' },
+    { title: '이용구분', align: 'center', key: 'usageType' },
+    { title: '거래통화', align: 'center', key: 'currency' },
+    { title: '결제일', align: 'center', key: 'paymentDate' }
 ]);
 //상세정보
 const userFields = ref<FormField[]>([
@@ -45,37 +45,26 @@ const userFields = ref<FormField[]>([
     { label: '결제일', name: 'paymentDate', type: 'date', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
 ]);
 
-const setUsers = (userList: SHCardItem[])=>{
-  users.value = userList;
-  console.log("사용자 데이터:", users.value);
-}
+const setUsers = (userList: SHCardItem[]) => {
+    users.value = userList;
+    console.log('사용자 데이터:', users.value);
+};
 // mockApi 로 데이터 불러오기.
 const users = ref<SHCardItem[]>([]); // 사용자 데이터를 저장할 변수
 onMounted(async () => {
-  // 초기화 또는 초기 작업 수행
-  try {
-    const response = await apiClient.get("/card/list");
-    setUsers(response.list);
-  }catch (e){
-    console.error("데이터 로드 중 오류 발생:", e);
-  }
+    // 초기화 또는 초기 작업 수행
+    try {
+        const response = await apiClient.get('/card/list');
+        setUsers(response.list);
+    } catch (e) {
+        console.error('데이터 로드 중 오류 발생:', e);
+    }
 });
 // `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
 //모듈 호출 : 기존코드 동일
-const identifierField:string = 'id';
-const {
-  onSearch,
-  resetSearch,
-  filteredList,
-  selectedEmpId,
-  onSelectionChange,
-  edit,
-  handleEdit,
-  onNew,
-  onSave,
-  onDelete,
-  onExcelSave
-} = useTableManager<SHCardItem>(users, formFields, userFields, identifierField);
+const identifierField: string = 'id';
+const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, edit, handleEdit, onNew, onSave, onDelete, onExcelSave } =
+    useTableManager<SHCardItem>(users, formFields, userFields, identifierField);
 
 function formatMoney(value: any) {
     if (value === null || value === undefined || value === '') return '';
@@ -84,11 +73,11 @@ function formatMoney(value: any) {
     return result;
 }
 
-const saveToServer = async (validateForm: any) =>{
+const saveToServer = async (validateForm: any) => {
     const formData = await validateForm();
     try {
         const response = await apiClient.post('/card/save', formData);
-        console.log('서버 저장:',response);
+        console.log('서버 저장:', response);
         return response;
     } catch (error) {
         console.error('서버 저장 실패:', error);
@@ -101,11 +90,11 @@ const saveToServer = async (validateForm: any) =>{
     <v-row>
         <v-col cols="12" md="12">
             <UiParentCard title="사용자 관리">
-<!--                <v-row>-->
-<!--                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>-->
-<!--                    <p>{{ JSON.stringify(users) }}</p>-->
-<!--                    <p>{{ JSON.stringify(filteredList) }}</p>-->
-<!--                </v-row>-->
+                <!--                <v-row>-->
+                <!--                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>-->
+                <!--                    <p>{{ JSON.stringify(users) }}</p>-->
+                <!--                    <p>{{ JSON.stringify(filteredList) }}</p>-->
+                <!--                </v-row>-->
                 <v-row>
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
@@ -171,11 +160,13 @@ const saveToServer = async (validateForm: any) =>{
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-<!--                                        <CustomSlotDialog ref="passwordDialog" title="패스워드초기화" />-->
-<!--                                        <v-btn color="grey" variant="outlined" @click="($refs.passwordDialog as any)?.open()"-->
-<!--                                            >패스워드초기화</v-btn-->
-<!--                                        >-->
-                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm))">저장</v-btn>
+                                        <!--                                        <CustomSlotDialog ref="passwordDialog" title="패스워드초기화" />-->
+                                        <!--                                        <v-btn color="grey" variant="outlined" @click="($refs.passwordDialog as any)?.open()"-->
+                                        <!--                                            >패스워드초기화</v-btn-->
+                                        <!--                                        >-->
+                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm))"
+                                            >저장</v-btn
+                                        >
                                     </div>
                                 </v-col>
                             </v-row>
@@ -187,5 +178,4 @@ const saveToServer = async (validateForm: any) =>{
     </v-row>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
