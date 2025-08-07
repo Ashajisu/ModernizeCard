@@ -1,3 +1,13 @@
+CREATE TABLE users (
+                       empno BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       usertype VARCHAR(255),
+                       name VARCHAR(255),
+                       email VARCHAR(100) NOT NULL UNIQUE,
+                       password VARCHAR(100) NOT NULL,
+                       deptcode BIGINT,
+                       position VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE card_transactions (
                                    id INT AUTO_INCREMENT PRIMARY KEY,
                                    transaction_date DATE NOT NULL,

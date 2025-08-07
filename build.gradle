@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.test'
-version = '0.0.1-SNAPSHOT'
+version = '0.1'
 
 java {
 	toolchain {
@@ -45,14 +45,10 @@ dependencies {
 }
 
 bootWar{
-	archiveBaseName = 'zoom'
-	archiveFileName = 'zoom.war'
+	archiveBaseName = 'ModernizeCard'
+	archiveFileName = 'ModernizeCard.war'
 	archiveVersion = "1.0.0"
 }
 
 bootWar.enabled = true
 war.enabled = false
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
