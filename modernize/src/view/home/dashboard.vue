@@ -1,37 +1,12 @@
 <!-- Copy : src/views/monitoring/DailyCallStats.vue -->
 <template>
   <v-card class="pa-5">
-    <v-card-title class="text-h4 font-weight-bold"> 활성 통화 건수 </v-card-title>
-    <v-card-title class="text-h6 font-weight-bold "> 💡줌 폰 시스템의 실시간 전화 사용량을 모니터링 할 수 있습니다. </v-card-title>
-
-    <v-row class="mt-5">
-      <v-col cols="6">
-        <div class="d-flex align-center">
-          <v-card-title class="text-body-1 font-weight-bold text-medium-emphasis">
-            최종 업데이트 시간 : {{ lastUpdatedTime }}
-          </v-card-title>
-          <v-btn size="large" @click="getcurrenttime" icon>
-            <IconRefresh size="30" />
-          </v-btn>
-        </div>
-      </v-col>
-
-    </v-row>
-
-    <!-- 날짜 선택 -->
     <v-row>
-      <v-col cols="12" align="center">
-        <div class="text-h6">일일 누적 통화 건수</div>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <!-- 통계 카드 1 -->
       <v-col cols="12" md="3">
         <v-card elevation="10" class="pa-4" @click="() => { updateTableTitle('전체 통화 콜 수'); getTableData('전체 통화 콜 수'); }">
           <div class="d-flex justify-space-between">
             <div>
-              <div class="text-subtitle-1">전체 통화 콜 수</div>
+              <div class="text-subtitle-1"> 통화 콜 수</div>
               <div class="text-h3 font-weight-bold">{{ totalCalls }}</div>
             </div>
             <v-avatar color="primary" size="56" class="elevation-6">
