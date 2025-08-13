@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +51,10 @@ public class DataController {
     /*카드내역 목록을 저장합니다. **/
     @PostMapping("/saveList")
     public ResponseEntity<List<CardTransaction>> saveTransaction(@RequestBody List<CardTransaction> dto) {
-        List<CardTransaction> saved = cardRepository.saveAll(dto);
+        //엑셀 역순으로 저장.
+        List<CardTransaction> reversedList = new ArrayList<>(dto);
+        Collections.reverse(reversedList);
+        List<CardTransaction> saved = cardRepository.saveAll(reversedList);
         return ResponseEntity.ok(saved);
     }
 }
