@@ -108,9 +108,9 @@ export function useTableManager<T extends Record<string, any>>(
                 const itemVal = item[key];
 
                 if (Array.isArray(searchVal)) {
-                    return searchVal.length === 0 || searchVal.some((val: string) => itemVal.toLowerCase() === val.toLowerCase());
+                    return searchVal.length === 0 || itemVal && searchVal.some((val: string) => String(itemVal).toLowerCase() === val.toLowerCase());
                 } else {
-                    return !searchVal || itemVal.toLowerCase().includes(searchVal.toLowerCase());
+                    return !searchVal || itemVal && String(itemVal).toLowerCase().includes(searchVal.toLowerCase());
                 }
             })
         );
