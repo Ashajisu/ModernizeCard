@@ -1,5 +1,6 @@
 package com.test.zoom.controller;
 
+import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.CardTransaction;
 
 import com.test.zoom.repository.CardRepository;
@@ -48,7 +49,7 @@ public class DataController {
         return ResponseEntity.ok().build() ;
     }
 
-    /*카드내역 목록을 저장합니다. **/
+    /**카드내역 목록을 저장합니다. **/
     @PostMapping("/saveList")
     public ResponseEntity<List<CardTransaction>> saveTransaction(@RequestBody List<CardTransaction> dto) {
         //엑셀 역순으로 저장.
@@ -56,5 +57,13 @@ public class DataController {
         Collections.reverse(reversedList);
         List<CardTransaction> saved = cardRepository.saveAll(reversedList);
         return ResponseEntity.ok(saved);
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @GetMapping("/usageTypeStats")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getUsageTypeCurrencyStats() {
+        List<StatsProcedure> stats = cardRepository.getUsageTypeCurrencyStats();
+        System.out.println(stats);
+        return ResponseEntity.ok(Map.of("list", stats));
     }
 }

@@ -3,6 +3,18 @@ type searchDialogType = {
     sub: object;
 };
 
+export type StatsItem = {
+    id: string;
+    title: string;
+    stat1: string;
+    stat2: string;
+    stat3: string;
+    stat4: string;
+    stat5: string;
+    stat6: string;
+    [key: string]: string;
+};
+
 export type SHCardItem = {
     id: string;
     transactionDate: string;

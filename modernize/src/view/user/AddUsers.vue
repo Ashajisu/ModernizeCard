@@ -2,7 +2,7 @@
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { onMounted, ref } from 'vue';
 import type { FormField } from '@/types/custom/InputTypes';
-import type { SHCardItem } from '@/types/custom/DataTableTypes';
+import type { SHCardItem, StatsItem } from '@/types/custom/DataTableTypes';
 import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
 import { useTableManager } from '@/common/useTableManager';
 import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
@@ -10,14 +10,14 @@ import { apiClient } from '@/data/Axios';
 
 //검색
 const formFields = ref<FormField[]>([
-    { label: 'd', name: 'd', type: 'select', value: '', options: ['기술팀', '영업팀', '고객지원본부'], required: false, disabled: false },
-    { label: '아이디', name: 'id', type: 'text', value: '', required: false, disabled: false },
-    { label: '사원번호', name: 'employeeId', type: 'search', value: '', searchObj: [], required: false, disabled: false },
-    { label: '사용자명', name: 'username', type: 'search_list', value: '', searchObj: [], required: false, disabled: false }
+    { label: '이용구분', name: 'usageType', type: 'select', value: '', options: ["엄지혜","엄지수","임준영"], required: false, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'select', value: '', options: ['결제확정','정산','예정','승인취소'], required: false, disabled: false },
+    { label: '거래일', name: 'transactionDate', type: 'date', value: '', searchObj: [], required: false, disabled: false },
+    { label: '결제일', name: 'paymentDate', type: 'date', value: '', searchObj: [], required: false, disabled: false }
 ]);
 //테이블헤더
 const headers = ref<any[]>([
-    { title: '아이디', align: 'start', key: 'id' },
+    { title: 'No.', align: 'start', key: 'id' },
     { title: '거래일', align: 'start', key: 'transactionDate' },
     { title: '카드구분', align: 'start', key: 'cardType' },
     { title: '이용카드', align: 'start', key: 'usedCard' },
@@ -31,30 +31,50 @@ const headers = ref<any[]>([
 ]);
 //상세정보
 const userFields = ref<FormField[]>([
-    { label: '아이디', name: 'id', type: 'hidden', value: '', required: false, disabled: true },
-    { label: '거래일', name: 'transactionDate', type: 'date', value: '', required: true, disabled: false },
-    { label: '카드구분', name: 'cardType', type: 'text', value: '', placeholder: '체크(신용)', required: true, disabled: false },
-    { label: '이용카드', name: 'usedCard', type: 'text', value: '', placeholder: '본인509*', required: true, disabled: false },
-    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: true, disabled: false },
+    { label: 'No.', name: 'id', type: 'hidden', value: '', required: true, disabled: true },
+    { label: '거래일', name: 'transactionDate', type: 'datetime', value: '', required: true, disabled: false },
+    { label: '카드구분', name: 'cardType', type: 'text', value: '', placeholder: '체크(신용)', required: false, disabled: false },
+    { label: '이용카드', name: 'usedCard', type: 'text', value: '', placeholder: '본인509*', required: false, disabled: false },
+    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: false, disabled: false },
     { label: '승인번호', name: 'approvalNumber', type: 'text', value: '', placeholder: '승인번호 입력', required: false, disabled: false },
     { label: '금액', name: 'amount', type: 'text', value: '', placeholder: '금액 입력', required: false, disabled: false },
-    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: false, disabled: false },
-    { label: '이용구분', name: 'usageType', type: 'text', value: '', placeholder: '사용자명 입력', required: false, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: true, disabled: false },
+    { label: '이용구분', name: 'usageType', type: 'text', value: '', placeholder: '사용자명 입력', required: true, disabled: false },
     { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
-    { label: '결제일', name: 'paymentDate', type: 'date', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
+    { label: '결제일', name: 'paymentDate', type: 'datetime', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
+]);
+
+//집계 테이블헤더
+const statHeaders = ref<any[]>([
+    { title: '이용구분', align: 'center', key: 'title' },
+    { title: '금액', align: 'center', key: 'stat1' },
+    { title: '할인', align: 'center', key: 'stat2' },
+    { title: '결제확정', align: 'center', key: 'stat3' },
+    { title: '정산', align: 'center', key: 'stat4' },
+    { title: '예정', align: 'center', key: 'stat5' },
+    { title: '합계', align: 'center', key: 'stat6' },
 ]);
 
 const setUsers = (userList: SHCardItem[]) => {
     users.value = userList;
     console.log('사용자 데이터:', users.value);
 };
+const setStats = (statList: StatsItem[]) => {
+    stats.value = statList;
+    console.log('집계 데이터:', stats.value);
+};
 // mockApi 로 데이터 불러오기.
 const users = ref<SHCardItem[]>([]); // 사용자 데이터를 저장할 변수
+const stats = ref<StatsItem[]>([]); // 집계 데이터를 저장할 변수
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
         const response = await apiClient.get('/card/list');
         setUsers(response.list);
+        if (response.list) {
+            const response = await apiClient.get('/card/usageTypeStats');
+            setStats(response.list);
+        }
     } catch (e) {
         console.error('데이터 로드 중 오류 발생:', e);
     }
@@ -193,6 +213,36 @@ const excelSaveToServer = async (data: any) => {
                         </template>
                     </CustomSearchChecksForm>
                 </template>
+            </UiParentCard>
+            <UiParentCard>
+                <v-row>
+                    <v-data-table
+                        items-per-page="5"
+                        :headers="statHeaders"
+                        :items="stats"
+                        class="border rounded-md"
+                    >
+                        <!-- amount 컬럼 커스텀 렌더링 -->
+                        <template #item.stat1="{ item }">
+                            {{ formatMoney(item.stat1) }}
+                        </template>
+                        <template #item.stat2="{ item }">
+                            {{ formatMoney(item.stat2) }}
+                        </template>
+                        <template #item.stat3="{ item }">
+                            {{ formatMoney(item.stat3) }}
+                        </template>
+                        <template #item.stat4="{ item }">
+                            {{ formatMoney(item.stat4) }}
+                        </template>
+                        <template #item.stat5="{ item }">
+                            {{ formatMoney(item.stat5) }}
+                        </template>
+                        <template #item.stat6="{ item }">
+                            {{ formatMoney(item.stat6) }}
+                        </template>
+                    </v-data-table>
+                </v-row>
             </UiParentCard>
         </v-col>
     </v-row>

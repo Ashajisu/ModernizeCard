@@ -1,5 +1,6 @@
 package com.test.zoom.repository;
 
+import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.CardTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,4 +19,7 @@ public interface CardRepository extends JpaRepository<CardTransaction, Long> {
     @Modifying
     @Query("UPDATE CardTransaction c SET c.deleted = true WHERE c.id = :id")
     int updateDeletedById(@Param("id") Long id);
+
+    @Query(value = "CALL getUsageTypeCurrencyStats()", nativeQuery = true)
+    List<StatsProcedure> getUsageTypeCurrencyStats();
 }
