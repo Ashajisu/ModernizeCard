@@ -5,7 +5,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 interface Props {
   save: any;
-  db: any;
+  url: any;
   title?: string;
 }
 const props = defineProps<Props>();
@@ -13,7 +13,7 @@ const dialog = ref<boolean>(false);
 const excelForm = ref<any>(null);
 const saveExcel = async () => {
   if (excelForm.value) {
-    const result = await props.save(excelForm.value?.validateForm, props.db);
+    const result = await props.save(excelForm.value?.validateForm, props.url);
     if (result) {
       dialog.value = false;
     }

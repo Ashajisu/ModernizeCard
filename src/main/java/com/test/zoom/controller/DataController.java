@@ -79,6 +79,26 @@ public class DataController {
         return ResponseEntity.ok(Map.of("list", list));
     }
 
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete/samsung")
+    public ResponseEntity<SSCardTransaction> deleteSSTransaction(@RequestBody SSCardTransaction dto) {
+        int deletedCnt = SamSungCardR.markDeleted(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
+    }
+
+    /**카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList/samsung")
+    public ResponseEntity<List<SSCardTransaction>> saveSSTransaction(@RequestBody List<SSCardTransaction> dto) {
+        //엑셀 역순으로 저장.
+        List<SSCardTransaction> reversedList = new ArrayList<>(dto);
+        Collections.reverse(reversedList);
+        List<SSCardTransaction> saved = SamSungCardR.saveAll(reversedList);
+        return ResponseEntity.ok(saved);
+    }
+
     /**이용구분별 통계를 조회합니다. **/
     @GetMapping("/usageTypeStats/samsung")
     public ResponseEntity<Map <String, List<StatsProcedure>>> getSSUsageTypeCurrencyStats() {

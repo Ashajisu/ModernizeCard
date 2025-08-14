@@ -3,6 +3,7 @@ import type { Ref } from "vue";
 import type {FormField} from "@/types/custom/InputTypes";
 import {parseExcel} from "@/common/excel/excelService";
 import { alert, confirm } from "@/common/alertService";
+import { deleteToServer, excelSaveToServer } from "@/utils/common";
 
 // 📌 부서 맵 : 차후 api 로 호출할 예정
 const deptOptions = ref<string[]>(['경영지원팀', '영업본부', '사업지원팀', '고객지원본부', '개발연구소']);
@@ -180,15 +181,15 @@ export function useTableManager<T extends Record<string, any>>(
         }
     };
 
-    const onExcelSave = async (validateForm: () => Promise<File | null>, func?:Function | null): Promise<boolean> => {
+    const onExcelSave = async (validateForm: () => Promise<File | null>, url:string): Promise<boolean> => {
         const file = await validateForm();
         if(!file){ return false; }
         const parsed:T[] = await parseExcel<T>(file); // useTableManager<T>에 따라 T는 이미 지정됨
 
         let data:T[] = [];
         if(!parsed){ return false; }
-        if(func && typeof func === 'function'){
-            data = await func(parsed);
+        if(url && typeof excelSaveToServer === 'function'){
+            data = await excelSaveToServer(parsed, url);
             // console.log(data);
         }else {
             data = parsed;
@@ -218,12 +219,10 @@ export function useTableManager<T extends Record<string, any>>(
 
 
     // ✅ 삭제 기능
-    const onDelete = async (selected: string, func?: Function|null) => {
+    const onDelete = async (selected: string, url: string) => {
         const index = tableList.value.findIndex((item) => item[identifierField] === selected);
         if (index !== -1 && await confirm("삭제 하시겠습니까?")) {
-            if (func) {
-                const deleted = await func(selected);
-            }
+            const deleted = await deleteToServer(selected, url);
             const removed = tableList.value.splice(index, 1);
             if (removed[0]) {
                 await alert(`${removed[0][identifierField]}이 삭제되었습니다.`);

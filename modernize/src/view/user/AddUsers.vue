@@ -88,7 +88,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
 
 function formatMoney(value: any) {
     if (value === null || value === undefined || value === '') return '';
-    const number = parseInt(value.toString().replace(/[^0-9]/g, ''));
+    const number = parseInt(value.toString().replace(/[^0-9\-]/g, ''));
     const result = isNaN(number) ? '' : number.toLocaleString(); // 12,345 형식
     return result;
 }
