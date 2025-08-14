@@ -12,8 +12,9 @@ import { apiClient } from '@/data/Axios';
 const formFields = ref<FormField[]>([
     { label: '이용구분', name: 'usageType', type: 'select', value: '', options: ["엄지혜","엄지수","임준영"], required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'select', value: '', options: ['결제확정','정산','예정','승인취소'], required: false, disabled: false },
-    { label: '거래일', name: 'transactionDate', type: 'date', value: '', searchObj: [], required: false, disabled: false },
-    { label: '결제일', name: 'paymentDate', type: 'date', value: '', searchObj: [], required: false, disabled: false }
+    { label: '거래일', name: 'transactionDate', type: 'date', value: '', required: false, disabled: false },
+    { label: '결제일', name: 'paymentDate', type: 'date', value: '', required: false, disabled: false },
+    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false }
 ]);
 //테이블헤더
 const headers = ref<any[]>([
@@ -133,7 +134,7 @@ const excelSaveToServer = async (data: any) => {
 <template>
     <v-row>
         <v-col cols="12" md="12">
-            <UiParentCard title="사용자 관리">
+            <UiParentCard title="신한카드">
                 <!--                <v-row>-->
                 <!--                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>-->
                 <!--                    <p>{{ JSON.stringify(users) }}</p>-->
@@ -217,7 +218,7 @@ const excelSaveToServer = async (data: any) => {
             <UiParentCard>
                 <v-row>
                     <v-data-table
-                        items-per-page="5"
+                        hide-default-footer
                         :headers="statHeaders"
                         :items="stats"
                         class="border rounded-md"

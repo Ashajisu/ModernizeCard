@@ -95,9 +95,9 @@ const sidebarItem: menu[] = [
         to: '/home/dashboard'
     },
 
-    { header: '사용자 및 조직' },
+    { header: '카드정산' },
     {
-        title: '사용자',
+        title: '신한카드',
         icon: UserPlusIcon,
         to: '/user/profile'
     },
