@@ -1,9 +1,11 @@
 package com.test.zoom.controller;
 
+import com.test.zoom.entity.SSCardTransaction;
 import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.SHCardTransaction;
 
 import com.test.zoom.repository.SHCardRepository;
+import com.test.zoom.repository.SSCardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -23,6 +25,9 @@ public class DataController {
 
     @Autowired
     private SHCardRepository ShinHanCardR;
+
+    @Autowired
+    private SSCardRepository SamSungCardR;
 
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
@@ -64,5 +69,13 @@ public class DataController {
         List<StatsProcedure> stats = ShinHanCardR.getSHUsageTypeCurrencyStats();
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    ///
+    /**사용자의 카드내역을 나열합니다. **/
+    @GetMapping("/list/samsung")
+    public ResponseEntity<Map <String, List<SSCardTransaction>>> getSSCardTransactionList() {
+        List<SSCardTransaction> list = SamSungCardR.findAllByDeleted(false);
+        return ResponseEntity.ok(Map.of("list", list));
     }
 }
