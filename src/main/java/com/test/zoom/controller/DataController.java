@@ -78,4 +78,12 @@ public class DataController {
         List<SSCardTransaction> list = SamSungCardR.findAllByDeleted(false);
         return ResponseEntity.ok(Map.of("list", list));
     }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @GetMapping("/usageTypeStats/samsung")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getSSUsageTypeCurrencyStats() {
+        List<StatsProcedure> stats = SamSungCardR.getSSUsageTypeCurrencyStats();
+        System.out.println(stats);
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
 }
