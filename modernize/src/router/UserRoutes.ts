@@ -21,6 +21,11 @@ const UserRoutes : RouteRecordRaw = {
             component: () => import('@/view/user/AddUsers.vue')
         },
         {
+            name: '삼성카드',
+            path: 'samsung',
+            component: () => import('@/view/user/AddSS.vue')
+        },
+        {
             name: '조직',
             path: 'organization',
             component: () => import('@/view/user/OrganizationM.vue')

@@ -102,6 +102,11 @@ const sidebarItem: menu[] = [
         to: '/user/profile'
     },
     {
+        title: '삼성카드',
+        icon: UserPlusIcon,
+        to: '/user/samsung'
+    },
+    {
         title: '조직',
         icon: AddressBookIcon,
         to: '/user/organization',
