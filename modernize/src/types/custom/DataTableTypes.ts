@@ -15,6 +15,21 @@ export type StatsItem = {
     [key: string]: string;
 };
 
+export type SSCardItem = {
+    id: string;
+    transactionDate: string;
+    cardType: string;
+    usedCard: string;
+    merchantName: string;
+    approvalNumber: string;
+    amount: string;
+    purchaseType: string;
+    usageType: string;
+    currency: string;
+    paymentDate: string;
+    [key: string]: string;
+};
+
 export type SHCardItem = {
     id: string;
     transactionDate: string;
