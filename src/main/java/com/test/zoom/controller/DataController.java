@@ -1,7 +1,7 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.entity.StatsProcedure;
-import com.test.zoom.entity.CardTransaction;
+import com.test.zoom.entity.SHCardTransaction;
 
 import com.test.zoom.repository.CardRepository;
 
@@ -27,21 +27,21 @@ public class DataController {
 
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
-    public ResponseEntity<Map <String, List<CardTransaction>>> getCardTransactionList() {
-        List<CardTransaction> list = cardRepository.findAllByDeleted(false);
+    public ResponseEntity<Map <String, List<SHCardTransaction>>> getCardTransactionList() {
+        List<SHCardTransaction> list = cardRepository.findAllByDeleted(false);
         return ResponseEntity.ok(Map.of("list", list));
     }
 
     /**신규 카드내역을 저장합니다. **/
     @PostMapping("/save")
-    public ResponseEntity<CardTransaction> saveTransaction(@RequestBody CardTransaction dto) {
-        CardTransaction saved = cardRepository.save(dto);
+    public ResponseEntity<SHCardTransaction> saveTransaction(@RequestBody SHCardTransaction dto) {
+        SHCardTransaction saved = cardRepository.save(dto);
         return ResponseEntity.ok(saved);
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
     @PostMapping("/delete")
-    public ResponseEntity<CardTransaction> deleteTransaction(@RequestBody CardTransaction dto) {
+    public ResponseEntity<SHCardTransaction> deleteTransaction(@RequestBody SHCardTransaction dto) {
         int deletedCnt = cardRepository.updateDeletedById(dto.getId());
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -51,11 +51,11 @@ public class DataController {
 
     /**카드내역 목록을 저장합니다. **/
     @PostMapping("/saveList")
-    public ResponseEntity<List<CardTransaction>> saveTransaction(@RequestBody List<CardTransaction> dto) {
+    public ResponseEntity<List<SHCardTransaction>> saveTransaction(@RequestBody List<SHCardTransaction> dto) {
         //엑셀 역순으로 저장.
-        List<CardTransaction> reversedList = new ArrayList<>(dto);
+        List<SHCardTransaction> reversedList = new ArrayList<>(dto);
         Collections.reverse(reversedList);
-        List<CardTransaction> saved = cardRepository.saveAll(reversedList);
+        List<SHCardTransaction> saved = cardRepository.saveAll(reversedList);
         return ResponseEntity.ok(saved);
     }
 

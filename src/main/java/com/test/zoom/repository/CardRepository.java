@@ -1,7 +1,7 @@
 package com.test.zoom.repository;
 
 import com.test.zoom.entity.StatsProcedure;
-import com.test.zoom.entity.CardTransaction;
+import com.test.zoom.entity.SHCardTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface CardRepository extends JpaRepository<CardTransaction, Long> {
-    List<CardTransaction> findAllByDeleted(boolean deleted);
+public interface CardRepository extends JpaRepository<SHCardTransaction, Long> {
+    List<SHCardTransaction> findAllByDeleted(boolean deleted);
 
-    CardTransaction save(CardTransaction dto);
+    SHCardTransaction save(SHCardTransaction dto);
 
     @Transactional
     @Modifying
-    @Query("UPDATE CardTransaction c SET c.deleted = true WHERE c.id = :id")
+    @Query("UPDATE SHCardTransaction c SET c.deleted = true WHERE c.id = :id")
     int updateDeletedById(@Param("id") Long id);
 
     @Query(value = "CALL getUsageTypeCurrencyStats()", nativeQuery = true)

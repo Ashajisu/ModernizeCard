@@ -8,9 +8,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "card_transactions")
+@Table(name = "SHcard")
 @Data
-public class CardTransaction {
+public class SHCardTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class CardTransaction {
     @Column(name = "approval_number")
     private String approvalNumber;
 
-    @Column(name = "amount", precision = 15, scale = 2)
-    private Integer amount;
+    @Column(name = "amount")
+    private Long amount;
 
     @Column(name = "purchase_type")
     private String purchaseType;
@@ -43,7 +43,7 @@ public class CardTransaction {
     private String usageType;
 
     @Column(name = "currency")
-    private String currency;
+    private Long currency;
 
     @Column(name = "payment_date")
     @JsonDeserialize(using = MultiDateTimeDeserializer.class)
