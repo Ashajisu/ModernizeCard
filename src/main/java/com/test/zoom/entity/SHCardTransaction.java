@@ -8,9 +8,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "SHcard")
+@Table(name = "shin_han_card")
 @Data
-public class SHCardTransaction {
+public class SHCardTransaction implements BaseCardTransaction{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

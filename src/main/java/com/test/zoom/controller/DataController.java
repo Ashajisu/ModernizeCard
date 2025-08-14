@@ -3,8 +3,7 @@ package com.test.zoom.controller;
 import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.SHCardTransaction;
 
-import com.test.zoom.repository.CardRepository;
-
+import com.test.zoom.repository.SHCardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -23,26 +22,26 @@ import java.util.Map;
 public class DataController {
 
     @Autowired
-    private CardRepository cardRepository;
+    private SHCardRepository ShinHanCardR;
 
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
     public ResponseEntity<Map <String, List<SHCardTransaction>>> getCardTransactionList() {
-        List<SHCardTransaction> list = cardRepository.findAllByDeleted(false);
+        List<SHCardTransaction> list = ShinHanCardR.findAllByDeleted(false);
         return ResponseEntity.ok(Map.of("list", list));
     }
 
     /**신규 카드내역을 저장합니다. **/
     @PostMapping("/save")
     public ResponseEntity<SHCardTransaction> saveTransaction(@RequestBody SHCardTransaction dto) {
-        SHCardTransaction saved = cardRepository.save(dto);
+        SHCardTransaction saved = ShinHanCardR.save(dto);
         return ResponseEntity.ok(saved);
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
     @PostMapping("/delete")
     public ResponseEntity<SHCardTransaction> deleteTransaction(@RequestBody SHCardTransaction dto) {
-        int deletedCnt = cardRepository.updateDeletedById(dto.getId());
+        int deletedCnt = ShinHanCardR.markDeleted(dto.getId());
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -55,14 +54,14 @@ public class DataController {
         //엑셀 역순으로 저장.
         List<SHCardTransaction> reversedList = new ArrayList<>(dto);
         Collections.reverse(reversedList);
-        List<SHCardTransaction> saved = cardRepository.saveAll(reversedList);
+        List<SHCardTransaction> saved = ShinHanCardR.saveAll(reversedList);
         return ResponseEntity.ok(saved);
     }
 
     /**이용구분별 통계를 조회합니다. **/
     @GetMapping("/usageTypeStats")
     public ResponseEntity<Map <String, List<StatsProcedure>>> getUsageTypeCurrencyStats() {
-        List<StatsProcedure> stats = cardRepository.getUsageTypeCurrencyStats();
+        List<StatsProcedure> stats = ShinHanCardR.getSHUsageTypeCurrencyStats();
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
