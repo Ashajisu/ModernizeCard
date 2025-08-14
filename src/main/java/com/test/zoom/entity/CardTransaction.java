@@ -1,9 +1,11 @@
 package com.test.zoom.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.test.zoom.service.MultiDateTimeDeserializer;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "card_transactions")
@@ -15,7 +17,9 @@ public class CardTransaction {
     private Long id;
 
     @Column(name = "transaction_date", nullable = false)
-    private LocalDate transactionDate;
+    @JsonDeserialize(using = MultiDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime transactionDate;
 
     @Column(name = "card_type")
     private String cardType;
@@ -42,7 +46,9 @@ public class CardTransaction {
     private String currency;
 
     @Column(name = "payment_date")
-    private LocalDate paymentDate;
+    @JsonDeserialize(using = MultiDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime paymentDate;
 
     @Column(name = "deleted")
     private boolean deleted;
