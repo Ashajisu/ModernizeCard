@@ -73,7 +73,7 @@ onMounted(async () => {
         const response = await apiClient.get('/card/list/samsung');
         setUsers(response.list);
         if (response.list) {
-            const response = await apiClient.get('/card/usageTypeStats');
+            const response = await apiClient.get('/card/usageTypeStats/samsung');
             setStats(response.list);
         }
     } catch (e) {
