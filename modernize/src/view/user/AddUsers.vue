@@ -7,6 +7,7 @@ import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksF
 import { useTableManager } from '@/common/useTableManager';
 import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 import { apiClient } from '@/data/Axios';
+import { formatMoney, saveToServer } from '@/utils/common';
 
 //검색
 const formFields = ref<FormField[]>([
@@ -85,61 +86,12 @@ onMounted(async () => {
 const identifierField: string = 'id';
 const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, edit, handleEdit, onNew, onSave, onDelete, onExcelSave } =
     useTableManager<SHCardItem>(users, formFields, userFields, identifierField);
-
-function formatMoney(value: any) {
-    if (value === null || value === undefined || value === '') return '';
-    const number = parseInt(value.toString().replace(/[^0-9\-]/g, ''));
-    const result = isNaN(number) ? '' : number.toLocaleString(); // 12,345 형식
-    return result;
-}
-
-const saveToServer = async (validateForm: any) => {
-    const formData = await validateForm();
-    try {
-        const response = await apiClient.post('/card/save', formData);
-        console.log('서버 저장:', response);
-        return response;
-    } catch (error) {
-        console.error('서버 저장 실패:', error);
-        throw error;
-    }
-};
-
-const deleteToServer = async (id: string) => {
-    try {
-        const response = await apiClient.post('/card/delete', { id : id});
-        if (response.status === 200) {
-            console.log('서버 삭제:', response);
-            return id;
-        }
-    } catch (error) {
-        console.error('서버 저장 실패:', error);
-        throw error;
-    }
-};
-
-const excelSaveToServer = async (data: any) => {
-    const list = Array.isArray(data) ? data : [data];
-    try {
-        const response = await apiClient.post('/card/saveList', list);
-        console.log('excel 서버 저장:');
-        return response;
-    } catch (error) {
-        console.error('excel 서버 저장 실패:', error);
-        throw error;
-    }
-};
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
     <v-row>
         <v-col cols="12" md="12">
             <UiParentCard title="신한카드">
-                <!--                <v-row>-->
-                <!--                    <v-btn @click="setUsers(users.slice(0, 2))">test</v-btn>-->
-                <!--                    <p>{{ JSON.stringify(users) }}</p>-->
-                <!--                    <p>{{ JSON.stringify(filteredList) }}</p>-->
-                <!--                </v-row>-->
                 <v-row>
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
@@ -156,7 +108,7 @@ const excelSaveToServer = async (data: any) => {
                             <v-btn flat color="primary" variant="outlined" @click="onNew"
                                 ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록
                             </v-btn>
-                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], deleteToServer)"
+                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/card/delete')"
                                 ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제
                             </v-btn>
                         </div>
@@ -164,7 +116,7 @@ const excelSaveToServer = async (data: any) => {
                     <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                            <ExcelUploadDialogBtn :save="onExcelSave" :db="excelSaveToServer" title="엑셀 업로드" />
+                            <ExcelUploadDialogBtn :save="onExcelSave" :url="'/card/saveList'" title="엑셀 업로드" />
                         </div>
                     </v-col>
                 </v-row>
@@ -205,9 +157,9 @@ const excelSaveToServer = async (data: any) => {
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm))"
-                                            >저장</v-btn
-                                        >
+                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save'))">
+                                            저장
+                                        </v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -223,24 +175,16 @@ const excelSaveToServer = async (data: any) => {
                         :items="stats"
                         class="border rounded-md"
                     >
-                        <!-- amount 컬럼 커스텀 렌더링 -->
-                        <template #item.stat1="{ item }">
-                            {{ formatMoney(item.stat1) }}
-                        </template>
-                        <template #item.stat2="{ item }">
-                            {{ formatMoney(item.stat2) }}
-                        </template>
-                        <template #item.stat3="{ item }">
-                            {{ formatMoney(item.stat3) }}
-                        </template>
-                        <template #item.stat4="{ item }">
-                            {{ formatMoney(item.stat4) }}
-                        </template>
-                        <template #item.stat5="{ item }">
-                            {{ formatMoney(item.stat5) }}
-                        </template>
-                        <template #item.stat6="{ item }">
-                            {{ formatMoney(item.stat6) }}
+                        <template #item="{ item }">
+                            <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat5) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat6) }}</td>
+                            </tr>
                         </template>
                     </v-data-table>
                 </v-row>
