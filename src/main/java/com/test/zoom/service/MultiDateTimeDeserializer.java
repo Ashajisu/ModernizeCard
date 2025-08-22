@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.Locale;
 
 @NoArgsConstructor
@@ -21,7 +23,12 @@ public class MultiDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
             DateTimeFormatter.ofPattern("yyyy.MM.dd'T'HH:mm", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.ENGLISH)
+            DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.ENGLISH),
+            new DateTimeFormatterBuilder().appendPattern("yyyyMMdd")
+                    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                    .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                    .toFormatter()
     };
 
     @Override

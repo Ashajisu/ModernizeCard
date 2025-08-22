@@ -29,6 +29,7 @@ public class DataController {
     @Autowired
     private SSCardRepository SamSungCardR;
 
+    /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
     public ResponseEntity<Map <String, List<SHCardTransaction>>> getCardTransactionList() {
@@ -71,12 +72,19 @@ public class DataController {
         return ResponseEntity.ok(Map.of("list", stats));
     }
 
-    ///
+    /// samsung : SS
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list/samsung")
     public ResponseEntity<Map <String, List<SSCardTransaction>>> getSSCardTransactionList() {
         List<SSCardTransaction> list = SamSungCardR.findAllByDeleted(false);
         return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save/samsung")
+    public ResponseEntity<SSCardTransaction> saveSSTransaction(@RequestBody SSCardTransaction dto) {
+        SSCardTransaction saved = SamSungCardR.save(dto);
+        return ResponseEntity.ok(saved);
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
@@ -92,10 +100,7 @@ public class DataController {
     /**카드내역 목록을 저장합니다. **/
     @PostMapping("/saveList/samsung")
     public ResponseEntity<List<SSCardTransaction>> saveSSTransaction(@RequestBody List<SSCardTransaction> dto) {
-        //엑셀 역순으로 저장.
-        List<SSCardTransaction> reversedList = new ArrayList<>(dto);
-        Collections.reverse(reversedList);
-        List<SSCardTransaction> saved = SamSungCardR.saveAll(reversedList);
+        List<SSCardTransaction> saved = SamSungCardR.saveAll(dto);
         return ResponseEntity.ok(saved);
     }
 
