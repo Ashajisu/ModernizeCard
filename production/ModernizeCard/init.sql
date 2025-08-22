@@ -132,7 +132,7 @@ FROM (
              SUM(CASE WHEN purchase_type = '정산' THEN currency ELSE 0 END) AS stat4,
              SUM(CASE WHEN purchase_type = '예정' THEN currency ELSE 0 END) AS stat5,
              SUM(currency) AS stat6
-         FROM shin_han_card, (SELECT @rownum := 0) r
+         FROM shinhan_card, (SELECT @rownum := 0) r
          WHERE usage_type != '승인취소'
          GROUP BY usage_type
 
@@ -146,7 +146,7 @@ FROM (
              SUM(CASE WHEN purchase_type = '정산' THEN currency ELSE 0 END) AS stat4,
              SUM(CASE WHEN purchase_type = '예정' THEN currency ELSE 0 END) AS stat5,
              SUM(currency) AS stat6
-         FROM shin_han_card
+         FROM shinhan_card
          WHERE usage_type != '승인취소') t
 ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
 END;
@@ -167,7 +167,7 @@ FROM (SELECT usage_type                 AS title,
           SUM(benefit_amount)        AS stat2, #할인
                  SUM(currency)              AS stat3, #거래통화
                  SUM(balance_after_deposit) AS stat4  #정산후
-      FROM sam_sung_card
+      FROM samsung_card
       WHERE usage_type IS NOT NULL
       GROUP BY usage_type
 
@@ -179,7 +179,7 @@ FROM (SELECT usage_type                 AS title,
           SUM(benefit_amount)        AS stat2,
           SUM(currency)              AS stat3,
           SUM(balance_after_deposit) AS stat4
-      FROM sam_sung_card
+      FROM samsung_card
       WHERE usage_type IS NOT NULL)t
 ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
 END;
