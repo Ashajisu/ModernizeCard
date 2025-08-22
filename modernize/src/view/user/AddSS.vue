@@ -44,7 +44,7 @@ const userFields = ref<FormField[]>([
     { label: '혜택금액', name: 'benefitAmount', type: 'text', value: '', placeholder: '0,000', required: true, disabled: false },
     { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
     { label: '결제일', name: 'paymentDate', type: 'datetime', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false },
-    { label: '총할부금액', name: 'InstallmentTotal', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
+    { label: '총할부금액', name: 'installmentTotal', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
     { label: '할부 개월', name: 'installmentMonths', type: 'number', value: '', placeholder: '0', required: false, disabled: false },
     { label: '할부 회차', name: 'installmentNumber', type: 'number', value: '', placeholder: '0', required: false, disabled: false }
 ]);
