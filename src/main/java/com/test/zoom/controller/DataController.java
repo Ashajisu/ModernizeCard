@@ -1,5 +1,6 @@
 package com.test.zoom.controller;
 
+import com.test.zoom.dto.Search;
 import com.test.zoom.entity.SSCardTransaction;
 import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.SHCardTransaction;
@@ -105,9 +106,9 @@ public class DataController {
     }
 
     /**이용구분별 통계를 조회합니다. **/
-    @GetMapping("/usageTypeStats/samsung")
-    public ResponseEntity<Map <String, List<StatsProcedure>>> getSSUsageTypeCurrencyStats() {
-        List<StatsProcedure> stats = SamSungCardR.getSSUsageTypeCurrencyStats();
+    @PostMapping("/usageTypeStats/samsung")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getSSUsageTypeCurrencyStats(@RequestBody Search search) {
+        List<StatsProcedure> stats = SamSungCardR.getSSUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }

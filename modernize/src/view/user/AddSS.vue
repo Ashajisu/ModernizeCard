@@ -7,12 +7,12 @@ import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksF
 import { useTableManager } from '@/common/useTableManager';
 import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 import { apiClient } from '@/data/Axios';
-import {formatMoney, saveToServer} from '@/utils/common';
+import { formatMoney, saveToServer } from '@/utils/common';
 
 //검색
 const formFields = ref<FormField[]>([
-    { label: '이용구분', name: 'usageType', type: 'select', value: '', options: ["엄지혜","엄지수","임준영"], required: false, disabled: false },
-    { label: '매입구분', name: 'purchaseType', type: 'select', value: '', options: ['결제확정','정산','예정','승인취소'], required: false, disabled: false },
+    { label: '이용구분', name: 'usageType', type: 'text', value: '', required: false, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
     { label: '거래일', name: 'transactionDate', type: 'date', value: '', required: false, disabled: false },
     { label: '결제일', name: 'paymentDate', type: 'date', value: '', required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false }
@@ -55,7 +55,7 @@ const statHeaders = ref<any[]>([
     { title: '금액', align: 'center', key: 'stat1' },
     { title: '할인', align: 'center', key: 'stat2' },
     { title: '결제확정', align: 'center', key: 'stat3' },
-    { title: '정산', align: 'center', key: 'stat4' }
+    { title: '할부잔액', align: 'center', key: 'stat4' }
 ]);
 
 const setUsers = (userList: SSCardItem[]) => {
@@ -75,7 +75,11 @@ onMounted(async () => {
         const response = await apiClient.get('/card/list/samsung');
         setUsers(response.list);
         if (response.list) {
-            const response = await apiClient.get('/card/usageTypeStats/samsung');
+            const response = await apiClient.post('/card/usageTypeStats/samsung', {
+                // startDate: '2025-08-01',
+                // endDate: '2025-08-31',
+                payDate: '2025-08-13'
+            });
             setStats(response.list);
         }
     } catch (e) {
@@ -158,9 +162,9 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save'))"
-                                            >저장</v-btn
-                                        >
+                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))">
+                                            저장
+                                        </v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -170,30 +174,17 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
             </UiParentCard>
             <UiParentCard>
                 <v-row>
-                    <v-data-table
-                        hide-default-footer
-                        :headers="statHeaders"
-                        :items="stats"
-                        class="border rounded-md"
-                    >
-                        <!-- amount 컬럼 커스텀 렌더링 -->
-                        <template #item.stat1="{ item }">
-                            {{ formatMoney(item.stat1) }}
-                        </template>
-                        <template #item.stat2="{ item }">
-                            {{ formatMoney(item.stat2) }}
-                        </template>
-                        <template #item.stat3="{ item }">
-                            {{ formatMoney(item.stat3) }}
-                        </template>
-                        <template #item.stat4="{ item }">
-                            {{ formatMoney(item.stat4) }}
-                        </template>
-                        <template #item.stat5="{ item }">
-                            {{ formatMoney(item.stat5) }}
-                        </template>
-                        <template #item.stat6="{ item }">
-                            {{ formatMoney(item.stat6) }}
+                    <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md">
+                        <template #item="{ item }">
+                            <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat5) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat6) }}</td>
+                            </tr>
                         </template>
                     </v-data-table>
                 </v-row>
