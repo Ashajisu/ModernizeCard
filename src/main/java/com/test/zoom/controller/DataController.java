@@ -7,6 +7,7 @@ import com.test.zoom.entity.SHCardTransaction;
 
 import com.test.zoom.repository.SHCardRepository;
 import com.test.zoom.repository.SSCardRepository;
+import com.test.zoom.repository.TotalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -29,6 +30,9 @@ public class DataController {
 
     @Autowired
     private SSCardRepository SamSungCardR;
+
+    @Autowired
+    private TotalRepository totalRepository;
 
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
@@ -110,6 +114,14 @@ public class DataController {
     public ResponseEntity<Map <String, List<StatsProcedure>>> getSSUsageTypeCurrencyStats(@RequestBody Search search) {
         List<StatsProcedure> stats = SamSungCardR.getSSUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
         System.out.println(stats);
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    /// 차트통계
+    @GetMapping("/dash/chart1")
+    public ResponseEntity<Map<String,String>> getDashChart1() {
+        String stats = totalRepository.getChart1UsageTypeCurrencyStats();
+        System.out.println(stats); //json 형태
         return ResponseEntity.ok(Map.of("list", stats));
     }
 }

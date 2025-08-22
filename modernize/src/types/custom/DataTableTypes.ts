@@ -3,6 +3,12 @@ type searchDialogType = {
     sub: object;
 };
 
+export type usageChart = {
+    lable: string;
+    cost: string;
+    ratio: string;
+};
+
 export type StatsItem = {
     id: string;
     title: string;

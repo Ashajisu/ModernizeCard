@@ -12,7 +12,7 @@ const UserRoutes : RouteRecordRaw = {
         {
             name: 'Dashboard',
             path: '/home/dashboard',
-            component: () => import('@/view/home/dashboard.vue')
+            component: () => import('@/view/home/chartDashboard.vue')
         },
         // 사용자 화면: 상대경로
         {
