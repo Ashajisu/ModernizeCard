@@ -181,12 +181,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn
-                                            flat
-                                            color="primary"
-                                            variant="outlined"
-                                            @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))"
-                                        >
+                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))" >
                                             저장
                                         </v-btn>
                                     </div>
