@@ -8,6 +8,7 @@ import { useTableManager } from '@/common/useTableManager';
 import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 import { apiClient } from '@/data/Axios';
 import { formatMoney, saveToServer } from '@/utils/common';
+import { format } from 'date-fns';
 
 //검색
 const formFields = ref<FormField[]>([
@@ -37,18 +38,25 @@ const userFields = ref<FormField[]>([
     { label: '거래일', name: 'transactionDate', type: 'datetime', value: '', required: true, disabled: false },
     { label: '이용카드', name: 'usedCard', type: 'text', value: '', placeholder: '본인509*', required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: false, disabled: false },
-    { label: '금액', name: 'amount', type: 'text', value: '', placeholder: '금액 입력', required: false, disabled: false },
-    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: true, disabled: false },
+    { label: '금액', name: 'amount', type: 'text', value: '', placeholder: '금액 입력', required: true, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: false, disabled: false },
     { label: '이용구분', name: 'usageType', type: 'text', value: '', placeholder: '사용자명 입력', required: true, disabled: false },
-    { label: '이용혜택', name: 'benefitType', type: 'text', value: '', placeholder: '사용자명 입력', required: true, disabled: false },
-    { label: '혜택금액', name: 'benefitAmount', type: 'text', value: '', placeholder: '0,000', required: true, disabled: false },
-    { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
+    { label: '이용혜택', name: 'benefitType', type: 'text', value: '', placeholder: '사용자명 입력', required: false, disabled: false },
+    { label: '혜택금액', name: 'benefitAmount', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
+    { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: true, disabled: false },
     { label: '결제일', name: 'paymentDate', type: 'datetime', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false },
     { label: '총할부금액', name: 'installmentTotal', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
     { label: '할부 개월', name: 'installmentMonths', type: 'number', value: '', placeholder: '0', required: false, disabled: false },
     { label: '할부 회차', name: 'installmentNumber', type: 'number', value: '', placeholder: '0', required: false, disabled: false }
 ]);
 
+//집계 검색
+const payDate = format(new Date().setDate(13), 'yyyy-MM-dd'); // 매월 결제일 13일 가정.
+const statFormFields = ref<FormField[]>([
+    // { label: '거래시작일', name: 'startDate', type: 'date', value: '', required: false, disabled: false },
+    // { label: '거래종료일', name: 'endDate', type: 'date', value: '', required: false, disabled: false },
+    { label: '결제일', name: 'payDate', type: 'date', value: payDate, required: false, disabled: false }
+]);
 //집계 테이블헤더
 const statHeaders = ref<any[]>([
     { title: '이용구분', align: 'center', key: 'title' },
@@ -75,17 +83,25 @@ onMounted(async () => {
         const response = await apiClient.get('/card/list/samsung');
         setUsers(response.list);
         if (response.list) {
-            const response = await apiClient.post('/card/usageTypeStats/samsung', {
-                // startDate: '2025-08-01',
-                // endDate: '2025-08-31',
-                payDate: '2025-08-13'
-            });
+            const response = await apiClient.post('/card/usageTypeStats/samsung', { payDate });
             setStats(response.list);
         }
     } catch (e) {
         console.error('데이터 로드 중 오류 발생:', e);
     }
 });
+
+const onSearchStats = async (validateForm: any) => {
+    const formData = await validateForm();
+    //빈문자열 제거
+    for (const key in formData) {
+        if (formData[key] === '') {
+            delete formData[key];
+        }
+    }
+    const response = await apiClient.post('/card/usageTypeStats/samsung', formData);
+    setStats(response.list);
+};
 // `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
 //모듈 호출 : 기존코드 동일
 const identifierField: string = 'id';
@@ -144,6 +160,9 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                         <template #item.currency="{ item }">
                             {{ formatMoney(item.currency) }}
                         </template>
+                        <template #item.benefitAmount="{ item }">
+                            {{ formatMoney(item.benefitAmount) }}
+                        </template>
                     </v-data-table>
                 </v-row>
             </UiParentCard>
@@ -162,7 +181,12 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                                 </v-col>
                                 <v-col cols="7">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))">
+                                        <v-btn
+                                            flat
+                                            color="primary"
+                                            variant="outlined"
+                                            @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))"
+                                        >
                                             저장
                                         </v-btn>
                                     </div>
@@ -174,6 +198,15 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
             </UiParentCard>
             <UiParentCard>
                 <v-row>
+                    <CustomSearchChecksForm :formFields="statFormFields" :colsPerRow="5" :edit="true" :hide-details="true">
+                        <template v-slot:lineBtn="{ validateForm }">
+                            <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                                <v-btn color="primary" flat @click="onSearchStats(validateForm)">조회</v-btn>
+                            </div>
+                        </template>
+                    </CustomSearchChecksForm>
+                </v-row>
+                <v-row>
                     <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md">
                         <template #item="{ item }">
                             <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
@@ -182,8 +215,6 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat5) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat6) }}</td>
                             </tr>
                         </template>
                     </v-data-table>
