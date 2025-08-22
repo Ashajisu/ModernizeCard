@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "shin_han_card")
+@Table(name = "shinhan_card")
 @Data
 public class SHCardTransaction implements BaseCardTransaction{
 

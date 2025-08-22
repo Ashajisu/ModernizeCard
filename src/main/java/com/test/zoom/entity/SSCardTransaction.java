@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "sam_sung_card")
+@Table(name = "samsung_card")
 public class SSCardTransaction implements BaseCardTransaction{
 
     @Id
@@ -54,7 +54,7 @@ public class SSCardTransaction implements BaseCardTransaction{
 
     // 혜택금액
     @Column(name = "benefit_amount")
-    private String benefitAmount;
+    private Long benefitAmount;
 
     // 할부 개월
     @Column(name = "installment_months")

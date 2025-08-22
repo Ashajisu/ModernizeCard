@@ -17,7 +17,7 @@ create table categorys
     cat_b varchar(20) null
 );
 
-create table sam_sung_card
+create table samsung_card
 (
     id                    bigint auto_increment
         primary key,
@@ -39,7 +39,7 @@ create table sam_sung_card
 )
     charset = utf8mb4;
 
-create table shin_han_card
+create table shinhan_card
 (
     id               int auto_increment
         primary key,
