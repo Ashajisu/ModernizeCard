@@ -16,9 +16,9 @@ const UserRoutes : RouteRecordRaw = {
         },
         // 사용자 화면: 상대경로
         {
-            name: '사용자',
+            name: '신한카드',
             path: 'profile',
-            component: () => import('@/view/user/AddUsers.vue')
+            component: () => import('@/view/user/AddSH.vue')
         },
         {
             name: '삼성카드',
