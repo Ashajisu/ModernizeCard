@@ -30,7 +30,8 @@ export default defineConfig({
         // 경로에서 '/api' 제거
         rewrite: (path) => path.replace(/^\/api/, '')
       }
-    }
+    },
+      allowedHosts: ['localhost','ashajisu.iptime.org']
   },
   build: {
     outDir : '../src/main/resources/static',

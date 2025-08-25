@@ -18,12 +18,18 @@ export const useAuthStore = defineStore({
     actions: {
         async login(username: string, password: string) {
 
-            const user = await fetchWrapper.post(`${baseUrl}/users/authenticate`, { username, password });
+            const user = {
+                id: 1,
+                username: username,
+                firstName: 'firstName',
+                lastName: 'lastName',
+                token: 'fake-jwt-token'
+            };
             // update pinia state
             this.user = user;
 
             //test JWT
-            await apiClient.post(`${baseUrl}/auth/login`, { username, password }).then( response => {
+            await apiClient.post(`/auth/login`, { username, password }).then( response => {
                 console.log(response);
                 const token = response?.token; // JWT 토큰 추출
                 if (token) {
