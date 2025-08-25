@@ -160,6 +160,14 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                         <template #item.benefitAmount="{ item }">
                             {{ formatMoney(item.benefitAmount) }}
                         </template>
+
+                        <!-- date 컬럼 커스텀 렌더링 -->
+                        <template #item.transactionDate="{ item }">
+                            {{ item.transactionDate.substring(0, 10) }}
+                        </template>
+                        <template #item.paymentDate="{ item }">
+                            {{ item.paymentDate.substring(0, 10) }}
+                        </template>
                     </v-data-table>
                 </v-row>
             </UiParentCard>
