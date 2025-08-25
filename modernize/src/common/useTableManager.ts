@@ -168,7 +168,7 @@ export function useTableManager<T extends Record<string, any>>(
 
     // ✅ 체크박스 선택 변경
     const onSelectionChange = () => {
-        console.log("onSelectionChange", selectedEmpId.value);
+        // console.log("onSelectionChange", selectedEmpId.value);
         if (selectedEmpId.value.length > 0 && detailFields) {
             updateUserFields(selectedEmpId.value[0]);
         }

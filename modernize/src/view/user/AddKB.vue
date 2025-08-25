@@ -65,11 +65,11 @@ const statHeaders = ref<any[]>([
 
 const setUsers = (userList: SSCardItem[]) => {
     users.value = userList;
-    console.log('사용자 데이터:', users.value);
+    // console.log('사용자 데이터:', users.value);
 };
 const setStats = (statList: StatsItem[]) => {
     stats.value = statList;
-    console.log('집계 데이터:', stats.value);
+    // console.log('집계 데이터:', stats.value);
 };
 // mockApi 로 데이터 불러오기.
 const users = ref<SSCardItem[]>([]); // 사용자 데이터를 저장할 변수

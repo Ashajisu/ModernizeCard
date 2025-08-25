@@ -11,7 +11,7 @@ const saveToServer = async (validateForm: any, url: string) => {
     const formData = await validateForm();
     try {
         const response = await apiClient.post(url, formData);
-        console.log('서버 저장:', response);
+        // console.log('서버 저장:', response);
         return response;
     } catch (error) {
         console.error('서버 저장 실패:', error);
@@ -23,7 +23,7 @@ const deleteToServer = async (id: string, url: string) => {
     try {
         const response = await apiClient.post(url, { id : id});
         if (response.status === 200) {
-            console.log('서버 삭제:', response);
+            // console.log('서버 삭제:', response);
             return id;
         }
     } catch (error) {
