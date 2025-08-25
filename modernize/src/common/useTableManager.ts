@@ -85,7 +85,14 @@ export function useTableManager<T extends Record<string, any>>(
     // ✅ 검색 초기화
     const resetSearch = () => {
         formFields.value.forEach(field => {
-            field.value='';
+            if (field.type === 'due') {
+                // DateRange 필드는 객체 형태로 초기화
+                field.value = { startDate: '', endDate: '' };
+            } else if (Array.isArray(field.value)) {
+                field.value = []; // 체크박스/멀티 선택 필드 초기화
+            } else {
+                field.value = ''; // 문자열, 기타 필드 초기화
+            }
         });
         search.value = {};
     };
@@ -94,11 +101,21 @@ export function useTableManager<T extends Record<string, any>>(
     const filteredList = computed(() => {
         if (!search.value) return tableList.value;
 
+        // 전체 값이 비어있으면 그대로 반환
         let isAllEmpty = true;
         for (const key in search.value) {
-            if (search.value[key] !== "") {
-                isAllEmpty = false;
-                break;
+            const v = search.value[key];
+            if (v !== "" && v !== null && v !== undefined) {
+                if (Array.isArray(v) && v.length === 0) continue;
+                if (typeof v === "object" && "startDate" in v && "endDate" in v) {
+                    if (v.startDate || v.endDate) {
+                        isAllEmpty = false;
+                        break;
+                    }
+                } else {
+                    isAllEmpty = false;
+                    break;
+                }
             }
         }
         if (isAllEmpty) return tableList.value;
@@ -108,11 +125,40 @@ export function useTableManager<T extends Record<string, any>>(
                 const searchVal = search.value[key];
                 const itemVal = item[key];
 
-                if (Array.isArray(searchVal)) {
-                    return searchVal.length === 0 || itemVal && searchVal.some((val: string) => String(itemVal).toLowerCase() === val.toLowerCase());
-                } else {
-                    return !searchVal || itemVal && String(itemVal).toLowerCase().includes(searchVal.toLowerCase());
+                // ① DateRange 검색
+                if (searchVal && typeof searchVal === "object" && "startDate" in searchVal && "endDate" in searchVal) {
+                    const { startDate, endDate } = searchVal;
+                    if (!itemVal) return false;
+
+                    const itemDate = new Date(itemVal);
+                    if (startDate && itemDate < new Date(startDate)) return false;
+                    if (endDate && itemDate > new Date(endDate)) return false;
+                    return true;
                 }
+
+                // ② 배열 검색
+                if (Array.isArray(searchVal)) {
+                    return (
+                        searchVal.length === 0 ||
+                        (itemVal &&
+                            searchVal.some(
+                                (val: string) =>
+                                    String(itemVal).toLowerCase() === val.toLowerCase()
+                            ))
+                    );
+                }
+
+                // ③ 문자열 검색
+                if (typeof searchVal === "string") {
+                    return (
+                        !searchVal ||
+                        (itemVal &&
+                            String(itemVal).toLowerCase().includes(searchVal.toLowerCase()))
+                    );
+                }
+
+                // ④ boolean / Date 등 나머지 타입
+                return !searchVal || itemVal === searchVal;
             })
         );
     });
