@@ -17,7 +17,7 @@ import { paymentGateways } from '@/_mockApis/components/dashboard/ecommerceData'
                     </div>
                     <div :class="'ml-auto font-weight-bold text-subtitle-1 text-medium-' + list.disable">{{ list.rank }}</div>
                 </div>
-                <v-btn class="mt-sm-15 mt-10" block variant="outlined" color="primary">View all transactions</v-btn>
+                <v-btn class="mt-sm-15 mt-10" block variant="outlined" color="primary" href="/user/usage">View all transactions</v-btn>
             </div>
         </v-card-item>
     </v-card>

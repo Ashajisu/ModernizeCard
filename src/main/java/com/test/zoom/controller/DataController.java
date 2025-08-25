@@ -1,6 +1,7 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.dto.Search;
+import com.test.zoom.entity.UsageTransaction;
 import com.test.zoom.entity.*;
 
 import com.test.zoom.repository.*;
@@ -33,6 +34,9 @@ public class DataController {
 
     @Autowired
     private KBCardRepository kbCardR;
+
+    @Autowired
+    private UsageRepository usageR;
 
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
@@ -122,6 +126,20 @@ public class DataController {
     public ResponseEntity<Map<String,String>> getDashChart1() {
         String stats = totalRepository.getChart1UsageTypeCurrencyStats();
         System.out.println(stats); //json 형태
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    /**사용자의 모든 지출내역을 나열합니다. **/
+    @GetMapping("/list/usage")
+    public ResponseEntity<Map <String, List<UsageTransaction>>> getUsageTransactionList() {
+        List<UsageTransaction> list = usageR.findAll();
+        return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @PostMapping("/usageTypeStats/usage")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getAllUsageTypeCurrencyStatsDate(@RequestBody Search search) {
+        List<StatsProcedure> stats = usageR.getAllUsageTypeCurrencyStatsDate(search.getStartDate(), search.getEndDate());
         return ResponseEntity.ok(Map.of("list", stats));
     }
 

@@ -112,6 +112,11 @@ const sidebarItem: menu[] = [
         to: '/user/kookmin'
     },
     {
+        title: '지출전체',
+        icon: UserPlusIcon,
+        to: '/user/usage'
+    },
+    {
         title: '조직',
         icon: AddressBookIcon,
         to: '/user/organization',

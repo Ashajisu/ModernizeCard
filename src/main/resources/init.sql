@@ -153,48 +153,6 @@ where `hab2`.`shinhan_card`.`deleted` = 0
   and `hab2`.`shinhan_card`.`purchase_type` = '결제확정';
 
 create
-definer = arisys@`%` procedure getAllUsedTypeCurrencyStatsDate(IN start_date date, IN end_date date)
-BEGIN
-    SET @rownum := 0;
-SELECT (@rownum := @rownum + 1) AS id, title,
-       COALESCE(stat1,0) as stat1,
-       COALESCE(stat2,0) as stat2,
-       COALESCE(stat3,0) as stat3,
-       COALESCE(stat4,0) as stat4,
-       COALESCE(stat5,0) as stat5,
-       COALESCE(stat6,0) as stat6
-FROM (
-         SELECT
-             '차량' AS title,
-             SUM(amount) AS stat1,
-             -(SUM(amount) - SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END)) AS stat2,
-             SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END) AS stat3,
-             0 AS stat4,
-             0 AS stat5,
-             0 AS stat6
-         FROM shinhan_card, (SELECT @rownum := 0) r
-         WHERE usage_type = '엄지수'
-           and ((start_date IS NULL OR end_date IS NULL) OR ( transaction_date between start_date and end_date))
-         GROUP BY usage_type
-
-         UNION ALL
-
-         SELECT
-             '합계' AS title,
-             SUM(amount) AS stat1,
-             -(SUM(amount) - SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END)) AS stat2,
-             SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END) AS stat3,
-             0 AS stat4,
-             0 AS stat5,
-             0 AS stat6
-         FROM shinhan_card
-         WHERE usage_type = '엄지수'
-           and ((start_date IS NULL OR end_date IS NULL) OR ( transaction_date between start_date and end_date))
-     ) t
-ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
-END;
-
-create
 definer = arisys@`%` procedure getMonthlyStatsAll()
 BEGIN
     DECLARE v_now DATE;
@@ -415,4 +373,42 @@ FROM (SELECT usage_type                 AS title,
      )t
 ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
 END;
+
+create
+definer = arisys@`%` procedure getAllUsageTypeCurrencyStatsDate(IN start_date date, IN end_date date)
+BEGIN
+SELECT (@rownum := @rownum + 1) AS id,
+       title,
+       COALESCE(stat1, 0)       as stat1,
+       COALESCE(stat2, 0)       as stat2,
+       COALESCE(stat3, 0)       as stat3,
+       COALESCE(stat4, 0)       as stat4,
+       0                        as stat5,
+       0                        as stat6
+FROM (SELECT usage_type    AS title,
+             SUM(currency) AS stat1, #합계
+          SUM(CASE WHEN card_company = 'SAMSUNG' THEN currency ELSE 0 END) AS stat2,
+                 SUM(CASE WHEN card_company = 'KOOKMIN' THEN currency ELSE 0 END) AS stat3,
+                 SUM(CASE WHEN card_company = 'SHINHAN' THEN currency ELSE 0 END) AS stat4
+      FROM unified_card_view
+      WHERE usage_type IS NOT NULL
+        and ((start_date IS NULL OR end_date IS NULL) OR (transaction_date between start_date and end_date))
+      GROUP BY usage_type
+
+      UNION ALL
+
+      SELECT '합계'          AS title,
+          SUM(currency) AS stat1,
+          SUM(CASE WHEN card_company = 'SAMSUNG' THEN currency ELSE 0 END) AS stat2,
+          SUM(CASE WHEN card_company = 'KOOKMIN' THEN currency ELSE 0 END) AS stat3,
+          SUM(CASE WHEN card_company = 'SHINHAN' THEN currency ELSE 0 END) AS stat4
+      FROM unified_card_view
+      WHERE usage_type IS NOT NULL
+        and ((start_date IS NULL OR end_date IS NULL) OR (transaction_date between start_date and end_date)) )t
+ORDER BY
+    CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
+SET @rownum := 0;
+END;
+
+
 

@@ -31,6 +31,11 @@ const UserRoutes : RouteRecordRaw = {
             component: () => import('@/view/user/AddKB.vue')
         },
         {
+            name: '지출전체',
+            path: 'usage',
+            component: () => import('@/view/user/AddUsage.vue')
+        },
+        {
             name: '조직',
             path: 'organization',
             component: () => import('@/view/user/OrganizationM.vue')
