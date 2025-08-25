@@ -21,9 +21,9 @@ const formFields = ref<FormField[]>([
 ]);
 //테이블헤더
 const headers = ref<any[]>([
-    { title: 'No.', align: 'start', key: 'key.id' },
+    { title: 'No.', align: 'start', key: 'id' },
     { title: '거래일', align: 'start', key: 'transactionDate' },
-    { title: '이용카드', align: 'start', key: 'key.cardCompany' },
+    { title: '이용카드', align: 'start', key: 'cardCompany' },
     { title: '가맹점명', align: 'start', key: 'merchantName' },
     { title: '매입구분', align: 'center', key: 'purchaseType' },
     { title: '이용구분', align: 'center', key: 'usageType' },
@@ -31,8 +31,8 @@ const headers = ref<any[]>([
 ]);
 //상세정보
 const userFields = ref<FormField[]>([
-    { label: 'No.', name: 'key.id', type: 'hidden', value: '', required: true, disabled: true },
-    { label: '이용카드', name: 'cardCompany', type: 'select', value: '', options:['SAMSUNG','KOOKMIN','SHINHAN'], required: true, disabled: false },
+    { label: 'No.', name: 'id', type: 'hidden', value: '', required: true, disabled: true },
+    { label: '이용카드', name: 'cardCompany', type: 'select', value: '', options:['KOOKMIN','SAMSUNG','SHINHAN'], required: true, disabled: false },
     { label: '거래일', name: 'transactionDate', type: 'datetime', value: '', required: true, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: false, disabled: false },

@@ -8,20 +8,19 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@IdClass(UsageTransactionKey.class)
 @Data
 @Entity
 @Table(name = "unified_card_view")
 public class UsageTransaction{
 
-    @EmbeddedId
-    private UsageTransactionKey key;
+    @Id
+    @Column(name = "id")
+    private Long id;
 
-//    @Column(name = "id")
-//    private Long id;
-
-    // 지출종류
-//    @Column(name = "card_company")
-//    private String cardCompany;
+     // 지출종류
+    @Column(name = "card_company")
+    private String cardCompany;
 
     // 이용일 -> 거래일
     @Column(name = "transaction_date")
