@@ -91,7 +91,7 @@ const seriescolumnchart = [
                 </h6>
             </div>
             <apexchart class="pt-1 revenuechart" type="bar" height="320" :options="chartOptions" :series="seriescolumnchart"> </apexchart>
-            <v-row class="mt-12"><v-col></v-col></v-row>
+<!--            <v-row class="mt-13"><v-col></v-col></v-row>-->
         </v-card-item>
     </v-card>
 </template>

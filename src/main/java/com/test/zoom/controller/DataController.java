@@ -2,21 +2,21 @@ package com.test.zoom.controller;
 
 import com.test.zoom.dto.Search;
 import com.test.zoom.entity.SSCardTransaction;
+import com.test.zoom.entity.Schedule;
 import com.test.zoom.entity.StatsProcedure;
 import com.test.zoom.entity.SHCardTransaction;
 
 import com.test.zoom.repository.SHCardRepository;
 import com.test.zoom.repository.SSCardRepository;
+import com.test.zoom.repository.ScheduleRepository;
 import com.test.zoom.repository.TotalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 /**controller 어노테이션에 의해 스프링 빈으로 등록 되어야, 컴포넌트 스캔의 대상이 되어 value 어노테이션이 동작한다.**/
 @Slf4j
@@ -33,6 +33,9 @@ public class DataController {
 
     @Autowired
     private TotalRepository totalRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
@@ -123,5 +126,27 @@ public class DataController {
         String stats = totalRepository.getChart1UsageTypeCurrencyStats();
         System.out.println(stats); //json 형태
         return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    @GetMapping("/schedule/top6")
+    public ResponseEntity<Map <String, List<Schedule>>>getSchedule() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.minusDays(4);
+        LocalDate end   = today.plusDays(30);
+
+        List<Schedule> list = scheduleRepository.findAll();
+        List<Schedule> topList =  list.stream()
+                .filter(s -> {
+                    LocalDate d = s.getDate();
+                    return d != null && !d.isBefore(start) && !d.isAfter(end);
+                })
+                .sorted(Comparator.comparing(Schedule::getDate))
+                .limit(6)
+                .toList();
+
+        if (!topList.isEmpty()) {
+            topList.get(topList.size() - 1).setLine(false);
+        }
+        return ResponseEntity.ok(Map.of("list", topList));
     }
 }

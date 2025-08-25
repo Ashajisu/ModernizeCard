@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { CircleIcon } from 'vue-tabler-icons';
-import { recentTransaction } from '@/_mockApis/components/dashboard/ecommerceData';
+import type { recentTrans } from '@/types/dashboard';
+import apiClient from '@/data/Axios';
+
+// 권장 리스트 top6
+const schedule = ref<recentTrans[]>([]);
+onMounted(async () => {
+    try {
+        const response = await apiClient.get('/card/schedule/top6');
+        schedule.value = response.list;
+    } catch (e) {
+        console.error('데이터 로드 중 오류 발생:', e);
+    }
+});
 </script>
 <template>
     <v-card>
         <v-card-item>
             <v-card-title class="text-h5">Recent Transactions</v-card-title>
             <div class="recent-transaction mt-10 px-3">
-                <div v-for="list in recentTransaction" :key="list.title">
+                <div v-for="list in schedule" :key="list.title">
                     <v-row class="d-flex mb-4">
                         <v-col cols="4" lg="3" md="auto" sm="auto" class="px-0 pt-0 pb-1 d-flex align-start">
                             <h6 class="text-body-1 textSecondary text-no-wrap">{{ list.title }}</h6>
