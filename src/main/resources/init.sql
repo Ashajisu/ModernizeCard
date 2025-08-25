@@ -19,6 +19,25 @@ create table categorys
     cat_b varchar(20) null
 );
 
+create table kookmin_card
+(
+    id                    bigint auto_increment
+        primary key,
+    transaction_date      datetime             null,
+    used_card             varchar(100)         null,
+    usage_type            varchar(100)         null,
+    merchant_name         varchar(255)         null,
+    amount                bigint               null,
+    benefit_type          varchar(100)         null,
+    purchase_type         varchar(50)          null,
+    benefit_amount        bigint               null,
+    currency              bigint               null,
+    balance_after_deposit bigint               null,
+    payment_date          datetime             null,
+    deleted               tinyint(1) default 0 not null
+)
+    charset = utf8mb4;
+
 create table samsung_card
 (
     id                    bigint auto_increment
@@ -354,6 +373,42 @@ FROM (SELECT usage_type                 AS title,
           SUM(currency)              AS stat3,
           SUM(balance_after_deposit) AS stat4
       FROM samsung_card
+      WHERE usage_type IS NOT NULL
+        and ((start_date IS NULL OR end_date IS NULL) OR (transaction_date between start_date and end_date))
+        and ((pay_date IS NULL) OR (payment_date = pay_date))
+     )t
+ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
+END;
+
+create
+definer = arisys@`%` procedure getKBUsageTypeCurrencyStatsDate(IN start_date date, IN end_date date, IN pay_date date)
+BEGIN
+    SET @rownum := 0;
+SELECT (@rownum := @rownum + 1) AS id, title,
+       COALESCE(stat1,0) as stat1,
+       COALESCE(stat2,0) as stat2,
+       COALESCE(stat3,0) as stat3,
+       0 as stat4,
+       0 as stat5,
+       0 as stat6
+FROM (SELECT usage_type                 AS title,
+             SUM(amount)                AS stat1, #이용금액
+          SUM(benefit_amount)        AS stat2, #할인
+                 SUM(currency)              AS stat3 #거래통화
+      FROM kookmin_card
+      WHERE usage_type IS NOT NULL
+        and ((start_date IS NULL OR end_date IS NULL) OR ( transaction_date between start_date and end_date))
+        and ((pay_date IS NULL) OR (payment_date = pay_date))
+      GROUP BY usage_type
+
+      UNION ALL
+
+      SELECT
+          '합계'                       AS title,
+          SUM(amount)                AS stat1,
+          SUM(benefit_amount)        AS stat2,
+          SUM(currency)              AS stat3
+      FROM kookmin_card
       WHERE usage_type IS NOT NULL
         and ((start_date IS NULL OR end_date IS NULL) OR (transaction_date between start_date and end_date))
         and ((pay_date IS NULL) OR (payment_date = pay_date))

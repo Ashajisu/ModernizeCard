@@ -1,15 +1,9 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.dto.Search;
-import com.test.zoom.entity.SSCardTransaction;
-import com.test.zoom.entity.Schedule;
-import com.test.zoom.entity.StatsProcedure;
-import com.test.zoom.entity.SHCardTransaction;
+import com.test.zoom.entity.*;
 
-import com.test.zoom.repository.SHCardRepository;
-import com.test.zoom.repository.SSCardRepository;
-import com.test.zoom.repository.ScheduleRepository;
-import com.test.zoom.repository.TotalRepository;
+import com.test.zoom.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -36,6 +30,9 @@ public class DataController {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private KBCardRepository kbCardR;
 
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
@@ -148,5 +145,46 @@ public class DataController {
             topList.get(topList.size() - 1).setLine(false);
         }
         return ResponseEntity.ok(Map.of("list", topList));
+    }
+
+
+    /// kookmin : KB
+    /**사용자의 카드내역을 나열합니다. **/
+    @GetMapping("/list/kookmin")
+    public ResponseEntity<Map <String, List<KBCardTransaction>>> getKBCardTransactionList() {
+        List<KBCardTransaction> list = kbCardR.findAllByDeleted(false);
+        return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save/kookmin")
+    public ResponseEntity<KBCardTransaction> saveKBTransaction(@RequestBody KBCardTransaction dto) {
+        KBCardTransaction saved = kbCardR.save(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete/kookmin")
+    public ResponseEntity<KBCardTransaction> deleteKBTransaction(@RequestBody KBCardTransaction dto) {
+        int deletedCnt = kbCardR.markDeleted(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
+    }
+
+    /**카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList/kookmin")
+    public ResponseEntity<List<KBCardTransaction>> saveKBTransaction(@RequestBody List<KBCardTransaction> dto) {
+        List<KBCardTransaction> saved = kbCardR.saveAll(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @PostMapping("/usageTypeStats/kookmin")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getKBUsageTypeCurrencyStats(@RequestBody Search search) {
+        List<StatsProcedure> stats = kbCardR.getKBUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
+        System.out.println(stats);
+        return ResponseEntity.ok(Map.of("list", stats));
     }
 }

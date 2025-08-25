@@ -107,6 +107,11 @@ const sidebarItem: menu[] = [
         to: '/user/samsung'
     },
     {
+        title: '국민카드',
+        icon: UserPlusIcon,
+        to: '/user/kookmin'
+    },
+    {
         title: '조직',
         icon: AddressBookIcon,
         to: '/user/organization',
