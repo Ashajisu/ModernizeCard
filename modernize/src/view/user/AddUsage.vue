@@ -5,9 +5,8 @@ import type { FormField } from '@/types/custom/InputTypes';
 import type { UsageItem, StatsItem } from '@/types/custom/DataTableTypes';
 import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
 import { useTableManager } from '@/common/useTableManager';
-import ExcelUploadDialogBtn from '@/common/excel/ExcelUploadDialogBtn.vue';
 import { apiClient } from '@/data/Axios';
-import { formatMoney, saveToServer } from '@/utils/common';
+import { formatMoney } from '@/utils/common';
 import { format } from 'date-fns';
 
 //검색
@@ -103,20 +102,9 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, o
                     </CustomSearchChecksForm>
                 </v-row>
                 <v-row>
-<!--                    <v-col>-->
-<!--                        <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">-->
-<!--                            <v-btn flat color="primary" variant="outlined" @click="onNew"-->
-<!--                                ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록-->
-<!--                            </v-btn>-->
-<!--                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/card/delete/samsung')"-->
-<!--                                ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제-->
-<!--                            </v-btn>-->
-<!--                        </div>-->
-<!--                    </v-col>-->
                     <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-<!--                            <ExcelUploadDialogBtn :save="onExcelSave" :url="'/card/saveList/samsung'" title="엑셀 업로드" />-->
                         </div>
                     </v-col>
                 </v-row>
