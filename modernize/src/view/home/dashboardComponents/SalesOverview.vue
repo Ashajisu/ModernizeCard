@@ -7,29 +7,26 @@ import { apiClient } from '@/data/Axios';
 import type { usageChart } from '@/types/custom/DataTableTypes';
 
 //날짜선택 : 당월, 전월, 전년도
-const now = new Date();
-const year_before = format(new Date().setFullYear(now.getFullYear() - 1), 'MMMM yyyy');
-const month_before = format(new Date().setMonth(now.getMonth() - 1), 'MMMM yyyy');
-const month_before2 = format(new Date().setMonth(now.getMonth() - 2), 'MMMM yyyy');
-const month_now = format(now, 'MMMM yyyy');
-const select = ref(month_now);
-const items = ref([month_now, month_before, month_before2, year_before]);
-
+const month_before = format(new Date().setMonth(new Date().getMonth() - 1), 'MMMM yyyy');
+const select = ref(month_before);
 // 차트 데이터
+
 const statsData = ref<Record<string, usageChart[]>>({});
 const currentData = computed<usageChart[]>(() => statsData.value[select.value] ?? []);
-const label = computed(() => currentData.value.map((item: any) => item.label));
-const seriescolumnchart = computed(() => currentData.value.map((item: any) => item.ratio));
+const label = computed(() => currentData.value.map((item: any) => item.label)?? []);
+const cost = computed(() => currentData.value.map((item: any) => item.cost)?? []);
 const totalCost = computed(() => {
     return formatMoney(currentData.value.reduce((sum: number, item: any) => sum + item.cost, 0));
 });
 
+const items = computed(() => Object.keys(statsData.value));
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
         const response = await apiClient.get('/card/dash/chart1');
         statsData.value = response.list;
         statsData.value = JSON.parse(response.list);
+        console.log(statsData.value);
     } catch (e) {
         console.error('데이터 로드 중 오류 발생:', e);
     }
@@ -77,7 +74,10 @@ const chartOptions = computed(() => {
                             offsetY: 7
                         },
                         value: {
-                            show: false
+                            show: true,
+                            formatter: (val: number, opts: any) => {
+                                return formatMoney(val);
+                            }
                         },
                         total: {
                             show: true,
@@ -117,7 +117,7 @@ const chartOptions = computed(() => {
                     <v-select v-model="select" :items="items" variant="outlined" density="compact" hide-details></v-select>
                 </div>
             </div>
-            <apexchart class="mt-6" type="donut" height="275" :options="chartOptions" :series="seriescolumnchart"> </apexchart>
+            <apexchart class="mt-6" type="donut" height="275" :options="chartOptions" :series="cost"> </apexchart>
             <v-row class="mt-5">
                 <v-col cols="4" v-for="(item, index) in currentData">
                     <div class="d-flex align-center mt-md-6 mt-3">
