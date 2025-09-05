@@ -12,12 +12,11 @@ import { format } from 'date-fns';
 
 //검색
 const formFields = ref<FormField[]>([
-    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN'], required: false, disabled: false },
-    { label: '이용구분', name: 'usageType', type: 'text', value: '', required: false, disabled: false },
-    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
     { label: '거래일', name: 'transactionDate', type: 'due', value: { startDate: '', endDate: '' }, required: false, disabled: false },
-    { label: '결제일', name: 'paymentDate', type: 'date', value: '', required: false, disabled: false },
-    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false }
+    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN'], required: false, disabled: false },
+    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false },
+    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
+    { label: '이용구분', name: 'usageType', type: 'text', value: '', required: false, disabled: false }
 ]);
 //테이블헤더
 const headers = ref<any[]>([
@@ -29,16 +28,6 @@ const headers = ref<any[]>([
     { title: '이용구분', align: 'center', key: 'usageType' },
     { title: '거래통화', align: 'center', key: 'currency' },
 ]);
-//상세정보
-const userFields = ref<FormField[]>([
-    { label: 'No.', name: 'id', type: 'hidden', value: '', required: true, disabled: true },
-    { label: '이용카드', name: 'cardCompany', type: 'select', value: '', options:['KOOKMIN','SAMSUNG','SHINHAN'], required: true, disabled: false },
-    { label: '거래일', name: 'transactionDate', type: 'datetime', value: '', required: true, disabled: false },
-    { label: '가맹점명', name: 'merchantName', type: 'text', value: '', placeholder: '가맹점명 입력', required: false, disabled: false },
-    { label: '매입구분', name: 'purchaseType', type: 'text', value: '', placeholder: '결제확정', required: false, disabled: false },
-    { label: '이용구분', name: 'usageType', type: 'text', value: '', placeholder: '사용자명 입력', required: true, disabled: false },
-    { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: true, disabled: false },
-]);
 
 //집계 검색
 const startDate = format(new Date().setDate(1), 'yyyy-MM-dd');
@@ -46,7 +35,6 @@ const endDate = format(new Date().setDate(31), 'yyyy-MM-dd');
 const statFormFields = ref<FormField[]>([
     { label: '거래시작일', name: 'startDate', type: 'date', value: startDate, required: false, disabled: false },
     { label: '거래종료일', name: 'endDate', type: 'date', value: endDate, required: false, disabled: false }
-    // { label: '결제일', name: 'payDate', type: 'date', value: payDate, required: false, disabled: false }
 ]);
 //집계 테이블헤더
 const statHeaders = ref<any[]>([
@@ -95,9 +83,9 @@ const onSearchStats = async (validateForm: any) => {
 };
 // `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
 //모듈 호출 : 기존코드 동일
-const identifierField: string = 'key';
-const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, edit, handleEdit, onNew, onSave, onDelete, onExcelSave } =
-    useTableManager<UsageItem>(users, formFields, userFields, identifierField);
+const identifierField: string = 'id';
+const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, onNew, onDelete, onExcelSave } =
+    useTableManager<UsageItem>(users, formFields, null, identifierField);
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -115,20 +103,20 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                     </CustomSearchChecksForm>
                 </v-row>
                 <v-row>
-                    <v-col>
-                        <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                            <v-btn flat color="primary" variant="outlined" @click="onNew"
-                                ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록
-                            </v-btn>
-                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/card/delete/samsung')"
-                                ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제
-                            </v-btn>
-                        </div>
-                    </v-col>
+<!--                    <v-col>-->
+<!--                        <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">-->
+<!--                            <v-btn flat color="primary" variant="outlined" @click="onNew"-->
+<!--                                ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록-->
+<!--                            </v-btn>-->
+<!--                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/card/delete/samsung')"-->
+<!--                                ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제-->
+<!--                            </v-btn>-->
+<!--                        </div>-->
+<!--                    </v-col>-->
                     <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
-                            <ExcelUploadDialogBtn :save="onExcelSave" :url="'/card/saveList/samsung'" title="엑셀 업로드" />
+<!--                            <ExcelUploadDialogBtn :save="onExcelSave" :url="'/card/saveList/samsung'" title="엑셀 업로드" />-->
                         </div>
                     </v-col>
                 </v-row>
@@ -138,7 +126,6 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                         :headers="headers"
                         :items="filteredList"
                         select-strategy="single"
-                        show-select
                         class="border rounded-md"
                         v-model="selectedEmpId"
                         :item-value="identifierField"
@@ -157,35 +144,6 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                 </v-row>
             </UiParentCard>
             <br />
-            <UiParentCard title="사용자 상세정보" :key="selectedEmpId[0]" v-if="selectedEmpId[0]">
-                <template v-slot:action></template>
-                <template v-slot:default>
-                    <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit">
-                        <template v-slot:topBtn="{ validateForm }">
-                            <v-row>
-                                <v-col cols="5">
-                                    <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)">편집</v-btn>
-                                        <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
-                                    </div>
-                                </v-col>
-                                <v-col cols="7">
-                                    <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                        <v-btn
-                                            flat
-                                            color="primary"
-                                            variant="outlined"
-                                            @click="onSave(() => saveToServer(validateForm, '/card/save/usage'))"
-                                        >
-                                            저장
-                                        </v-btn>
-                                    </div>
-                                </v-col>
-                            </v-row>
-                        </template>
-                    </CustomSearchChecksForm>
-                </template>
-            </UiParentCard>
             <UiParentCard>
                 <v-row>
                     <CustomSearchChecksForm :formFields="statFormFields" :colsPerRow="5" :edit="true" :hide-details="true">
