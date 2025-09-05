@@ -10,9 +10,10 @@ import type { usageChart } from '@/types/custom/DataTableTypes';
 const now = new Date();
 const year_before = format(new Date().setFullYear(now.getFullYear() - 1), 'MMMM yyyy');
 const month_before = format(new Date().setMonth(now.getMonth() - 1), 'MMMM yyyy');
+const month_before2 = format(new Date().setMonth(now.getMonth() - 2), 'MMMM yyyy');
 const month_now = format(now, 'MMMM yyyy');
 const select = ref(month_now);
-const items = ref([month_now, month_before, year_before]);
+const items = ref([month_now, month_before, month_before2, year_before]);
 
 // 차트 데이터
 const statsData = ref<Record<string, usageChart[]>>({});
