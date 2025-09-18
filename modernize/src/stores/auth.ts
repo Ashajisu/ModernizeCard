@@ -1,10 +1,6 @@
 import { defineStore } from 'pinia';
 import { router } from '@/router';
-import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
 import { apiClient } from "@/data/Axios";
-
-const baseUrl = `${import.meta.env.VITE_API_URL}`;
-// const apiUrl = `/api`;
 
 export const useAuthStore = defineStore({
     id: 'auth',

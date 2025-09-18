@@ -21,10 +21,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // "/api"로 시작하는 요청을 프록시 처리
+      // "/api"로 시작하는 요청을 프록시 처리 - 개발환경에서만 가능.
       '/api': {
         // 백엔드 서버 주소
-        target: 'http://192.168.10.75:9090',
+        target: 'http://localhost:9090',
         // CORS 문제 해결을 위해 필요
         changeOrigin: true,
         // 경로에서 '/api' 제거

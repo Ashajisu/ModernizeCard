@@ -118,6 +118,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://ashajisu.iptime.org:5173");  // Vue 허용
         configuration.addAllowedOrigin("http://ashajisu.iptime.org:5050"); //외부 경로 허용
         configuration.addAllowedOrigin("http://ashajisu.iptime.org:9090"); //외부 경로 허용
+        configuration.addAllowedOrigin("https://jisu-arisys.github.io"); //외부 경로 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setMaxAge(3600L);

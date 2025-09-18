@@ -7,9 +7,13 @@ import {mockData} from "@/_mockApis/mockData";
 
 const isBackendReady = true; // 백엔드 준비 여부를 나타내는 플래그 (임시)
 
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
+const devUrl = `${import.meta.env.VITE_API_URL}`;
+
 // Axios 인스턴스 생성
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: baseUrl, //운영할때 env 경로를 통해서
+    // baseURL: devUrl, //개발할때 proxy 경로를 통해서
     headers: {
         'Content-Type': 'application/json',
     },
