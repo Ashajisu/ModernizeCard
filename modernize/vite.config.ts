@@ -33,6 +33,7 @@ export default defineConfig({
     },
       allowedHosts: ['localhost','ashajisu.iptime.org']
   },
+  base: 'ModernizeCard',
   build: {
     outDir : '../dist',
     emptyOutDir: true,            // 해당 경로 이전 build 파일 삭제
