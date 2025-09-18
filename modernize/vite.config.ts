@@ -34,7 +34,7 @@ export default defineConfig({
       allowedHosts: ['localhost','ashajisu.iptime.org']
   },
   build: {
-    outDir : '../src/main/resources/static',
+    outDir : '../dist',
     emptyOutDir: true,            // 해당 경로 이전 build 파일 삭제
     chunkSizeWarningLimit: 5000,
     rollupOptions: {
