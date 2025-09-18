@@ -3,12 +3,6 @@ import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
 import UserRoutes from "./UserRoutes";
-import PhoneRoutes from "./PhoneRoutes";
-import MonitoringRoutes from './MonitoringRoutes';
-import ReportRoutes from "./ReportRoutes";
-import DeviceRoutes from "./DeviceRoutes";
-import LicenseRoutes from "./LicenseRoutes";
-import SettingsRoutes from './SettingsRoutes';
 
 const routes = [
     {
@@ -19,12 +13,6 @@ const routes = [
     AuthRoutes, // home 경로 로그인화면 포함
     // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
     UserRoutes, // 탭 기본 화면 dashboard 포함
-    PhoneRoutes,
-    MonitoringRoutes,
-    ReportRoutes,
-    DeviceRoutes,
-    LicenseRoutes,
-    SettingsRoutes,
 
 ]
 // KeepAlive 에서 컴포넌트를 캐싱하려면 컴포넌트에 name 이 필요함.

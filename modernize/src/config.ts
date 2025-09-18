@@ -28,9 +28,9 @@ const config: ConfigProps = {
 
     maxTabs : 20,
     siteName : 'arisys',
-    setSearchbar : true,
+    setSearchbar : false,
     setThemeToggle : false,
-    setDashboard : true,
+    setDashboard : false,
     mainPage: '/home/dashboard'
 
 };

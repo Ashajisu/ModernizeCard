@@ -34,16 +34,6 @@ const UserRoutes : RouteRecordRaw = {
             name: '지출전체',
             path: 'usage',
             component: () => import('@/view/user/AddUsage.vue')
-        },
-        {
-            name: '조직',
-            path: 'organization',
-            component: () => import('@/view/user/OrganizationM.vue')
-        },
-        {
-            name: '폰 사용자',
-            path: 'phone',
-            component: () => import('@/view/user/AddPhone.vue')
         }
     ]
 };
