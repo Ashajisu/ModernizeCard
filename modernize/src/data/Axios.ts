@@ -3,12 +3,9 @@ import axios, { type AxiosResponse} from "axios";
 import {router} from "@/router";
 import {useAuthStore} from "@/stores/auth";
 import { alert } from "@/common/alertService";
-import {mockData} from "@/_mockApis/mockData";
-
-const isBackendReady = true; // 백엔드 준비 여부를 나타내는 플래그 (임시)
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
-const devUrl = `${import.meta.env.VITE_API_URL}`;
+const devUrl = `${import.meta.env.DEV_API_URL}`;
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -132,13 +129,6 @@ axios.interceptors.response.use(
 // 인터셉터에 의해 headers 자동 설정 됨.
 export const apiClient = {
     get: async (url: string, params?: any) => {
-        if (!isBackendReady) { // 백엔드 준비 상태 체크
-            const mockResponse = mockData[url]?.GET; // Mock 데이터에서 URL과 메서드 매칭
-            await handleMockDataNull(mockResponse.data); // 데이터가 없으면 예외 처리
-            return mockResponse.data; // Mock 데이터 반환
-        }
-
-        // 실제 API 호출
         const response = await api.get(url, { params });
         return response.data;
     },

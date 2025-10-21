@@ -45,11 +45,21 @@ dependencies {
 	implementation 'p6spy:p6spy:3.9.1'
 }
 
-bootWar{
-	archiveBaseName = 'ModernizeCard'
-	archiveFileName = 'ModernizeCard.war'
-	archiveVersion = "1.0.0"
+//bootWar{
+//	archiveBaseName = 'ModernizeCard'
+//	archiveFileName = 'ModernizeCard.war'
+//	archiveVersion = "1.0.0"
+//}
+
+bootJar {
+    archiveBaseName = 'ModernizeCard'
+    archiveVersion = '0.0.1'
+
+    // 루트 기준으로 제외할 폴더 지정
+    exclude 'modernize/**'
+    exclude 'build/**'
+    exclude 'dist/**'
 }
 
-bootWar.enabled = true
-war.enabled = false
+//bootWar.enabled = true
+//war.enabled = false
