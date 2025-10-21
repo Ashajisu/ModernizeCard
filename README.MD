@@ -9,9 +9,9 @@
 ### 프론트앤드 git pages 배포
 ```
 cd modernize
-npm run build
 npm run deploy
 ```
+빌드, .nojekyll 폴더생성, 배포
 배포에 2분 정도 소요됩니다.
 https://github.com/jisu-arisys/ModernizeCard/deployments 에서 Upates 완료여부를 확인하고
 https://jisu-arisys.github.io/ModernizeCard/ 경로로 접속합니다.
