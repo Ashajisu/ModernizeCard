@@ -1,7 +1,4 @@
-
-
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from "vite-plugin-vuetify";
@@ -33,7 +30,7 @@ export default defineConfig({
     },
       allowedHosts: ['localhost','ashajisu.iptime.org']
   },
-  base: 'ModernizeCard',
+  base: '/ModernizeCard/',
   build: {
     outDir : '../dist',
     emptyOutDir: true,            // 해당 경로 이전 build 파일 삭제
