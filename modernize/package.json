@@ -10,7 +10,7 @@
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
         "predeploy": "echo > ../dist/.nojekyll",
         "clean": "rm -rf ../dist",
-        "deploy": "npm run clean && npm run build && gh-pages -d ../dist -b gh-pages -n"
+        "deploy": "npm run clean && npm run build && gh-pages -d ../dist -b gh-pages -n --dotfiles --add"
     },
     "homepage": "https://github.com/jisu-arisys/ModernizeCard",
     "dependencies": {
