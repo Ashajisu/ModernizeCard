@@ -7,7 +7,7 @@ import CustomSlotDialog from "@/components/custom/dialog/CustomSlotDialog.vue";
 /*Social icons*/
 const checkbox = ref(false);
 const valid = ref(false);
-const password = ref('admin123');
+const password = ref('');
 const username = ref('info@wrappixel.com');
 const passwordRules = ref([
     (v: string) => !!v || 'Password is required',

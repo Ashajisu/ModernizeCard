@@ -14,13 +14,7 @@ public class UserInitializer {
     @Bean
     public CommandLineRunner init(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (userRepository.findByUsername("info@wrappixel.com").isEmpty()) {
-                User user = new User();
-                user.setUsername("info@wrappixel.com");
-                user.setPassword(passwordEncoder.encode("admin123")); // 원본 비밀번호를 해싱
-                user.setAuthName(Auth.USER);
-                userRepository.save(user);
-            }
+            userRepository.findAll().forEach(System.out::println);
         };
     }
 }

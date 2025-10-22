@@ -4,8 +4,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "info@wrappixel.com",
-  "password": "admin123"
+  "username": "@wrappixel.com",
+  "password": ""
 }
 
 ### 토큰 로그인 테스트: 성공

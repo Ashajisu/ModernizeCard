@@ -1,7 +1,7 @@
 export { fakeBackend };
 
 function fakeBackend() {
-    let users = [{ id: 1, username: 'info@wrappixel.com', password: 'admin123', firstName: 'Wrappixel', lastName: '.com' }];
+    let users = [{ id: 1, username: '1@wrappixel.com', password: '1', firstName: 'Wrappixel', lastName: '.com' }];
     let realFetch = window.fetch;
     window.fetch = function (url: any, opts: any) {
         return new Promise((resolve: any, reject) => {
