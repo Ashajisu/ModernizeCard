@@ -1,0 +1,1 @@
+.mainbox{position:relative;overflow:hidden}.left-part{width:320px;border-right:1px solid rgb(var(--v-theme-borderColor));min-height:500px;transition:.1s ease-in;flex-shrink:0}.v-theme--light .left-part{background:#fff}.v-theme--dark .left-part{background:#2b2b2b}.right-part{width:100%;min-height:500px;position:relative}
