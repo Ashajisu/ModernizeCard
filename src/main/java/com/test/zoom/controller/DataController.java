@@ -17,7 +17,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/card")
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class DataController {
 
     @Autowired

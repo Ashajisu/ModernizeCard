@@ -22,7 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth") //rewite 로 "/api" path 제거
 //@CrossOrigin(origins = "http://localhost:5173") // Vue 서버 주소를 허용
-@CrossOrigin(origins = "http://localhost:5177") // Vue 서버 주소를 허용
+//@CrossOrigin(origins = "http://localhost:5177") // Vue 서버 주소를 허용
 public class SecurityController {
 
     private final UserRepository userRepository;
