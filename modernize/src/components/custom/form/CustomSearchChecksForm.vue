@@ -173,6 +173,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             variant="outlined"
                             type="date"
                             v-model="field.value"
+                            @update:model-value="val => field.value = val === '' ? null : val"
                             :rules="edit && field.required ? rules : []"
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
@@ -190,6 +191,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).startDate"
+                                    @update:model-value="val => field.value = val === '' ? null : val"
                                     :label="field.label + ' 시작'"
                                     :rules="edit && field.required ? rules : []"
                                     :readonly="!isEditable || field.disabled"
@@ -202,6 +204,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).endDate"
+                                    @update:model-value="val => field.value = val === '' ? null : val"
                                     :label="field.label + ' 종료'"
                                     :rules="edit && field.required ? rules : []"
                                     :readonly="!isEditable || field.disabled"
@@ -217,6 +220,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             variant="outlined"
                             type="datetime-local"
                             v-model="field.value"
+                            @update:model-value="val => field.value = val === '' ? null : val"
                             :rules="edit && field.required ? rules : []"
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"

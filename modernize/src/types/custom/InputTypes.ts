@@ -2,7 +2,7 @@ export interface FormField {
     label: string;
     name: string;
     type: string; //text, select, search, checks
-    value: string | Date | boolean | string[] | DateRange;
+    value: string | Date | boolean | string[] | DateRange | null;
     options?: string[];
     placeholder?: string;
     required?: boolean;
