@@ -57,9 +57,18 @@ const statHeaders = ref<any[]>([
     { title: '합계', align: 'center', key: 'stat6' },
 ]);
 
+const setUsageType = (uniqueUsageList: string[]) => {
+    const target = formFields.value.find(f => f.name === 'usageType');
+    if (target) {
+        target.options = uniqueUsageList;
+    }
+    // console.log('이용구분 선택란 데이터:', uniqueUsageList);
+};
 const setUsers = (userList: SHCardItem[]) => {
     users.value = userList;
     // console.log('사용자 데이터:', users.value);
+    const uniqueUsageList : string[] = [...new Set(userList.map(item => item.usageType))];
+    setUsageType(uniqueUsageList);
 };
 const setStats = (statList: StatsItem[]) => {
     stats.value = statList;

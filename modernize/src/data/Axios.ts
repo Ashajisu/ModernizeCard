@@ -13,6 +13,7 @@ const api = axios.create({
     // baseURL: devUrl, //개발할때 proxy 경로를 통해서
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '69420'
     },
     withCredentials: true,
 });
