@@ -80,10 +80,10 @@ const stats = ref<StatsItem[]>([]); // 집계 데이터를 저장할 변수
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
-        const response = await apiClient.get('/card/list');
+        const response = await apiClient.get('/guest/list');
         setUsers(response.list);
         if (response.list) {
-            const response = await apiClient.get('/card/usageTypeStats');
+            const response = await apiClient.get('/guest/usageTypeStats');
             setStats(response.list);
         }
     } catch (e) {

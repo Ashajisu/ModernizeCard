@@ -91,9 +91,10 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // 브라우저에서 사용하는 DB인 h2에 콘솔로 접근할 때 인증 불필요 (기본 경로는 /h2-console)
                         .requestMatchers("/resources/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll() // 페이지를 대표하는 아이콘
-                        .requestMatchers("/zoom/**").authenticated()
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/check/login").permitAll()
+                        .requestMatchers("/guest/**").hasAnyRole("GUEST", "USER", "ADMIN")
+                        .requestMatchers("/card/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
         //B. rest 방식 : id/pw 로그인 후 JWT 반환 필터 & 로그인을 제외한 모든 요청에서 JWT 검증하는 필터 & 세션 미사용 :

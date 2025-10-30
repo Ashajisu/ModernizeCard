@@ -4,5 +4,5 @@ import jakarta.persistence.Convert;
 
 @Convert(converter = AuthConverter.class)
 public enum Auth {
-    USER, ADMIN, LOCK
+    USER, ADMIN, LOCK, GUEST
 }
