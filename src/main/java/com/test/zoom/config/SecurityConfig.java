@@ -108,13 +108,13 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:5173");  // Vue 허용
-        configuration.addAllowedOrigin("http://192.168.0.9:5173");  // Vue 허용
-        configuration.addAllowedOrigin("http://ashajisu.iptime.org:5173");  // Vue 허용
-        configuration.addAllowedOrigin("http://ashajisu.iptime.org:5050"); //외부 경로 허용
-        configuration.addAllowedOrigin("http://ashajisu.iptime.org:9090"); //외부 경로 허용
-        configuration.addAllowedOrigin("https://jisu-arisys.github.io"); //외부 경로 허용
-        configuration.addAllowedOrigin("https://*.ngrok-free.dev"); //외부 경로 허용
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://catamenial-deeann-reconditely.ngrok-free.dev",
+                "https://*.ngrok-free.dev",
+                "https://jisu-arisys.github.io",
+                "http://localhost:5173",
+                "http://192.168.10.59:5173"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
