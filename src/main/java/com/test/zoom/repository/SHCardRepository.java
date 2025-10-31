@@ -24,4 +24,5 @@ public interface SHCardRepository extends JpaRepository<SHCardTransaction, Long>
     @Query(value = "CALL getSHUsageTypeCurrencyStats()", nativeQuery = true)
     List<StatsProcedure> getSHUsageTypeCurrencyStats();
 
+    List<SHCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 }

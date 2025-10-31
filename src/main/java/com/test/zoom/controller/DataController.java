@@ -42,7 +42,7 @@ public class DataController {
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
     public ResponseEntity<Map <String, List<SHCardTransaction>>> getCardTransactionList() {
-        List<SHCardTransaction> list = ShinHanCardR.findAllByDeleted(false);
+        List<SHCardTransaction> list = ShinHanCardR.findAllByDeletedFalseOrderByIdDesc();
         return ResponseEntity.ok(Map.of("list", list));
     }
 
@@ -85,7 +85,7 @@ public class DataController {
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list/samsung")
     public ResponseEntity<Map <String, List<SSCardTransaction>>> getSSCardTransactionList() {
-        List<SSCardTransaction> list = SamSungCardR.findAllByDeleted(false);
+        List<SSCardTransaction> list = SamSungCardR.findAllByDeletedFalseOrderByIdDesc();
         return ResponseEntity.ok(Map.of("list", list));
     }
 
@@ -132,7 +132,7 @@ public class DataController {
     /**사용자의 모든 지출내역을 나열합니다. **/
     @GetMapping("/list/usage")
     public ResponseEntity<Map <String, List<UsageTransaction>>> getUsageTransactionList() {
-        List<UsageTransaction> list = usageR.findAll();
+        List<UsageTransaction> list = usageR.findAllByOrderByCardCompanyAscIdDesc();
         return ResponseEntity.ok(Map.of("list", list));
     }
 
@@ -170,7 +170,7 @@ public class DataController {
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list/kookmin")
     public ResponseEntity<Map <String, List<KBCardTransaction>>> getKBCardTransactionList() {
-        List<KBCardTransaction> list = kbCardR.findAllByDeleted(false);
+        List<KBCardTransaction> list = kbCardR.findAllByDeletedFalseOrderByIdDesc();
         return ResponseEntity.ok(Map.of("list", list));
     }
 

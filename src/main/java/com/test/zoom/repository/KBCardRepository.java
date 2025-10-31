@@ -25,4 +25,6 @@ public interface KBCardRepository extends JpaRepository<KBCardTransaction, Long>
 
     @Query(value = "CALL getKBUsageTypeCurrencyStatsDate(:startDate, :endDate, :payDate)", nativeQuery = true)
     List<StatsProcedure> getKBUsageTypeCurrencyStats(LocalDate startDate, LocalDate endDate, LocalDate payDate);
+
+    List<KBCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 }

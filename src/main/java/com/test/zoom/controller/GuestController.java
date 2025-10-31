@@ -21,7 +21,7 @@ public class GuestController {
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
     public ResponseEntity<Map <String, List<SHCardTransaction>>> getCardTransactionList() {
-        List<SHCardTransaction> list = ShinHanCardR.findAllByDeleted(false);
+        List<SHCardTransaction> list = ShinHanCardR.findAllByDeletedFalseOrderByIdDesc();
         return ResponseEntity.ok(Map.of("list", list));
     }
 
