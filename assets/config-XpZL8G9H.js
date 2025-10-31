@@ -1,1 +1,0 @@
-const e={Sidebar_drawer:null,Customizer_drawer:!1,mini_sidebar:!1,setHorizontalLayout:!1,setRTLLayout:!1,actTheme:"BLUE_THEME",boxed:!1,setBorderCard:!1,maxTabs:20,siteName:"arisys",setSearchbar:!1,setThemeToggle:!1,setDashboard:!1,mainPage:"/home/dashboard"};export{e as c};
