@@ -3,9 +3,19 @@ import Logo from '@/layouts/full/logo/Logo.vue';
 /* Login form */
 import CustomLoginForm from '@/components/custom/CustomLoginForm.vue';
 </script>
+<style lang="scss">
+.auth-image-wrapper {
+    height: 100%;
+    width: 100%;
+    background-image: url('../../assets/images/backgrounds/mone_3215.png');
+    background-repeat: no-repeat;  /* 반복 방지 */
+    background-size: cover;
+    background-position: left top;
+}
+</style>
 
 <template>
-    <div class="pa-3">
+    <div class="">
         <v-row class="h-100vh mh-100 auth">
             <v-col cols="12" lg="7" xl="8"
                 class="d-lg-flex align-center justify-center authentication position-relative">
@@ -14,10 +24,7 @@ import CustomLoginForm from '@/components/custom/CustomLoginForm.vue';
                         <Logo />
                     </div>
                 </div>
-                <div class="">
-                    <img src="../../assets/images/backgrounds/Zoom_Logo_2022.svg" class="position-relative d-none d-lg-flex"
-                         alt="login-background" />
-                </div>
+                <div class="position-relative d-none d-lg-flex auth-image-wrapper"/>
             </v-col>
             <v-col cols="12" lg="5" xl="4" class="d-flex align-center justify-center">
                 <div class="mt-xl-0 mt-5 mw-100">
