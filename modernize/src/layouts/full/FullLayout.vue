@@ -8,9 +8,14 @@ import Customizer from './customizer/Customizer.vue';
 import { useCustomizerStore } from '@/stores/customizer';
 const customizer = useCustomizerStore();
 
-import { useTabStore } from '@/stores/tabStore';
+import { useAuthStore } from '@/stores/auth';
+const authStore = useAuthStore();
+import { useTabStore } from '@/stores/tabStore_renewal';
 import CustomFooter from "@/layouts/full/custom/CustomFooter.vue";
+import { type KeepAlive, ref } from 'vue';
 const tabStore = useTabStore();
+// const aliveRef = ref<InstanceType<typeof KeepAlive> | null>(null);
+const aliveRef = ref();
 </script>
 <template>
     <!-----RTL LAYOUT------->
@@ -37,9 +42,9 @@ const tabStore = useTabStore();
                     <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                         <div :class="customizer.boxed ? 'maxWidth' : ''">
                             <RouterView v-slot="{ Component }">
-                              <keep-alive :include="tabStore.cachedTabs" >
-                                <component :is="Component"/>
-                              </keep-alive>
+                                <keep-alive :include="tabStore.cachedTabs" >
+                                    <component :is="Component" :key="tabStore.activeTab.cacheKey"/>
+                                </keep-alive>
                             </RouterView>
                             <v-btn
                                 class="customizer-btn"
@@ -80,10 +85,10 @@ const tabStore = useTabStore();
             <v-main>
                 <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
-                        <RouterView v-slot="{ Component }">
-                          <keep-alive :include="tabStore.cachedTabs" >
-                            <component :is="Component"/>
-                          </keep-alive>
+                        <RouterView v-slot="{ Component }" >
+                            <keep-alive :include="tabStore.cachedTabs">
+                                <component :is="Component" :key="tabStore.activeTab.cacheKey"/>
+                            </keep-alive>
                         </RouterView>
                         <v-btn
                             class="customizer-btn"

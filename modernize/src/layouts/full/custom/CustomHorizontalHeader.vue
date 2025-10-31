@@ -27,7 +27,7 @@ watch(priority, (newPriority) => {
 
 // config iframe
 import { useAuthStore } from "@/stores/auth";
-import CustomTabs from "@/layouts/full/custom/CustomTabs.vue";
+import CustomTabs from "@/layouts/full/custom/CustomTabs_renewal.vue";
 import config from "@/config";
 const authStore = useAuthStore();
 </script>

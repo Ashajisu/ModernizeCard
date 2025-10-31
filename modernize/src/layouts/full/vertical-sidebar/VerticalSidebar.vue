@@ -13,7 +13,7 @@ import RtlLogo from '../logo/RtlLogo.vue';
 const customizer = useCustomizerStore();
 const sidebarMenu = shallowRef(sidebarItems);
 
-import { useTabStore } from '@/stores/tabStore';
+import { useTabStore } from '@/stores/tabStore_renewal';
 const tabStore = useTabStore();
 </script>
 
