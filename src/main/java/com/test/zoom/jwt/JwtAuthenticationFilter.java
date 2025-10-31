@@ -1,6 +1,8 @@
 package com.test.zoom.jwt;
 
 import com.test.zoom.dto.LoginRequest;
+import com.test.zoom.entity.CustomUserDetails;
+import com.test.zoom.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /** B-2. Spring Security 내 의 필터 체인에 동작을 추가하여 인증 요청(`/auth/login`)을 컨트롤러의 엔드포인트 대신 자동으로 처리. JSON 요청을 처리하고 인증 후 토큰을 생성 **/
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -45,11 +49,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        // 인증 성공 시 JWT 반환
-        String token = JwtUtils.generateToken(authResult);
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+        // 인증 성공 시 JWT, 사용자정보 반환
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = customUserDetails.getUserForJWT();
+        String token = JwtUtils.generateToken(authentication);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", token);
+        result.put("user", user);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
-        response.getWriter().flush();
+        new ObjectMapper().writeValue(response.getWriter(), result); //내부적으로 writer.flush() 를 이미 호출하는 함수
+//        response.getWriter().flush();
     }
 }

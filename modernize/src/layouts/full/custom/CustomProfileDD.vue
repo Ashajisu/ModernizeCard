@@ -54,8 +54,8 @@ const dynamicMaxHeight = computed(()=>{
                         <img :src="userSrc" width="80" :alt="userName"/>
                     </v-avatar>
                     <div class="ml-3">
-                        <h6 class="text-h6 mb-n1">{{ authStore.user.firstName }}{{ authStore.user.lastName }}</h6>
-                        <span class="text-subtitle-1 font-weight-regular textSecondary">&nbsp</span>
+                        <h6 class="text-h6 mb-n1">{{ authStore.user.lastName }}</h6>
+                        <span class="text-subtitle-1 font-weight-regular textSecondary mt-1">&nbsp{{ authStore.user.authName }}</span>
                         <div class="d-flex align-center mt-1">
                             <MailIcon size="18" stroke-width="1.5" />
                             <span class="text-subtitle-1 font-weight-regular textSecondary ml-2">{{ authStore.user.username }}</span>

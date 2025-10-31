@@ -4,6 +4,7 @@ import com.test.zoom.jwt.JwtUtils;
 import com.test.zoom.entity.User;
 import com.test.zoom.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,8 +22,7 @@ import java.util.Optional;
 /** B-1. security 의 formLogin 사용하지 않고, rest 방식 중에서도 수동으로 직접 처리하기위한 컨트롤러 **/
 @RestController
 @RequestMapping("/auth") //rewite 로 "/api" path 제거
-//@CrossOrigin(origins = "http://localhost:5173") // Vue 서버 주소를 허용
-//@CrossOrigin(origins = "http://localhost:5177") // Vue 서버 주소를 허용
+@Slf4j
 public class SecurityController {
 
     private final UserRepository userRepository;
@@ -78,7 +78,9 @@ public class SecurityController {
      * UsernamePasswordAuthenticationFilter 미사용 setAuthentication 로 직접구현
      * RequestBody 로 JSON 객체를 전달하여 처리. **/
     @PostMapping("/login")
+    @Deprecated
     public ResponseEntity<?> login(@RequestBody User loginUser, HttpSession session) { //로그인요청 처리
+        log.warn("/auth/login 컨트롤러 호출됨");
         Optional<User> foundUser = userRepository.findByUsername(loginUser.getUsername());
         if(foundUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

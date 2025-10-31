@@ -17,14 +17,15 @@ export const useAuthStore = defineStore({
             const user = {
                 id: 1,
                 username: username,
-                firstName: 'firstName',
                 lastName: 'lastName',
-                token: 'fake-jwt-token'
+                token: 'fake-jwt-token',
+                authName: '',
+                dept: ''
             };
             // update pinia state
             this.user = user;
 
-            //test JWT
+            //JWT , user
             await apiClient.post(`/auth/login`, { username, password }).then( response => {
                 console.log(response);
                 const token = response?.token; // JWT 토큰 추출
@@ -33,6 +34,16 @@ export const useAuthStore = defineStore({
                     this.user.token = token // 사용자 상태에 토큰 추가
                     console.log(token);
                 }
+                const user = response?.user;
+                if (user) {
+                    // 로컬 저장소에 토큰 저장
+                    this.user.id = user.id;
+                    this.user.authName = user.authName;
+                    this.user.dept = user.dept;
+                    this.user.lastName = user.name;
+                    console.log(user);
+                }
+
             });
 
             // store user details and jwt in local storage to keep user logged in between page refreshes

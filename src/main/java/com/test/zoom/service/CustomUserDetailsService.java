@@ -1,5 +1,6 @@
 package com.test.zoom.service;
 
+import com.test.zoom.entity.CustomUserDetails;
 import com.test.zoom.entity.User;
 import com.test.zoom.repository.UserRepository;
 import org.slf4j.Logger;
@@ -26,7 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Deprecated
+    public UserDetails loadUserByUsername1(String username) throws UsernameNotFoundException {
         Optional<User> foundUser = userRepository.findByUsername(username);
 
         if(foundUser.isEmpty()) {
@@ -39,6 +41,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(user.getPassword())
                 .roles(user.getAuthName().name())
                 .build();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .map(CustomUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
 }

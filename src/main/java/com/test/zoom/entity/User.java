@@ -3,15 +3,12 @@ package com.test.zoom.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Immutable;
 
-/** View 이므로 단순 조회만 가능 **/
 @Entity
 @Table(name = "users")
 @Getter @Setter @Builder @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Immutable
 public class User {
 
     @Id
@@ -35,6 +32,7 @@ public class User {
 
     @Column(name = "deptcode", length = 50)
     private Long dept;
+
     @Column(name = "position", length = 50)
     private String position;
 }
