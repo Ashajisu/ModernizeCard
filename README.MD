@@ -35,6 +35,16 @@ nohup java -jar ./ModernizeCard-0.1.jar > app_yyyymmdd.log 2>&1 &
 ```mac 포워딩
 ngrok http 9090
 ```
+
+```window
+
+cd /원드라이브/hab/ModernizeCard
+start java -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&1
+```
+
+```window 포워딩
+ngrok http 9090
+```
 이러면 백엔드 서버가 백그라운드에서 계속 동작합니다.
 
 ### 인증서 90일 간격 갱신
