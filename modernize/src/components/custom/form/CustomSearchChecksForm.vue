@@ -213,7 +213,25 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 />
                             </v-col>
                         </v-row>
-
+                        <v-text-field
+                            v-else-if="field.type === 'month'"
+                            color="primary"
+                            variant="outlined"
+                            type="month"
+                            v-model="field.value"
+                            @update:model-value="val => field.value = val === '' ? null : val"
+                            :rules="edit && field.required ? rules : []"
+                            :readonly="!isEditable || field.disabled"
+                            :hide-details="hideDetails"
+                            persistent-placeholder
+                        >
+                            <template v-slot:label>
+                                <span
+                                >{{ field.label }}
+                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
+                                </span>
+                            </template>
+                        </v-text-field>
                         <v-text-field
                             v-else-if="field.type === 'datetime'"
                             color="primary"

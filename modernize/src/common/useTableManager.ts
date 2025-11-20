@@ -125,6 +125,14 @@ export function useTableManager<T extends Record<string, any>>(
                 const searchVal = search.value[key];
                 const itemVal = item[key];
 
+                // + 🔥 월 검색 ("yyyy-MM" 형태)
+                if (typeof searchVal === "string" && /^\d{4}-\d{2}$/.test(searchVal)) {
+                    console.log('search key', key, searchVal, itemVal);
+                    if (!itemVal) return false;
+                    const itemMonth = itemVal.slice(0, 7); // "yyyy-MM"
+                    return itemMonth === searchVal;
+                }
+
                 // ① DateRange 검색
                 if (searchVal && typeof searchVal === "object" && "startDate" in searchVal && "endDate" in searchVal) {
                     const { startDate, endDate } = searchVal;

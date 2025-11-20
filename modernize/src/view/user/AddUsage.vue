@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 
 //검색
 const formFields = ref<FormField[]>([
-    { label: '거래일', name: 'transactionDate', type: 'due', value: { startDate: '', endDate: '' }, required: false, disabled: false },
+    { label: '거래월', name: 'transactionDate', type: 'month', value: '', required: false, disabled: false },
     { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI'], required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
