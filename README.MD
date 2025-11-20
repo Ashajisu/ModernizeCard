@@ -4,11 +4,17 @@
 * **원격경로**: http://github.com/jisu-arisys/ModernizeCard.git
 
 <br>
+
+### 버전관리
+
+jdk : ms-21 (언어수준 17) 
+
 <br>
 
 ### 프론트앤드 git pages 배포
 ```
 cd modernize
+npm run build
 npm run deploy
 ```
 빌드, .nojekyll 폴더생성, 배포
@@ -36,13 +42,16 @@ nohup java -jar ./ModernizeCard-0.1.jar > app_yyyymmdd.log 2>&1 &
 ngrok http 9090
 ```
 
-```window
+```window CMD
 
-cd /원드라이브/hab/ModernizeCard
-start java -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&1
+cd C:\Users\USER\OneDrive - 주식회사 아리시스\hab\ModernizeCard
+C:\Java64\jdk-21\bin\javaw -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&1
 ```
 
 ```window 포워딩
+관리자권한 ㅇㅇ
+
+
 ngrok http 9090
 ```
 이러면 백엔드 서버가 백그라운드에서 계속 동작합니다.

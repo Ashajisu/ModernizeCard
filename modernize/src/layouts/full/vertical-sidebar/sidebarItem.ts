@@ -112,6 +112,11 @@ const sidebarItem: menu[] = [
         to: '/user/kookmin'
     },
     {
+        title: '우리카드',
+        icon: UserPlusIcon,
+        to: '/user/woori'
+    },
+    {
         title: '지출전체',
         icon: UserPlusIcon,
         to: '/user/usage'

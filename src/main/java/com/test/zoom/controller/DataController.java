@@ -38,6 +38,9 @@ public class DataController {
     @Autowired
     private UsageRepository usageR;
 
+    @Autowired
+    private WOCardRepository woCardR;
+
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
@@ -202,6 +205,46 @@ public class DataController {
     @PostMapping("/usageTypeStats/kookmin")
     public ResponseEntity<Map <String, List<StatsProcedure>>> getKBUsageTypeCurrencyStats(@RequestBody Search search) {
         List<StatsProcedure> stats = kbCardR.getKBUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
+        System.out.println(stats);
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    /// woori : WO
+    /**사용자의 카드내역을 나열합니다. **/
+    @GetMapping("/list/woori")
+    public ResponseEntity<Map <String, List<WOCardTransaction>>> getWOCardTransactionList() {
+        List<WOCardTransaction> list = woCardR.findAllByDeletedFalseOrderByIdDesc();
+        return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save/woori")
+    public ResponseEntity<WOCardTransaction> saveWOTransaction(@RequestBody WOCardTransaction dto) {
+        WOCardTransaction saved = woCardR.save(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete/woori")
+    public ResponseEntity<WOCardTransaction> deleteWOTransaction(@RequestBody WOCardTransaction dto) {
+        int deletedCnt = woCardR.markDeleted(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
+    }
+
+    /**카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList/woori")
+    public ResponseEntity<List<WOCardTransaction>> saveWOTransaction(@RequestBody List<WOCardTransaction> dto) {
+        List<WOCardTransaction> saved = woCardR.saveAll(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @PostMapping("/usageTypeStats/woori")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getWOUsageTypeCurrencyStats(@RequestBody Search search) {
+        List<StatsProcedure> stats = woCardR.getWOUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
