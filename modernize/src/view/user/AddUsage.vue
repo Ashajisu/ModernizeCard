@@ -86,6 +86,17 @@ const onSearchStats = async (validateForm: any) => {
 const identifierField: string = 'id';
 const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, onNew, onDelete, onExcelSave } =
     useTableManager<UsageItem>(users, formFields, null, identifierField);
+
+
+const getSummaryClass = (item:any) => {
+    if (item.title === '합계') {
+        return 'totalSum';
+    }
+    if (item.title === '개인합계') {
+        return 'personalSum';
+    }
+    return '';
+};
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
 <template>
@@ -146,7 +157,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, o
                 <v-row>
                     <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md" items-per-page="20">
                         <template #item="{ item }">
-                            <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
+                            <tr :class="getSummaryClass(item)">
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
@@ -162,4 +173,15 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, o
     </v-row>
 </template>
 
-<style scoped></style>
+<style scoped>
+.totalSum {
+    font-weight: 700;
+    color: #1D4ED8;
+}
+
+.personalSum {
+    font-weight: 700;
+    color: #c424a4de;
+}
+
+</style>
