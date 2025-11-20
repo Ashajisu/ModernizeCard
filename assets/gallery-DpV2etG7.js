@@ -1,1 +1,0 @@
-import{aX as a,aZ as r}from"./index-CG8jbmZw.js";const l=a({id:"Gallery",state:()=>({gallery:[]}),getters:{},actions:{async fetchGallery(){try{const e=await r.get("/api/gallery/list");this.gallery=e.data.gallery}catch(e){alert(e),console.log(e)}}}});export{l as u};
