@@ -4,6 +4,8 @@ import com.test.zoom.jwt.JwtUtils;
 import com.test.zoom.entity.User;
 import com.test.zoom.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +25,21 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth") //rewite 로 "/api" path 제거
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityController {
 
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
 
     @GetMapping("/user")
     public static String getLoginUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            // 인증된 사용자가 있을 경우
-            // 인증된 사용자 정보 확인
             return ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
         }
         return null;
     }
-
-
 
     @GetMapping(value = "/check/login")
     public ResponseEntity<String> checkLogin() {
@@ -52,12 +53,6 @@ public class SecurityController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
-    private final AuthenticationManager authenticationManager;
-    public SecurityController(AuthenticationManager authenticationManager, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
     }
 
     private Authentication setAuthentication(User loginUser, HttpSession session) {
@@ -87,7 +82,7 @@ public class SecurityController {
         }else {
             Authentication authentication = setAuthentication(loginUser, session); // spring security 세션에 사용자 로그인처리
             // JWT 발급 (JWT 사용 시) 응답값에 map 으로 감싸서 전달.
-			String token = JwtUtils.generateToken(authentication);
+			String token = jwtUtils.generateToken(authentication);
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("user", foundUser.get());

@@ -15,9 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-//spring boot의 주요원칙인 컴포넌트 기반 설정을 유지하기위해 extands WebSecurityConfigurerAdapter 구조는 deprecated 하고, @Bean 방식을 사용한다.
+//spring boot 수동로그인 하려면 @Bean 방식을 사용한다. 그외에는 자동주입을 생성하도록 수정했다.
 //Spring Security 5.7 이후로 @EnableWebSecurity 는 더 이상 필수적이지 않다.
 @Slf4j
 @Configuration
@@ -35,42 +33,22 @@ public class SecurityConfig {
 
     /** B. rest 방식으로 Controller 에서 AuthenticationProvider 를 사용하기위해 빈 등록함. **/
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
         return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+        return new ProviderManager(authenticationProvider);
     }
     //------------------------------------------------------------------------------------------------------- 빈 등록.
-
-    private final UserRepository userRepository;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    /** 불변성을 위해 생성자 주입을 사용함. **/
-    public SecurityConfig(UserRepository userRepository, JwtUtils jwtUtils, JwtAccessDeniedHandler jwtAccessDeniedHandler) {
-        this.userRepository = userRepository;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.jwtAuthenticationEntryPoint = new JwtAuthenticationEntryPoint();
-    }
-
-    /** i-2. JPA 조회를 통해 사용자를 확인함.**/
+    /** 생성자 없이 자동주입된 컴포넌트 사용**/
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService(userRepository, passwordEncoder());
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtils jwtUtils) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandler jwtAccessDeniedHandler,
+                                           JwtAuthorizationFilter jwtAuthorizationFilter, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 허용
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
@@ -98,8 +76,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
         //B. rest 방식 : id/pw 로그인 후 JWT 반환 필터 & 로그인을 제외한 모든 요청에서 JWT 검증하는 필터 & 세션 미사용 :
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore( jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );

@@ -3,11 +3,15 @@ package com.test.zoom.jwt;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /** 요청 헤더에 필요한 권한이 없으면 403 Forbidden 에러를 리턴함. **/
+@Component
+@NoArgsConstructor
 public class JwtAuthenticationEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
 
 

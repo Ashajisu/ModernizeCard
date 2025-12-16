@@ -5,8 +5,8 @@ import com.test.zoom.entity.UsageTransaction;
 import com.test.zoom.entity.*;
 
 import com.test.zoom.repository.*;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,29 +17,17 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/card")
+@AllArgsConstructor
 //@CrossOrigin(origins = "http://localhost:5173")
 public class DataController {
-
-    @Autowired
-    private SHCardRepository ShinHanCardR;
-
-    @Autowired
-    private SSCardRepository SamSungCardR;
-
-    @Autowired
-    private TotalRepository totalRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
-    private KBCardRepository kbCardR;
-
-    @Autowired
-    private UsageRepository usageR;
-
-    @Autowired
-    private WOCardRepository woCardR;
+    private final SHCardRepository ShinHanCardR;
+    private final SSCardRepository SamSungCardR;
+    private final TotalRepository totalRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final PaymentRepository paymentRepository;
+    private final KBCardRepository kbCardR;
+    private final UsageRepository usageR;
+    private final WOCardRepository woCardR;
 
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
