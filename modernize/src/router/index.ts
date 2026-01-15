@@ -52,6 +52,22 @@ router.beforeEach(async (to, from, next) => {
     const authRequired = !publicPages.includes(to.path);
     const auth: any = useAuthStore();
 
+    //쿠키검사 안함
+    if (to.path === '/auth/login') {
+        return next();
+    }
+
+    //로그인페이지에서 쿠키 내 사용자 정보 존재시 대시보드로 이동
+    if (to.path.includes('/auth/login/check') && !auth.user) {
+        const isLogined : boolean = await auth.loginCheckCookie();
+        if (!isLogined) {
+            return next();
+        }else {
+            alert("자동로그인");
+            return next('/home/dashboard');
+        }
+    }
+
     if (to.matched.some((record) => record.meta.requiresAuth)) {
         if (authRequired && !auth.user) {
             auth.returnUrl = to.fullPath;

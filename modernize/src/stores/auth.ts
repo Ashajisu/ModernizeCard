@@ -13,62 +13,42 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username: string, password: string) {
-
-            const user = {
-                id: 1,
-                username: username,
-                lastName: 'lastName',
-                token: 'fake-jwt-token',
-                authName: '',
-                dept: ''
-            };
-            // update pinia state
-            this.user = user;
-
-            //JWT , user
-            await apiClient.post(`/auth/login`, { username, password }).then( response => {
-                console.log(response);
-                const token = response?.token; // JWT 토큰 추출
-                if (token) {
-                    // 로컬 저장소에 토큰 저장
-                    this.user.token = token // 사용자 상태에 토큰 추가
-                    console.log(token);
-                }
-                const user = response?.user;
-                if (user) {
-                    // 로컬 저장소에 토큰 저장
-                    this.user.id = user.id;
-                    this.user.authName = user.authName;
-                    this.user.dept = user.dept;
-                    this.user.lastName = user.name;
-                    console.log(user);
-                }
-
+            await apiClient.post(`/auth/login`, { username, password }).then( async response => {
+                this.user = response.user;
+                localStorage.setItem('user', JSON.stringify(this.user));
+                await router.push(this.returnUrl || '/home/dashboard');
             });
-
-            // store user details and jwt in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
-            // redirect to previous url or default to home page
-            await router.push(this.returnUrl || '/home/dashboard');
         },
         logout() {
             this.user = null;
             localStorage.removeItem('user');
             router.push('/');
         },
-        // JWT 토큰 존재 여부 확인
-        getToken() {
-            return this.user?.token || null;
-        },
-        // 인증 상태 확인
-        isLoggedIn() {
-            return !!this.getToken();
-        },
-        async fetchUserConfig() {
+        async loginCheckCookie() {
+            //서버 에러시 쿠키로그인 실패처리
             try {
-                //시스템 관리자가 개인별/부서별/본부별 부여한 기능버튼영역 config 정보 호출 : 미구현
-                // const data = await axios.get('/api/config/user');
-                // this.config = data.data;
+                return await apiClient.get(`/auth/me`).then( async response => {
+                    if(response.loggedIn){
+                        const user = response.user;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }else {
+                        console.debug("loginCheckCookie loggedIn not found ");
+                    }
+                    return response.loggedIn;
+                });
+            }catch (error) {
+                console.debug("loginCheckCookie error: ", error);
+                return false;
+            }
+        },
+        async fetchOptions() {
+            try {
+                await apiClient.get('/api/base/option').then(res => {
+                    // this.deptOptions = res.dept;
+                    // this.authOptions = res.userType;
+                    // this.licenseOptions = res.license;
+                    // console.log("selectOption", this.deptOptions, this.authOptions, this.licenseOptions)
+                });
             } catch (error) {
                 alert(error);
                 console.log(error);
