@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.test.zoom.service.MultiDateTimeDeserializer;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,11 +41,12 @@ public class SHCardTransaction implements BaseCardTransaction{
     @Column(name = "purchase_type")
     private String purchaseType;
 
-    @Column(name = "usage_type")
+    @Column(name = "usage_type", nullable = false)
     private String usageType;
 
-    @Column(name = "currency")
-    private Long currency;
+    @Column(name = "currency", nullable = false)
+    @ColumnDefault("0L")
+    private Long currency = 0L;
 
     @Column(name = "payment_date")
     @JsonDeserialize(using = MultiDateTimeDeserializer.class)
@@ -51,5 +54,6 @@ public class SHCardTransaction implements BaseCardTransaction{
     private LocalDateTime paymentDate;
 
     @Column(name = "deleted")
-    private boolean deleted;
+    @ColumnDefault("false")
+    private boolean deleted = false;
 }

@@ -6,6 +6,8 @@ import com.test.zoom.service.MultiDateTimeDeserializer;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -19,7 +21,7 @@ public class SSCardTransaction implements BaseCardTransaction{
     private Long id;
 
     // 이용일 -> 거래일
-    @Column(name = "transaction_date")
+    @Column(name = "transaction_date", nullable = false)
     @JsonDeserialize(using = MultiDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime transactionDate;
@@ -29,7 +31,7 @@ public class SSCardTransaction implements BaseCardTransaction{
     private String usedCard;
 
     // 이용구분
-    @Column(name = "usage_type")
+    @Column(name = "usage_type", nullable = false)
     private String usageType;
 
     // 가맹점
@@ -65,8 +67,9 @@ public class SSCardTransaction implements BaseCardTransaction{
     private Integer installmentNumber;
 
     // 원금
-    @Column(name = "currency")
-    private Long currency;
+    @Column(name = "currency", nullable = false)
+    @ColumnDefault("0L")
+    private Long currency = 0L;
 
     // 입금후잔액
     @Column(name = "balance_after_deposit")
@@ -79,7 +82,8 @@ public class SSCardTransaction implements BaseCardTransaction{
     private LocalDateTime paymentDate;
 
     //삭제여부
-    @Column(name = "deleted")
-    private boolean deleted;
+    @Column(name = "deleted", nullable = false)
+    @ColumnDefault("false")
+    private boolean deleted = false;
 
 }

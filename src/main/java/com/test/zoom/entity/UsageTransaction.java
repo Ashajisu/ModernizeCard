@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.test.zoom.service.MultiDateTimeDeserializer;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -23,13 +24,13 @@ public class UsageTransaction{
     private String cardCompany;
 
     // 이용일 -> 거래일
-    @Column(name = "transaction_date")
+    @Column(name = "transaction_date", nullable = false)
     @JsonDeserialize(using = MultiDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime transactionDate;
 
     // 이용구분
-    @Column(name = "usage_type")
+    @Column(name = "usage_type", nullable = false)
     private String usageType;
 
     // 가맹점
@@ -41,6 +42,7 @@ public class UsageTransaction{
     private String purchaseType;
 
     // 원금
-    @Column(name = "currency")
-    private Long currency;
+    @Column(name = "currency", nullable = false)
+    @ColumnDefault("0L")
+    private Long currency = 0L;
 }
