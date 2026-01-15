@@ -347,3 +347,15 @@ gradle-app.setting
 
 # Ignore Modernize build file
 src/main/resources/static/
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/modules/ModernizeCard.main.iml
+/.idea/.gitignore
+/.idea/compiler.xml
+/.idea/dataSources.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/prettier.xml
+/.idea/vcs.xml
+/META-INF/MANIFEST.MF
+/modernize/src/assets/images/backgrounds/mone_3215.png
+/modernize/src/assets/images/backgrounds/mone_3216.jpeg

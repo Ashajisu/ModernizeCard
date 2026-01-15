@@ -49,9 +49,7 @@ C:\Java64\jdk-21\bin\javaw -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&
 ```
 
 ```window 포워딩
-관리자권한 ㅇㅇ
-
-
+관리자권한 cmd
 ngrok http 9090
 ```
 이러면 백엔드 서버가 백그라운드에서 계속 동작합니다.

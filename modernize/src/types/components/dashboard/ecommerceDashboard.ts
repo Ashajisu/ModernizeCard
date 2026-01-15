@@ -8,17 +8,6 @@ type paymentGateway = {
     bgcolor: string;
 };
 
-/*Recent Transaction*/
-// type recentTrans = {
-//     title: string;
-//     subtitle: string;
-//     textcolor: string;
-//     boldtext: string;
-//     line: string;
-//     link: string;
-//     url: string;
-// };
-
 type recentTrans = {
     title: string;
     subtitle: string;
