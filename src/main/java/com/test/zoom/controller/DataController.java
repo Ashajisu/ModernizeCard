@@ -156,6 +156,11 @@ public class DataController {
         return ResponseEntity.ok(Map.of("list", topList));
     }
 
+    @GetMapping("/payment/gateway/list")
+    public ResponseEntity<Map <String, List<Payment>>> getPaymentGatewayList() {
+        List<Payment> payment = paymentRepository.findAll();
+        return ResponseEntity.ok(Map.of("list", payment));
+    }
 
     /// kookmin : KB
     /**사용자의 카드내역을 나열합니다. **/
