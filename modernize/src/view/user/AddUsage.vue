@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 //검색
 const formFields = ref<FormField[]>([
     { label: '거래월', name: 'transactionDate', type: 'month', value: '', required: false, disabled: false },
-    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI'], required: false, disabled: false },
+    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI','NONGHYUP'], required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
     { label: '이용구분', name: 'usageType', type: 'text', value: '', required: false, disabled: false }
@@ -43,6 +43,7 @@ const statHeaders = ref<any[]>([
     { title: '국민', align: 'center', key: 'stat3' },
     { title: '신한', align: 'center', key: 'stat4' },
     { title: '우리', align: 'center', key: 'stat5' },
+    { title: '농협', align: 'center', key: 'stat6' },
 ]);
 
 const setUsers = (userList: UsageItem[]) => {
@@ -164,6 +165,7 @@ const getSummaryClass = (item:any) => {
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat5) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat6) }}</td>
                             </tr>
                         </template>
                     </v-data-table>

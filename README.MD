@@ -73,3 +73,7 @@ sudo certbot certonly --standalone -d ashajisu.iptime.org
 라이센스동의
 ```
 
+## 테이블 생성시 collation 주의
+테이블 자동생성시 '데이터 정렬'방법이 'utf8mb4_general_ci' 가 아니면 뷰 생성시
+Illegal mix of collations for operation 'UNION' 이 발생합니다.
+테이블의 정렬방법 변경시 각 필드의 정렬방법 옵션을 지워줘야합니다.

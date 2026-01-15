@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-const UserRoutes : RouteRecordRaw = {
+const UserRoutes: RouteRecordRaw = {
     path: '/user',
     meta: {
         requiresAuth: true
@@ -34,6 +34,11 @@ const UserRoutes : RouteRecordRaw = {
             name: '우리카드',
             path: 'woori',
             component: () => import('@/view/user/AddWO.vue')
+        },
+        {
+            name: '농협카드',
+            path: 'nh',
+            component: () => import('@/view/user/AddNH.vue')
         },
         {
             name: '지출전체',

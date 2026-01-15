@@ -1,73 +1,8 @@
 import {
-    CircleOffIcon,
-    BoxMultipleIcon,
-    AppsIcon,
-    FileTextIcon,
-    FileDotsIcon,
-    FilesIcon,
-    EditIcon,
-    BorderAllIcon,
-    BorderHorizontalIcon,
-    BorderInnerIcon,
-    BorderTopIcon,
-    BorderVerticalIcon,
-    BoxIcon,
-    AlertCircleIcon,
-    LoginIcon,
-    UserPlusIcon,
-    RotateIcon,
-    CurrencyDollarIcon,
-    ChartLineIcon,
-    ChartAreaIcon,
-    ChartDotsIcon,
-    ChartArcsIcon,
-    ChartCandleIcon,
-    ChartDonut3Icon,
-    ChartRadarIcon,
-    ShoppingCartIcon,
+    //https://tabler.io/icons 참고
     ApertureIcon,
-    LayoutIcon,
-    HelpIcon,
-    UserCircleIcon,
-    BoxAlignBottomIcon,
-    BoxAlignLeftIcon,
-    SettingsIcon,
-    ZoomCodeIcon,
-    StarIcon,
-    AwardIcon,
-    MoodSmileIcon,
-    Message2Icon,
-    PointIcon,
-    AppWindowIcon,
-    MailIcon,
-    BasketIcon,
-    CalendarIcon,
-    BorderStyle2Icon,
-    ColumnsIcon,
-    RowInsertBottomIcon,
-    EyeTableIcon,
-    SortAscendingIcon,
-    PageBreakIcon,
-    FilterIcon,
-    BoxModelIcon,
-    ServerIcon,
-    JumpRopeIcon,
-    LayoutKanbanIcon,
-    PhotoAiIcon,
-    SearchIcon,
-    SocialIcon,
-    BinaryIcon,
-    BrandTidalIcon,
-    HomeIcon,
-    FileInfoIcon,
-    AddressBookIcon,
-    BellDollarIcon,
-    TicketIcon,
-    FileCheckIcon,
-    PhoneIcon,
-    CloudComputingIcon,
-    CameraIcon,
-    PlayerPlayIcon
+    CreditCardIcon,
+    PlusMinusIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -98,29 +33,36 @@ const sidebarItem: menu[] = [
     { header: '카드정산' },
     {
         title: '신한카드',
-        icon: UserPlusIcon,
+        icon: CreditCardIcon,
         to: '/user/profile'
     },
     {
         title: '삼성카드',
-        icon: UserPlusIcon,
+        icon: CreditCardIcon,
         to: '/user/samsung'
     },
     {
         title: '국민카드',
-        icon: UserPlusIcon,
+        icon: CreditCardIcon,
         to: '/user/kookmin'
     },
     {
         title: '우리카드',
-        icon: UserPlusIcon,
+        icon: CreditCardIcon,
         to: '/user/woori'
     },
     {
-        title: '지출전체',
-        icon: UserPlusIcon,
-        to: '/user/usage'
+        title: '농협카드',
+        icon: CreditCardIcon,
+        to: '/user/nh'
     },
-]
+
+    { header: '지출관리' },
+    {
+        title: '지출전체',
+        icon: PlusMinusIcon,
+        to: '/user/usage'
+    }
+];
 
 export default sidebarItem;

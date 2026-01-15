@@ -20,15 +20,17 @@ import java.util.*;
 @AllArgsConstructor
 //@CrossOrigin(origins = "http://localhost:5173")
 public class DataController {
-    private final SHCardRepository ShinHanCardR;
-    private final SSCardRepository SamSungCardR;
     private final TotalRepository totalRepository;
     private final ScheduleRepository scheduleRepository;
     private final PaymentRepository paymentRepository;
-    private final KBCardRepository kbCardR;
-    private final UsageRepository usageR;
-    private final WOCardRepository woCardR;
 
+    private final SHCardRepository ShinHanCardR;
+    private final SSCardRepository SamSungCardR;
+    private final KBCardRepository kbCardR;
+    private final WOCardRepository woCardR;
+    private final NHCardRepository nhCardR;
+    private final UsageRepository usageR;
+    
     /// shinhan : SH
     /**사용자의 카드내역을 나열합니다. **/
     @GetMapping("/list")
@@ -198,7 +200,6 @@ public class DataController {
     @PostMapping("/usageTypeStats/kookmin")
     public ResponseEntity<Map <String, List<StatsProcedure>>> getKBUsageTypeCurrencyStats(@RequestBody Search search) {
         List<StatsProcedure> stats = kbCardR.getKBUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
-        System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
 
@@ -238,7 +239,50 @@ public class DataController {
     @PostMapping("/usageTypeStats/woori")
     public ResponseEntity<Map <String, List<StatsProcedure>>> getWOUsageTypeCurrencyStats(@RequestBody Search search) {
         List<StatsProcedure> stats = woCardR.getWOUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+    /// NH
+    /**사용자의 카드내역을 나열합니다. **/
+    @GetMapping("/list/nh")
+    public ResponseEntity<Map <String, List<NHCardTransaction>>> getNHCardTransactionList() {
+        List<NHCardTransaction> list = nhCardR.findAllByDeletedFalseOrderByIdDesc();
+        return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save/nh")
+    public ResponseEntity<NHCardTransaction> saveNHTransaction(@RequestBody NHCardTransaction dto) {
+        NHCardTransaction saved = nhCardR.save(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete/nh")
+    public ResponseEntity<NHCardTransaction> deleteNHTransaction(@RequestBody SHCardTransaction dto) {
+        int deletedCnt = nhCardR.markDeleted(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
+    }
+
+    /**카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList/nh")
+    public ResponseEntity<List<NHCardTransaction>> saveNHTransaction(@RequestBody List<NHCardTransaction> dto) {
+        //엑셀 역순으로 저장.
+        List<NHCardTransaction> reversedList = new ArrayList<>(dto);
+        Collections.reverse(reversedList);
+        List<NHCardTransaction> saved = nhCardR.saveAll(reversedList);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @PostMapping("/usageTypeStats/nh")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getNHUsageTypeCurrencyStats(@RequestBody Search search) {
+        List<StatsProcedure> stats = nhCardR.getNHUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
+
 }
