@@ -1,4 +1,4 @@
-package com.test.zoom.entity;
+package com.test.zoom.entity.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "kookmin_card")
-public class KBCardTransaction implements BaseCardTransaction{
+@Table(name = "nh_card")
+public class NHCardTransaction implements BaseCardTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,11 +56,8 @@ public class KBCardTransaction implements BaseCardTransaction{
 
     // 원금
     @Column(name = "currency", nullable = false)
-    private Long currency;
-
-    // 입금후잔액
-    @Column(name = "balance_after_deposit")
-    private Long balanceAfterDeposit;
+    @ColumnDefault("0L")
+    private Long currency = 0L;
 
     //결제일
     @Column(name = "payment_date")
@@ -70,7 +67,6 @@ public class KBCardTransaction implements BaseCardTransaction{
 
     //삭제여부
     @Column(name = "deleted", nullable = false)
-    @ColumnDefault( "false")
     private boolean deleted = false;
 
 }

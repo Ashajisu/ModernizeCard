@@ -4,7 +4,9 @@ import com.test.zoom.dto.Search;
 import com.test.zoom.entity.UsageTransaction;
 import com.test.zoom.entity.*;
 
+import com.test.zoom.entity.card.*;
 import com.test.zoom.repository.*;
+import com.test.zoom.repository.card.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;

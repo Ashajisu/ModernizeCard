@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-const UserRoutes: RouteRecordRaw = {
+const CardRoutes: RouteRecordRaw = {
     path: '/user',
     meta: {
         requiresAuth: true
@@ -18,34 +18,34 @@ const UserRoutes: RouteRecordRaw = {
         {
             name: '신한카드',
             path: 'profile',
-            component: () => import('@/view/user/AddSH.vue')
+            component: () => import('@/view/card/AddSH.vue')
         },
         {
             name: '삼성카드',
             path: 'samsung',
-            component: () => import('@/view/user/AddSS.vue')
+            component: () => import('@/view/card/AddSS.vue')
         },
         {
             name: '국민카드',
             path: 'kookmin',
-            component: () => import('@/view/user/AddKB.vue')
+            component: () => import('@/view/card/AddKB.vue')
         },
         {
             name: '우리카드',
             path: 'woori',
-            component: () => import('@/view/user/AddWO.vue')
+            component: () => import('@/view/card/AddWO.vue')
         },
         {
             name: '농협카드',
             path: 'nh',
-            component: () => import('@/view/user/AddNH.vue')
+            component: () => import('@/view/card/AddNH.vue')
         },
         {
             name: '지출전체',
             path: 'usage',
-            component: () => import('@/view/user/AddUsage.vue')
+            component: () => import('@/view/card/AddUsage.vue')
         }
     ]
 };
 
-export default UserRoutes;
+export default CardRoutes;

@@ -1,6 +1,5 @@
 package com.test.zoom.repository;
 
-import com.test.zoom.entity.SSCardTransaction;
 import com.test.zoom.entity.UsageTransaction;
 import com.test.zoom.entity.StatsProcedure;
 import org.springframework.data.jpa.repository.JpaRepository;

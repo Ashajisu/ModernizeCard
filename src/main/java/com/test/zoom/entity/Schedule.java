@@ -41,6 +41,8 @@ public class Schedule {
     private boolean line = true;
     @Transient
     private String url = "";
+    @Transient
+    private String amount = "";
 
 
     public String getTitle() {

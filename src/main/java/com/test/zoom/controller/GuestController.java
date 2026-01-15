@@ -1,7 +1,8 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.entity.*;
-import com.test.zoom.repository.*;
+import com.test.zoom.entity.card.SHCardTransaction;
+import com.test.zoom.repository.card.SHCardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

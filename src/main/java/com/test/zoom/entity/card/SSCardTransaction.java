@@ -1,4 +1,4 @@
-package com.test.zoom.entity;
+package com.test.zoom.entity.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "samsung_card")
-public class SSCardTransaction implements BaseCardTransaction{
+public class SSCardTransaction implements BaseCardTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

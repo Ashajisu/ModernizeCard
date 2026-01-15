@@ -1,4 +1,4 @@
-package com.test.zoom.entity;
+package com.test.zoom.entity.card;
 
 import java.time.LocalDateTime;
 

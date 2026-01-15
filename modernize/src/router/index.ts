@@ -2,7 +2,7 @@ import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
-import UserRoutes from "./UserRoutes";
+import CardRoutes from './CardRoutes';
 
 const routes = [
     {
@@ -12,9 +12,8 @@ const routes = [
     MainRoutes,
     AuthRoutes, // home 경로 로그인화면 포함
     // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
-    UserRoutes, // 탭 기본 화면 dashboard 포함
-
-]
+    CardRoutes
+];
 // KeepAlive 에서 컴포넌트를 캐싱하려면 컴포넌트에 name 이 필요함.
 // 비동기(import())로 호출된 컴포넌트는 기본적으로 name 이 없으므로,
 // tabStore 에서 관리하는 탭 이름과도 일치하도록 route.name 값을 컴포넌트의 name 으로 설정해줌.
