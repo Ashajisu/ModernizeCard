@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { DateRange, FormField } from '@/types/custom/InputTypes';
-import { type ComponentPublicInstance, computed, getCurrentInstance, ref } from 'vue';
+import { type ComponentPublicInstance, computed, getCurrentInstance, ref, watch } from 'vue';
 import CustomDialog from '@/components/custom/dialog/CustomSearchsDialog.vue';
 import type { VForm } from 'vuetify/components';
+import { getDeepValue, setDeepValue } from '@/utils/common';
 
 const props = defineProps<{
     formFields: FormField[];
@@ -16,13 +17,14 @@ const isEditable = computed(() => props.edit);
 const hideDetails = props.hideDetails ?? false; // props.hideDetails가 undefined이면 false로 설정
 
 // Dialog 열림 여부
+// 클릭만으로는 안 열리고, 한 글자라도 입력되면 자동으로 팝업이 열리며, 그 입력값이 검색 키워드로 전달되는 구조
 const { proxy } = getCurrentInstance()!;
-const openSearchDialog = async (field: FormField) => {
+const openSearchDialog = async (field: FormField, keyword: string) => {
     if (isEditable.value) {
         const rowDialog = proxy?.$refs[`dialog_${field.name}`] as ComponentPublicInstance<typeof CustomDialog>;
         const dialog = Array.isArray(rowDialog) ? rowDialog[0]?.$?.exposed : rowDialog?.$?.exposed;
         if (!!dialog) {
-            dialog?.open();
+            dialog?.open(keyword);
         }
     }
 };
@@ -39,7 +41,13 @@ const validateForm = async () => {
 const formData = computed(() => {
     const data: Record<string, any> = {};
     props.formFields.forEach((field) => {
-        data[field.name] = field.value;
+        // ⬇ 날짜 필드는 포맷 변환
+        if (field.type === 'datetime') {
+            // setDeepValue(data, field.name, formatDateTimeString(field.value?.toString()));
+            setDeepValue(data, field.name, field.value);
+        } else {
+            setDeepValue(data, field.name, field.value);
+        }
     });
     return data;
 });
@@ -80,6 +88,23 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
 }
 
 const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
+
+// 필드 자동 동기화
+watch(
+    () => props.formFields.map((f) => f.value),
+    () => {
+        props.formFields.forEach((field) => {
+            if (field.type === 'hidden' && field.linkTo) {
+                const srcValue = getDeepValue(formData.value, field.linkTo);
+                if (srcValue !== undefined) {
+                    setDeepValue(formData.value, field.name, srcValue);
+                    field.value = srcValue; // UI에도 반영
+                }
+            }
+        });
+    },
+    { deep: true }
+);
 </script>
 <!-- single-line 입력시 label 옵션 적용 안됨 주의! -->
 <!-- 자동검증을 위한 form 태그 추가 : form 제출로 인한 페이지 새로고침을 막기위해 lineBtn 슬롯 내 버튼에는 type="submit"을 주지 말것-->
@@ -90,7 +115,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
     <v-container>
         <slot name="topBtn" :validateForm="validateForm" />
         <v-form ref="formRef" lazy-validation="false">
-            <v-row class="mb-6 align-center">
+            <v-row class="mb-3 align-center">
                 <template v-for="field in formFields">
                     <v-col
                         v-bind="colSettings[colsPerRow > 5 ? 5 : colsPerRow]"
@@ -99,22 +124,18 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                     >
                         <v-select
                             v-if="field.type === 'select'"
-                            return-object
+                            :return-object="field.returnObject !== false"
                             variant="outlined"
                             v-model="field.value as string"
                             :items="field.options"
+                            :item-title="field.itemTitle"
+                            :item-value="field.itemValue"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
                             :hide-details="hideDetails"
                             persistent-placeholder
-                        >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
-                        </v-select>
+                            :label="field.label + (field.required ? ' *' : '')"
+                        />
 
                         <div v-else-if="field.type === 'search' || field.type === 'search_list'">
                             <CustomDialog
@@ -122,7 +143,9 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 :title="field.label"
                                 :single="field.type === 'search'"
                                 :items="field.searchObj"
-                                :searchField="field.name"
+                                :searchField="field.itemValue ?? field.name"
+                                :viewField="field.viewLabelMap"
+                                :field="field"
                                 @update:selectedValue="
                                     (selectedValue: string[] | string) => {
                                         field.value = selectedValue;
@@ -132,19 +155,18 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             <v-text-field
                                 v-model="field.value"
                                 :rules="edit && field.required ? rules : []"
-                                :readonly="!isEditable || field.disabled"
+                                :readonly="field.disabled || !isEditable"
                                 :hide-details="hideDetails"
-                                @click="openSearchDialog(field)"
+                                :item-title="field.itemTitle ?? field.name"
                                 persistent-placeholder
+                                :label="field.label + (field.required ? ' *' : '')"
                             >
                                 <template v-slot:append-inner>
-                                    <v-icon icon="mdi-account-search" class="text-right"></v-icon>
-                                </template>
-                                <template v-slot:label>
-                                    <span
-                                        >{{ field.label }}
-                                        <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                    </span>
+                                    <v-icon
+                                        icon="mdi-account-search"
+                                        class="text-right"
+                                        @click.stop="openSearchDialog(field, String(field.value ?? '').trim())"
+                                    ></v-icon>
                                 </template>
                             </v-text-field>
                         </div>
@@ -155,17 +177,13 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             variant="outlined"
                             type="password"
                             v-model="field.value"
+                            :item-title="field.itemTitle ?? field.name"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            :label="field.label + (field.required ? ' *' : '')"
                         >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
                         </v-text-field>
                         <v-text-field
                             v-else-if="field.type === 'date'"
@@ -173,28 +191,25 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             variant="outlined"
                             type="date"
                             v-model="field.value"
-                            @update:model-value="val => field.value = val === '' ? null : val"
+                            :item-title="field.itemTitle ?? field.name"
+                            @update:model-value="(val) => (field.value = val === '' ? null : val)"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            :label="field.label + (field.required ? ' *' : '')"
                         >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
                         </v-text-field>
                         <v-row v-else-if="field.type === 'due'">
                             <v-col cols="6">
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).startDate"
-                                    @update:model-value="val => field.value = val === '' ? null : val"
+                                    :item-title="field.itemTitle ?? field.name"
+                                    @update:model-value="(val) => (field.value = val === '' ? null : val)"
                                     :label="field.label + ' 시작'"
                                     :rules="edit && field.required ? rules : []"
-                                    :readonly="!isEditable || field.disabled"
+                                    :readonly="field.disabled || !isEditable"
                                     :hide-details="hideDetails"
                                     persistent-placeholder
                                 />
@@ -204,53 +219,32 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).endDate"
-                                    @update:model-value="val => field.value = val === '' ? null : val"
+                                    :item-title="field.itemTitle ?? field.name"
+                                    @update:model-value="(val) => (field.value = val === '' ? null : val)"
                                     :label="field.label + ' 종료'"
                                     :rules="edit && field.required ? rules : []"
-                                    :readonly="!isEditable || field.disabled"
+                                    :readonly="field.disabled || !isEditable"
                                     :hide-details="hideDetails"
                                     persistent-placeholder
                                 />
                             </v-col>
                         </v-row>
-                        <v-text-field
-                            v-else-if="field.type === 'month'"
-                            color="primary"
-                            variant="outlined"
-                            type="month"
-                            v-model="field.value"
-                            @update:model-value="val => field.value = val === '' ? null : val"
-                            :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
-                            :hide-details="hideDetails"
-                            persistent-placeholder
-                        >
-                            <template v-slot:label>
-                                <span
-                                >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
-                        </v-text-field>
+
                         <v-text-field
                             v-else-if="field.type === 'datetime'"
                             color="primary"
                             variant="outlined"
                             type="datetime-local"
                             v-model="field.value"
-                            @update:model-value="val => field.value = val === '' ? null : val"
+                            :item-title="field.itemTitle ?? field.name"
+                            @update:model-value="(val) => (field.value = val === '' ? null : val)"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
                             :hide-details="hideDetails"
                             persistent-placeholder
                             style="min-width: 200px"
+                            :label="field.label + (field.required ? ' *' : '')"
                         >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
                         </v-text-field>
 
                         <div v-else-if="field.type === 'check'" class="outlined-checkbox">
@@ -260,18 +254,19 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             </v-label>
                             <v-checkbox
                                 v-for="(option, index) in field.options"
+                                :key="index"
+                                v-model="field.value"
+                                :label="option.label"
+                                :value="option.value"
+                                :readonly="field.disabled || !isEditable"
+                                multiple
+                                density="compact"
+                                hide-details
                                 color="primary"
                                 variant="outlined"
                                 type="text"
-                                density="compact"
-                                hide-details
-                                :key="index"
-                                v-model="field.value"
-                                multiple
-                                :value="option"
+                                :return-object="field.returnObject !== false"
                                 :rules="edit && field.required ? rules : []"
-                                :readonly="!isEditable || field.disabled"
-                                :label="option"
                             >
                             </v-checkbox>
                         </div>
@@ -281,15 +276,11 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             color="primary"
                             inset
                             v-model="field.value as boolean"
+                            :item-title="field.itemTitle ?? field.name"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
+                            :label="field.label + (field.required ? ' *' : '')"
                         >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
                         </v-switch>
                         <v-text-field
                             v-else-if="field.type === 'text'"
@@ -297,17 +288,13 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             variant="outlined"
                             type="text"
                             v-model="field.value as string"
+                            :item-title="field.itemTitle ?? field.name"
                             :rules="edit && field.required ? rules : []"
-                            :readonly="!isEditable || field.disabled"
+                            :readonly="field.disabled || !isEditable"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            :label="field.label + (field.required ? ' *' : '')"
                         >
-                            <template v-slot:label>
-                                <span
-                                    >{{ field.label }}
-                                    <span style="color: red"> {{ field.required ? '&nbsp*' : '' }}</span>
-                                </span>
-                            </template>
                         </v-text-field>
                         <template v-else-if="field.type === `slot`">
                             <slot :name="field.name" :field="field" />
