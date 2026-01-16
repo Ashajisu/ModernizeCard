@@ -5,6 +5,9 @@ import com.test.zoom.entity.entry.*;
 import com.test.zoom.repository.entry.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -54,39 +57,23 @@ public class VoucherService {
         return voucher.getId();
     }
 
-    /**
-     * 거래 유형 + 계정 성격 기준으로 차/대변 결정
-     */
-//    private DcPair resolveDc(VoucherType type, Account de, Account cre) {
-//
-//        return switch (type) {
-//
-//            case TRANSFER -> new DcPair(
-//                    de,     // 받는 계좌 증가
-//                    cre    // 보내는 계좌 감소 또는 수익의 증가
-//            );
-//
-//            case CARD -> new DcPair(
-//                    de,     // 비용 증가
-//                    cre    // 카드부채 증가
-//            );
-//
-//            case CARD_PAYMENT -> new DcPair(
-//                    de,   // 카드부채 감소
-//                    cre      // 계좌 감소
-//            );
-//
-//            case CASH -> new DcPair(
-//                    cre,     // 비용 증가
-//                    de    // 현금 감소
-//            );
-//
-//            case ADJUST -> new DcPair(
-//                    cre,
-//                    de
-//            );
-//        };
-//    }
-//
-//    private record DcPair(Account debit, Account credit) {}
+    public List<Account> getAccounts() {
+        List<Account> list = accountRepository.findAll();
+        return list;
+    }
+
+    @Transactional
+    public Account deleteAccount(Account account) {
+        Account found = accountRepository.findById(account.getId()).orElseThrow();
+        found.setActive(false);
+        return found;
+    }
+
+    public Account saveAccount(Account account) {
+        return accountRepository.save(account);
+    }
+
+    public List<Account> saveAccounts(List<Account> reversedList) {
+        return accountRepository.saveAll(reversedList);
+    }
 }

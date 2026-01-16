@@ -1,15 +1,16 @@
 package com.test.zoom.entity.entry;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(catalog = "ledger", name = "entry")
 /** 실제 계좌별 금액 변동, voucher와 account FK */

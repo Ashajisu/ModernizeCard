@@ -1,9 +1,18 @@
 package com.test.zoom.entity.entry;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ToString
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(catalog = "ledger", name = "account")
 /** 계좌/카드/현금 등의 계정 정보 */
@@ -32,7 +41,8 @@ public class Account {
     @Column(nullable = false)
     private boolean isActive = true;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Entry> entries;
 
     private LocalDateTime createdAt = LocalDateTime.now();

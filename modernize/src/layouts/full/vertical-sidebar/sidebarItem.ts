@@ -2,7 +2,12 @@ import {
     //https://tabler.io/icons 참고
     ApertureIcon,
     CreditCardIcon,
-    PlusMinusIcon
+    PlusMinusIcon,
+    RowInsertBottomIcon,
+    TableIcon,
+    TablePlusIcon,
+    CashBanknoteIcon,
+    MathSymbolsIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -62,6 +67,38 @@ const sidebarItem: menu[] = [
         title: '지출전체',
         icon: PlusMinusIcon,
         to: '/user/usage'
+    },
+
+    { header: '잔액관리' },
+    {
+        title: '계정관리',
+        icon: CashBanknoteIcon,
+        to: '/entry/account'
+    },
+    {
+        title: '전표조회',
+        icon: RowInsertBottomIcon,
+        to: '/entry/voucher'
+    },
+    {
+        title: '보조원장',
+        icon: TableIcon,
+        to: "/entry/ledger/account'"
+    },
+    {
+        title: '전체원장',
+        icon: TablePlusIcon,
+        to: '/entry/ledger/all'
+    },
+    {
+        title: '대차대조표',
+        icon: MathSymbolsIcon,
+        to: '/entry/sheet/balance'
+    },
+    {
+        title: '손익계산서',
+        icon: PlusMinusIcon,
+        to: '/entry/sheet/income'
     }
 ];
 

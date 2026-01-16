@@ -1,19 +1,18 @@
 package com.test.zoom.entity.entry;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(catalog = "ledger", name = "voucher")
 /** 거래 단위, 날짜/유형/설명/업로드 정보 */
@@ -33,7 +32,7 @@ public class Voucher {
     @Column(length = 255)
     private String description;
 
-    @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Entry> entries;
 
     private LocalDateTime createdAt = LocalDateTime.now();

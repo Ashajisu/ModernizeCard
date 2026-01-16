@@ -3,6 +3,7 @@ import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
 import CardRoutes from './CardRoutes';
+import EntryRoutes from '@/router/EntryRoutes';
 
 const routes = [
     {
@@ -12,7 +13,8 @@ const routes = [
     MainRoutes,
     AuthRoutes, // home 경로 로그인화면 포함
     // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
-    CardRoutes
+    CardRoutes,
+    EntryRoutes
 ];
 // KeepAlive 에서 컴포넌트를 캐싱하려면 컴포넌트에 name 이 필요함.
 // 비동기(import())로 호출된 컴포넌트는 기본적으로 name 이 없으므로,

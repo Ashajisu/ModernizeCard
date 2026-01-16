@@ -20,7 +20,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/card")
 @AllArgsConstructor
-//@CrossOrigin(origins = "http://localhost:5173")
 public class DataController {
     private final TotalRepository totalRepository;
     private final ScheduleRepository scheduleRepository;

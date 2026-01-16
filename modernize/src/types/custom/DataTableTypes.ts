@@ -64,3 +64,27 @@ export type SHCardItem = {
     [key: string]: string;
 };
 
+export type AccountItem = {
+    id: string;
+    accountName: string;
+    accountType: string;
+    categoryType: string;
+    accountBalance: string;
+};
+
+export const AccountTypeMapping = [
+    { label: '자산', value: 'ASSET' },
+    { label: '부채', value: 'LIABILITY' },
+    { label: '기간수익', value: 'INCOME' },
+    { label: '기간비용', value: 'EXPENSE' },
+    { label: '순자산', value: 'EQUITY' }
+];
+export const CategoryTypeMapping = [
+    { label: '계좌', value: 'BANK' },
+    { label: '카드', value: 'CARD' },
+    { label: '현금', value: 'CASH' },
+    { label: '투자', value: 'INVEST' },
+    { label: '대출', value: 'LOAN' },
+    { label: '내가받을돈', value: 'RECEIVABLE' },
+    { label: '기타', value: 'ETC' }
+];
