@@ -102,3 +102,38 @@ sudo certbot certonly --standalone -d ashajisu.iptime.org
 테이블 자동생성시 '데이터 정렬'방법이 'utf8mb4_general_ci' 가 아니면 뷰 생성시
 Illegal mix of collations for operation 'UNION' 이 발생합니다.
 테이블의 정렬방법 변경시 각 필드의 정렬방법 옵션을 지워줘야합니다.
+
+
+## 분개
+계좌(account) → 전표(voucher) → 분개(entry) 관계
+
+
+## 전표 구분
+TRANSFER
+계좌 ↔ 계좌
+급여, 송금, 자동이체, 계좌이동
+분개: 계좌 A 차변 / 계좌 B 대변
+
+CARD
+카드 승인 발생 시점
+지출 확정, 부채 증가
+분개: 비용 or 자산 감소 / 카드부채 증가
+
+CARD_PAYMENT
+카드 대금 결제일
+부채 감소 + 계좌 감소
+분개: 카드부채 차변 / 계좌 대변
+
+CASH
+현금 직접 사용
+분개: 비용 or 자산 / 현금 감소
+
+ADJUST
+잔액 보정, 이월, 초기잔액
+분개: 계좌 / 조정계정
+
+
+## 성능 향상을 위한 필수 인덱스
+CREATE INDEX idx_entry_account ON ledger.entry(account_id);
+CREATE INDEX idx_entry_voucher ON ledger.entry(voucher_id);
+CREATE INDEX idx_voucher_date ON ledger.voucher(voucher_date);
