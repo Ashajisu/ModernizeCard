@@ -5,12 +5,10 @@ import {useAuthStore} from "@/stores/auth";
 import { alert } from "@/common/alertService";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
-const devUrl = `${import.meta.env.DEV_API_URL}`;
 
 // Axios 인스턴스 생성
 const api = axios.create({
-    baseURL: baseUrl, //운영할때 env 경로를 통해서
-    // baseURL: devUrl, //개발할때 proxy 경로를 통해서
+    baseURL: baseUrl,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '69420'
