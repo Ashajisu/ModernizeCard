@@ -1,0 +1,1 @@
+import{aZ as s,a$ as r}from"./index-DLvhGpt9.js";const i=s({id:"Frineds",state:()=>({friends:[]}),getters:{},actions:{async fetchFrineds(){try{const e=await r.get("/api/friends/list");this.friends=e.data.friends}catch(e){alert(e),console.log(e)}}}});export{i as u};
