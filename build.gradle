@@ -53,7 +53,7 @@ dependencies {
 
 bootJar {
     archiveBaseName = 'ModernizeCard'
-    archiveVersion = '0.0.2'
+    archiveVersion = '0.0.3'
     //우리카드 추가
 
     // 루트 기준으로 제외할 폴더 지정

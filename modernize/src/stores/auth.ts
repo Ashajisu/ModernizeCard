@@ -8,13 +8,17 @@ export const useAuthStore = defineStore({
         // initialize state from local storage to enable user to stay logged in
         // @ts-ignore
         user: JSON.parse(localStorage.getItem('user')),
+        token: localStorage.getItem('token'),
         returnUrl: null,
         config : { iframe : false }
     }),
     actions: {
         async login(username: string, password: string) {
             await apiClient.post(`/auth/login`, { username, password }).then( async response => {
-                this.user = response.user;
+                const { token, user } = response;
+                this.token = token;
+                this.user = user;
+                localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(this.user));
                 await router.push(this.returnUrl || '/home/dashboard');
             });

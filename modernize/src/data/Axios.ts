@@ -91,8 +91,8 @@ api.interceptors.request.use((config) => {
         // }
     // }
 
-    if (authStore.user?.token) {
-        config.headers.Authorization = `Bearer ${authStore.user.token}`;
+    if (authStore.token) {
+        config.headers.Authorization = `Bearer ${authStore.token}`;
     }
     console.log(`[Request]${config.method?.toUpperCase()}: ${config.url}`);
     return config;

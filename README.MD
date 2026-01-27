@@ -12,6 +12,9 @@ jdk : ms-21 (언어수준 17)
 <br>
 
 ### 프론트앤드 git pages 배포
+
+.env 파일의 VITE_API_URL="https://doris-aquicultural-adequately.ngrok-free.dev" 경로 확인
+
 ```
 cd modernize
 npm run build
@@ -20,10 +23,44 @@ npm run deploy
 빌드, .nojekyll 폴더생성, 배포
 배포에 2분 정도 소요됩니다.
 https://github.com/jisu-arisys/ModernizeCard/deployments 에서 Upates 완료여부를 확인하고
-https://jisu-arisys.github.io/ModernizeCard/ 경로로 접속합니다.
+https://jisu-arisys.github.io/ModernizeCard/ 경로로 접속합니다. 쿠키를 지우고 다시 접속합니다.
 
-### 백엔드 항상 켜두기
 
+### 윈도우에서 백엔드 항상 켜두기
+build.gradle 버전변경
+bootJar 실행
+/build/libs/ModernizeCard-0.0.x.jar 파일 이동 > OneDrive/hab/ModernizeCard
+
+윈도우에서
+OneDrive/hab/ModernizeCard > D:\WinSW\ModernizeCard-0.0.x.jar 파일 이동
+D:\WinSW\modernizecard.xml 실행할 파일 arguments 이름 수정  
+
+윈도우 관리자 CMD 에서
+D:
+cd WinSW
+modernizecard.exe stop
+sc delete modernizecard (modernizecard.exe uninstall 안됨)
+서비스 > 동작 > 새로고침 이후 modernizecard 서비스 사라진것 확인
+
+modernizecard.exe install
+sc start modernizecard
+서비스 > 동작 > 새로고침 이후 modernizecard 서비스 등록 및 실행중 확인
+-2026.1.27
+
+```window CMD
+
+cd C:\Users\USER\OneDrive - 주식회사 아리시스\hab\ModernizeCard
+C:\Java64\jdk-21\bin\javaw -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&1
+```
+
+```window 포워딩
+관리자권한 cmd
+ngrok http 9090
+```
+이러면 백엔드 서버가 백그라운드에서 계속 동작합니다.
+
+
+### 윈도우에서 백엔드 항상 켜두기
 노트북에서 터미널 닫아도 계속 실행하려면 pm2 같은 프로세스 매니저를 씁니다:
 ```bash
 npm install -g pm2
@@ -41,18 +78,6 @@ nohup java -jar ./ModernizeCard-0.1.jar > app_yyyymmdd.log 2>&1 &
 ```mac 포워딩
 ngrok http 9090
 ```
-
-```window CMD
-
-cd C:\Users\USER\OneDrive - 주식회사 아리시스\hab\ModernizeCard
-C:\Java64\jdk-21\bin\javaw -jar ./ModernizeCard-0.0.1.jar > app_yyyymmdd.log 2>&1
-```
-
-```window 포워딩
-관리자권한 cmd
-ngrok http 9090
-```
-이러면 백엔드 서버가 백그라운드에서 계속 동작합니다.
 
 ### 인증서 90일 간격 갱신
 
