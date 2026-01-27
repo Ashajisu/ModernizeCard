@@ -24,8 +24,8 @@ export const saveToServer = async (validateForm: any, url: string) => {
 
 export const deleteToServer = async (id: string, url: string) => {
     try {
-        const response = await apiClient.get(url);
-        return response.status >= 200 && response.status < 300;  // boolean 보장
+        await apiClient.delete(url); //response.data 값을 반환함
+        return true; //apiClient 에서 핸들링하므로 오류만 아니면 응답값 내용은 상관없이 성공처리
     } catch (error) {
         console.error('서버 저장 실패:', error);
         throw error;

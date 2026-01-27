@@ -28,10 +28,11 @@ public class EntryController {
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("/account/delete")
-    public ResponseEntity<Account> deleteAccount( @RequestBody Account account) {
-        Account deleted = voucherService.deleteAccount(account);
-        return ResponseEntity.ok(deleted);
+    @DeleteMapping("/account/delete/{id}")
+    public ResponseEntity<Long> deleteAccount( @PathVariable Long id) {
+        Account deleted = voucherService.deleteAccount(id);
+        log.info("deleted account: {}", deleted);
+        return ResponseEntity.ok(deleted.getId());
     }
 
     @PostMapping("/account/save")

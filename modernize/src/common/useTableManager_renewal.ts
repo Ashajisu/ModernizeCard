@@ -288,9 +288,9 @@ export function useTableManager<T extends Record<string, any>>(
         console.log(index);
         if (index !== -1 && await confirm("삭제 하시겠습니까?")) {
             const deleted : boolean | undefined = await deleteToServer(selected, url);
-            // const removed = tableList.value.splice(index, 1);
+            const removed = tableList.value.splice(index, 1);
             if (deleted) {
-                // await alert(`${removed[0][identifierField]}이 삭제되었습니다.`);
+                await alert(`${removed[0][identifierField]}이 삭제되었습니다.`);
             } else {
                 await alert("삭제 실패");
             }

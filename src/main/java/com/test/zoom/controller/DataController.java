@@ -48,9 +48,9 @@ public class DataController {
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
-    @PostMapping("/delete")
-    public ResponseEntity<SHCardTransaction> deleteTransaction(@RequestBody SHCardTransaction dto) {
-        int deletedCnt = ShinHanCardR.markDeleted(dto.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<SHCardTransaction> deleteTransaction(@PathVariable Long id) {
+        int deletedCnt = ShinHanCardR.markDeleted(id);
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -91,9 +91,9 @@ public class DataController {
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
-    @PostMapping("/delete/samsung")
-    public ResponseEntity<SSCardTransaction> deleteSSTransaction(@RequestBody SSCardTransaction dto) {
-        int deletedCnt = SamSungCardR.markDeleted(dto.getId());
+    @DeleteMapping("/delete/samsung/{id}")
+    public ResponseEntity<SSCardTransaction> deleteSSTransaction(@PathVariable Long id) {
+        int deletedCnt = SamSungCardR.markDeleted(id);
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -181,9 +181,9 @@ public class DataController {
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
-    @PostMapping("/delete/kookmin")
-    public ResponseEntity<KBCardTransaction> deleteKBTransaction(@RequestBody KBCardTransaction dto) {
-        int deletedCnt = kbCardR.markDeleted(dto.getId());
+    @DeleteMapping("/delete/kookmin/{id}")
+    public ResponseEntity<KBCardTransaction> deleteKBTransaction(@PathVariable Long id) {
+        int deletedCnt = kbCardR.markDeleted(id);
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -220,9 +220,9 @@ public class DataController {
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
-    @PostMapping("/delete/woori")
-    public ResponseEntity<WOCardTransaction> deleteWOTransaction(@RequestBody WOCardTransaction dto) {
-        int deletedCnt = woCardR.markDeleted(dto.getId());
+    @DeleteMapping("/delete/woori/{id}")
+    public ResponseEntity<WOCardTransaction> deleteWOTransaction(@PathVariable Long id) {
+        int deletedCnt = woCardR.markDeleted(id);
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -259,9 +259,9 @@ public class DataController {
     }
 
     /**신규 카드내역을 논리 삭제합니다. **/
-    @PostMapping("/delete/nh")
-    public ResponseEntity<NHCardTransaction> deleteNHTransaction(@RequestBody SHCardTransaction dto) {
-        int deletedCnt = nhCardR.markDeleted(dto.getId());
+    @DeleteMapping("/delete/nh/{id}")
+    public ResponseEntity<NHCardTransaction> deleteNHTransaction(@PathVariable Long id) {
+        int deletedCnt = nhCardR.markDeleted(id);
         if(deletedCnt > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }

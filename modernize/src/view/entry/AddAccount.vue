@@ -69,7 +69,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                             <v-btn flat color="primary" variant="outlined" @click="onNew"
                                 ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록
                             </v-btn>
-                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/entry/account/delete')"
+                            <v-btn flat color="error" variant="outlined" @click="onDelete(selectedEmpId[0], '/entry/account/delete/'+selectedEmpId[0])"
                                 ><v-icon icon="mdi-minus" stroke-width="1.5" size="18" class="mr-2" />삭제
                             </v-btn>
                         </div>
