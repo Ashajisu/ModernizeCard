@@ -4,11 +4,15 @@ import com.test.zoom.dto.VoucherCreateRequest;
 import com.test.zoom.entity.entry.*;
 import com.test.zoom.repository.entry.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class VoucherService {
@@ -58,13 +62,15 @@ public class VoucherService {
     }
 
     public List<Account> getAccounts() {
-        List<Account> list = accountRepository.findAll();
+        List<Account> list = accountRepository.findAllByOrderByAccountCodeAsc();
         return list;
     }
 
     @Transactional
-    public Account deleteAccount(Account account) {
-        Account found = accountRepository.findById(account.getId()).orElseThrow();
+    public Account deleteAccount(Long accountId) {
+        Account found = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(422), accountId + " not found"));
+        log.info("found account: {}", found);
         found.setActive(false);
         return found;
     }

@@ -34,7 +34,8 @@ const userFields = ref<FormField[]>([
     { label: '계정명', name: 'accountName', type: 'text', value: '', required: true, disabled: false },
     { label: '구분', name: 'accountType', type: 'select', value: '', returnObject:false, required: true, disabled: false,
         itemTitle:'label', itemValue:'value', options: AccountTypeMapping },
-    { label: '유형', name: 'categoryType', type: 'text', value: '', required: true, disabled: false },
+    { label: '유형', name: 'categoryType', type: 'select', value: '', returnObject:false, required: true, disabled: false,
+        itemTitle:'label', itemValue:'value', options: CategoryTypeMapping},
     { label: '소속', name: 'bankName', type: 'text', value: '', required: false, disabled: false },
     { label: '활성화', name: 'active', type: 'switch', value: '', options:[true,false], required: false, disabled: false }
 ]);
