@@ -76,7 +76,7 @@ const sidebarItem: menu[] = [
         to: '/entry/account'
     },
     {
-        title: '전표조회',
+        title: '전표관리',
         icon: RowInsertBottomIcon,
         to: '/entry/voucher'
     },

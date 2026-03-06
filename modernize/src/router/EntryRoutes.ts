@@ -13,12 +13,12 @@ const EntryRoutes: RouteRecordRaw = {
             name: '계정관리',
             path: 'account',
             component: () => import('@/view/entry/AddAccount.vue')
-        }
-        // {
-        //     name: '전표조회',
-        //     path: 'voucher',
-        //     component: () => import('@/view/entry/VoucherList.vue')
-        // },
+        },
+        {
+            name: '전표관리',
+            path: 'voucher',
+            component: () => import('@/view/entry/AddVoucher.vue')
+        },
         // {
         //     name: '보조원장',
         //     path: 'ledger/account',

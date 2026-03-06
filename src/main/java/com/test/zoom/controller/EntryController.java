@@ -1,7 +1,9 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.dto.VoucherCreateRequest;
+import com.test.zoom.dto.VoucherSelectDto;
 import com.test.zoom.entity.entry.Account;
+import com.test.zoom.entity.entry.Voucher;
 import com.test.zoom.service.VoucherService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -51,11 +53,22 @@ public class EntryController {
 
     /** 전표 관리 */
 
+    @GetMapping("/vouchers")
+    public ResponseEntity<List<VoucherSelectDto>> getVoucher() {
+        List<VoucherSelectDto> list = voucherService.getVouchers();
+        return ResponseEntity.ok(list);
+    }
+    
+    @PostMapping("/vouchers")
+    public ResponseEntity<List<VoucherSelectDto>> getVoucher(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+        List<VoucherSelectDto> list = voucherService.getVouchersByDate(startDate, endDate);
+        return ResponseEntity.ok(list);
+    }
+
     @PostMapping("/voucher/create")
     public ResponseEntity<Long> createVoucher( @RequestBody @Valid VoucherCreateRequest request ) {
         Long voucherId = voucherService.createVoucher(request);
         return ResponseEntity.ok(voucherId);
     }
-    
     
 }

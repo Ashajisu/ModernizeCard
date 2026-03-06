@@ -72,6 +72,15 @@ export type AccountItem = {
     accountBalance: string;
 };
 
+export type VoucherItem = {
+    id: string;
+    voucherType: string;
+    description: string;
+    voucherDate: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
 export const AccountTypeMapping = [
     { label: '자산', value: 'ASSET' },
     { label: '부채', value: 'LIABILITY' },
@@ -87,4 +96,11 @@ export const CategoryTypeMapping = [
     { label: '대출', value: 'LOAN' },
     { label: '내가받을돈', value: 'RECEIVABLE' },
     { label: '기타', value: 'ETC' }
+];
+export const VoucherTypeMapping = [
+    { label: '이체', value: 'TRANSFER' },
+    { label: '카드', value: 'CARD' },
+    { label: '현금', value: 'CASH' },
+    { label: '카드대금', value: 'CARD_PAYMENT' },
+    { label: '정산', value: 'ADJUST' }
 ];
