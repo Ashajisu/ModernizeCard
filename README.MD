@@ -1,7 +1,7 @@
 ## 📌Git 관리 가이드
 
 ### 원격 저장소
-* **원격경로**: http://github.com/jisu-arisys/ModernizeCard.git
+* **원격경로**: http://github.com/ashajisu/ModernizeCard.git
 
 <br>
 
@@ -22,8 +22,8 @@ npm run deploy
 ```
 빌드, .nojekyll 폴더생성, 배포
 배포에 2분 정도 소요됩니다.
-https://github.com/jisu-arisys/ModernizeCard/deployments 에서 Upates 완료여부를 확인하고
-https://jisu-arisys.github.io/ModernizeCard/ 경로로 접속합니다. 쿠키를 지우고 다시 접속합니다.
+https://github.com/ashajisu/ModernizeCard/deployments 에서 Upates 완료여부를 확인하고
+https://ashajisu.github.io/ModernizeCard/ 경로로 접속합니다. 쿠키를 지우고 다시 접속합니다.
 
 
 ### 윈도우에서 백엔드 항상 켜두기
