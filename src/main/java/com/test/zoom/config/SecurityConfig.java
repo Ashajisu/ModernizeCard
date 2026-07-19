@@ -88,11 +88,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOriginPatterns(List.of(
-                "https://catamenial-deeann-reconditely.ngrok-free.dev",
-                "https://*.ngrok-free.dev",
-                "https://ashajisu.github.io",
-                "http://localhost:5173",
-                "http://192.168.10.59:5173"
+                "https://ashajisu.github.io"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

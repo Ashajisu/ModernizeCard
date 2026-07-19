@@ -28,7 +28,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     },
-      allowedHosts: ['localhost','ashajisu.iptime.org','ashajisu.github.io','131.186.39.198']
+      allowedHosts: ['localhost','ashajisu.iptime.org','ashajisu.github.io','ashajisu.duckdns.org']
   },
   base: '/ModernizeCard/',
   build: {
