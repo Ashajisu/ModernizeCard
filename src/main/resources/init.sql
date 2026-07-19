@@ -152,78 +152,81 @@ from `hab2`.`shinhan_card`
 where `hab2`.`shinhan_card`.`deleted` = 0
   and `hab2`.`shinhan_card`.`purchase_type` = '결제확정';
 
-create
-definer = arisys@`%` procedure getMonthlyStatsAll()
+CREATE DEFINER=`hab2`@`%` PROCEDURE `hab2`.`getMonthlyStatsAll`()
 BEGIN
     DECLARE v_now DATE;
+    DECLARE v_month_now VARCHAR(7);
+    DECLARE v_month_before VARCHAR(7);
+    DECLARE v_month_before2 VARCHAR(7);
+    DECLARE v_year_before VARCHAR(7);
     DECLARE v_month_now_key VARCHAR(20);
     DECLARE v_month_before_key VARCHAR(20);
+    DECLARE v_month_before_key2 VARCHAR(20);
     DECLARE v_year_before_key VARCHAR(20);
 
-    -- 현재 기준 날짜
+    -- 날짜 계산
     SET v_now = CURDATE();
+    SET v_month_now = DATE_FORMAT(v_now, '%Y-%m');
+    SET v_month_before = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 MONTH), '%Y-%m');
+    SET v_month_before2 = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 2 MONTH), '%Y-%m');
+    SET v_year_before = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 YEAR), '%Y-%m');
 
     -- 화면과 동일한 key 형식: 'August 2025'
     SET v_month_now_key = DATE_FORMAT(v_now, '%M %Y');
     SET v_month_before_key = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 MONTH), '%M %Y');
+    SET v_month_before_key2 = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 2 MONTH), '%M %Y');
     SET v_year_before_key = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 YEAR), '%M %Y');
 
     -- JSON 반환
 SELECT JSON_OBJECT(
-               v_month_now_key, (
-            SELECT JSON_ARRAYAGG(JSON_OBJECT(
-                    'label', t.usage_type,
-                    'cost', t.total_cost,
-                    'ratio', ROUND(t.total_cost / NULLIF(m.total_month,0)*100)
-                                 ))
-            FROM (
-                     SELECT usage_type, SUM(currency) AS total_cost
-                     FROM unified_card_view
-                     WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(v_now, '%Y-%m')
-                     GROUP BY usage_type
-                 ) t
-                     CROSS JOIN (
-                SELECT SUM(currency) AS total_month
-                FROM unified_card_view
-                WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(v_now, '%Y-%m')
-            ) m
-        ),
-               v_month_before_key, (
-                   SELECT JSON_ARRAYAGG(JSON_OBJECT(
-                           'label', t.usage_type,
-                           'cost', t.total_cost,
-                           'ratio', ROUND(t.total_cost / NULLIF(m.total_month,0)*100)
-                                        ))
-                   FROM (
-                            SELECT usage_type, SUM(currency) AS total_cost
-                            FROM unified_card_view
-                            WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 MONTH), '%Y-%m')
-                            GROUP BY usage_type
-                        ) t
-                            CROSS JOIN (
-                       SELECT SUM(currency) AS total_month
-                       FROM unified_card_view
-                       WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 MONTH), '%Y-%m')
-                   ) m
-               ),
-               v_year_before_key, (
-                   SELECT JSON_ARRAYAGG(JSON_OBJECT(
-                           'label', t.usage_type,
-                           'cost', t.total_cost,
-                           'ratio', ROUND(t.total_cost / NULLIF(m.total_month,0)*100)
-                                        ))
-                   FROM (
-                            SELECT usage_type, SUM(currency) AS total_cost
-                            FROM unified_card_view
-                            WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 YEAR), '%Y-%m')
-                            GROUP BY usage_type
-                        ) t
-                            CROSS JOIN (
-                       SELECT SUM(currency) AS total_month
-                       FROM unified_card_view
-                       WHERE DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(DATE_SUB(v_now, INTERVAL 1 YEAR), '%Y-%m')
-                   ) m
-               )
+               v_month_now_key, (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                'label', t.usage_type,
+                'cost', t.total_cost,
+                'ratio', ROUND(t.total_cost / NULLIF(m.total_month, 0) * 100)
+                                                      ))
+                                 FROM (SELECT usage_type, SUM(currency) AS total_cost
+                                       FROM unified_card_view
+                                       WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_now
+                                       GROUP BY usage_type) t
+                                          CROSS JOIN (SELECT SUM(currency) AS total_month
+                                                      FROM unified_card_view
+                                                      WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_now) m),
+               v_month_before_key, (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                'label', t.usage_type,
+                'cost', t.total_cost,
+                'ratio', ROUND(t.total_cost / NULLIF(m.total_month, 0) * 100)
+                                                         ))
+                                    FROM (SELECT usage_type, SUM(currency) AS total_cost
+                                          FROM unified_card_view
+                                          WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_before
+                                          GROUP BY usage_type) t
+                                             CROSS JOIN (SELECT SUM(currency) AS total_month
+                                                         FROM unified_card_view
+                                                         WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_before) m),
+               v_month_before_key2, (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                'label', t.usage_type,
+                'cost', t.total_cost,
+                'ratio', ROUND(t.total_cost / NULLIF(m.total_month, 0) * 100)
+                                                          ))
+                                     FROM (SELECT usage_type, SUM(currency) AS total_cost
+                                           FROM unified_card_view
+                                           WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_before2
+                                           GROUP BY usage_type) t
+                                              CROSS JOIN (SELECT SUM(currency) AS total_month
+                                                          FROM unified_card_view
+                                                          WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_month_before2) m),
+               v_year_before_key, (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                'label', t.usage_type,
+                'cost', t.total_cost,
+                'ratio', ROUND(t.total_cost / NULLIF(m.total_month, 0) * 100)
+                                                        ))
+                                   FROM (SELECT usage_type, SUM(currency) AS total_cost
+                                         FROM unified_card_view
+                                         WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_year_before
+                                         GROUP BY usage_type) t
+                                            CROSS JOIN (SELECT SUM(currency) AS total_month
+                                                        FROM unified_card_view
+                                                        WHERE DATE_FORMAT(transaction_date, '%Y-%m') = v_year_before) m)
        ) AS stateData;
 
 END;
