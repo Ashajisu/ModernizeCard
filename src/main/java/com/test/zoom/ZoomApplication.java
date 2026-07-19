@@ -7,15 +7,16 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 
 @SpringBootApplication
-public class ZoomApplication extends SpringBootServletInitializer {
+public class ZoomApplication  {
+		//extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ZoomApplication.class, args);
 	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(ZoomApplication.class);
-	}
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//		return builder.sources(ZoomApplication.class);
+//	}
 
 }
