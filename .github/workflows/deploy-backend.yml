@@ -35,7 +35,20 @@ jobs:
           source: "build/libs/*.jar"
           target: "/opt/backend/"
           strip_components: 2
-          rename: app.jar
+
+      - name: Update symlink and restart
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/backend
+            LATEST_JAR=$(ls -t ModernizeCard-*.jar | grep -v plain | head -n 1)
+            ln -sf "$LATEST_JAR" modernize
+            sudo systemctl restart backend
+            sleep 5
+            sudo systemctl status backend --no-pager
 
       - name: Restart backend service
         uses: appleboy/ssh-action@v1
