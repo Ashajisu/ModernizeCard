@@ -54,3 +54,7 @@ bootJar {
     exclude 'build/**'
     exclude 'dist/**'
 }
+
+tasks.named('jar') {
+	enabled = false
+}
