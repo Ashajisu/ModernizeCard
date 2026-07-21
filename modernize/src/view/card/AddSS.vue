@@ -180,13 +180,13 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                     <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit">
                         <template v-slot:topBtn="{ validateForm }">
                             <v-row>
-                                <v-col cols="7">
+                                <v-col class="v-col-12 v-col-sm-6">
                                     <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                                         <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)">편집</v-btn>
                                         <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
                                     </div>
                                 </v-col>
-                                <v-col cols="5">
+                                <v-col class="v-col-12 v-col-sm-6">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                                         <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))" >
                                             저장
@@ -200,7 +200,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
             </UiParentCard>
             <UiParentCard>
                 <v-row>
-                    <CustomSearchChecksForm :formFields="statFormFields" :colsPerRow="5" :edit="true" :hide-details="true">
+                    <CustomSearchChecksForm :formFields="statFormFields" :colsPerRow="4" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
                             <v-btn color="primary" flat @click="onSearchStats(validateForm)">조회</v-btn>
                         </template>

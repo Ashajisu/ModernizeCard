@@ -53,10 +53,10 @@ defineExpose({
 // 반응형 폭
 const colSettings: Record<number, { cols: number; sm: number; md: number; lg: number }> = {
     1: { cols: 12, sm: 12, md: 12, lg: 12 },
-    2: { cols: 6, sm: 6,  md: 6,  lg: 6 },
-    3: { cols: 6, sm: 6,  md: 4,  lg: 4 },
-    4: { cols: 12, sm: 12, md: 6,  lg: 3 },
-    5: { cols: 12, sm: 12, md: 6,  lg: 2 }
+    2: { cols: 12, sm: 6,  md: 6,  lg: 6 },
+    3: { cols: 12, sm: 6,  md: 4,  lg: 4 },
+    4: { cols: 12, sm: 6, md: 4,  lg: 3 },
+    5: { cols: 12, sm: 6, md: 4,  lg: 2 }
 };
 function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }) {
     const colSetting = colSettings[props.colsPerRow] || colSettings[1];
