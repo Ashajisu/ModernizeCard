@@ -51,12 +51,12 @@ defineExpose({
 });
 
 // 반응형 폭
-const colSettings: Record<number, { xs: number; sm: number; md: number; lg: number }> = {
-    1: { xs: 12, sm: 12, md: 12, lg: 12 },
-    2: { xs: 12, sm: 12, md: 6, lg: 6 },
-    3: { xs: 12, sm: 12, md: 6, lg: 4 },
-    4: { xs: 12, sm: 12, md: 6, lg: 3 },
-    5: { xs: 12, sm: 12, md: 6, lg: 2 }
+const colSettings: Record<number, { cols: number; sm: number; md: number; lg: number }> = {
+    1: { cols: 12, sm: 12, md: 12, lg: 12 },
+    2: { cols: 6, sm: 6,  md: 6,  lg: 6 },
+    3: { cols: 6, sm: 6,  md: 4,  lg: 4 },
+    4: { cols: 12, sm: 12, md: 6,  lg: 3 },
+    5: { cols: 12, sm: 12, md: 6,  lg: 2 }
 };
 function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }) {
     const colSetting = colSettings[props.colsPerRow] || colSettings[1];
@@ -64,16 +64,16 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
     const visibleFieldCount = computed(() => props.formFields.filter((f) => f.type !== 'hidden').length);
 
     return computed(() => {
-        const result = { xs:12, sm: 12, md: 12, lg: 12 }; // 기본값은 줄바꿈
+        const result = { cols:12, sm: 12, md: 12, lg: 12 }; // 기본값은 줄바꿈
         const fields = visibleFieldCount.value;
 
-        const calcRemaining = (size: 'xs' | 'sm' | 'md' | 'lg') => {
+        const calcRemaining = (size: 'cols' | 'sm' | 'md' | 'lg') => {
             const used = fields * colSetting[size];
             const remaining = 12 - used;
             return remaining > 0 ? remaining : 12;
         };
 
-        result.xs = calcRemaining('xs');
+        result.cols = calcRemaining('cols');
         result.sm = calcRemaining('sm');
         result.md = calcRemaining('md');
         result.lg = calcRemaining('lg');
@@ -93,7 +93,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
     <v-container fluid class="pa-2 pa-sm-4">
         <slot name="topBtn" :validateForm="validateForm" />
         <v-form ref="formRef" lazy-validation="false">
-            <v-row dense :class="{ 'd-block align-center': mobile }">
+            <v-row dense>
                 <template v-for="field in formFields">
                     <v-col
                         v-bind="colSettings[colsPerRow > 5 ? 5 : colsPerRow]"

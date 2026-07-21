@@ -180,7 +180,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                     <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit">
                         <template v-slot:topBtn="{ validateForm }">
                             <v-row>
-                                <v-col cols="5">
+                                <v-col cols="7">
                                     <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                                         <v-btn flat color="primary" variant="outlined" @click="handleEdit(true)">편집</v-btn>
                                         <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
