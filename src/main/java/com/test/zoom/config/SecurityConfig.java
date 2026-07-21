@@ -88,7 +88,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOriginPatterns(List.of(
-                "https://ashajisu.github.io"
+                "https://ashajisu.github.io",
+                "http://localhost:5173", "http:/192.168.0.4:5173"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
