@@ -4,14 +4,12 @@ import {router} from "@/router";
 import {useAuthStore} from "@/stores/auth";
 import { alert } from "@/common/alertService";
 
-//isDev 값으로 조절 운영할때 env 경로를 통해서, 개발할때 proxy 경로를 통해서
-const baseUrl = `${import.meta.env.VITE_API_URL}`;
-const devUrl = `${import.meta.env.VITE_DEV_API_URL}`;
-const isDev = `${import.meta.env.VITE_IS_DEV}`;
-
+// 운영할때 env 경로를 통해서, npm run dev로 개발할때 proxy 경로를 통해서
 // Axios 인스턴스 생성
 const api = axios.create({
-    baseURL: isDev ? devUrl : baseUrl,
+    baseURL: import.meta.env.DEV
+        ? "/api"
+        : import.meta.env.VITE_API_URL,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '69420'
