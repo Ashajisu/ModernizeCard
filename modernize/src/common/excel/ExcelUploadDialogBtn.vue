@@ -22,7 +22,6 @@ const saveExcel = async () => {
 </script>
 
 <template>
-  <div>
       <v-btn color="grey" variant="outlined" @click.stop="dialog = true">{{ title || '엑셀 업로드' }}</v-btn>
       <v-dialog v-model="dialog" width="700" @click:outside="dialog = false">
           <v-card>
@@ -37,5 +36,4 @@ const saveExcel = async () => {
               </UiParentCard>
           </v-card>
       </v-dialog>
-  </div>
 </template>

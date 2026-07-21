@@ -116,15 +116,13 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                 <v-row>
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
-                            <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                                 <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
                                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
-                            </div>
                         </template>
                     </CustomSearchChecksForm>
                 </v-row>
                 <v-row>
-                    <v-col>
+                    <v-col cols="12" sm="6">
                         <div class="d-flex gap-3 flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn flat color="primary" variant="outlined" @click="onNew"
                                 ><v-icon icon="mdi-plus" stroke-width="1.5" size="18" class="mr-2" />신규등록
@@ -134,7 +132,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                             </v-btn>
                         </div>
                     </v-col>
-                    <v-col>
+                    <v-col cols="12" sm="6">
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
                             <ExcelUploadDialogBtn :save="onExcelSave" :url="'/card/saveList/samsung'" title="엑셀 업로드" />
@@ -152,6 +150,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                         v-model="selectedEmpId"
                         :item-value="identifierField"
                         @update:model-value="onSelectionChange"
+                        mobile-breakpoint="sm"
                     >
                         <!-- amount 컬럼 커스텀 렌더링 -->
                         <template #item.amount="{ item }">
@@ -175,7 +174,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                 </v-row>
             </UiParentCard>
             <br />
-            <UiParentCard title="사용자 상세정보" :key="selectedEmpId[0]" v-if="selectedEmpId[0]">
+            <UiParentCard title="상세정보" :key="selectedEmpId[0]" v-if="selectedEmpId[0]">
                 <template v-slot:action></template>
                 <template v-slot:default>
                     <CustomSearchChecksForm :formFields="userFields" :colsPerRow="4" :edit="edit">
@@ -187,7 +186,7 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                                         <v-btn flat color="error" variant="outlined" @click="handleEdit(false)">취소</v-btn>
                                     </div>
                                 </v-col>
-                                <v-col cols="7">
+                                <v-col cols="5">
                                     <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
                                         <v-btn flat color="primary" variant="outlined" @click="onSave(() => saveToServer(validateForm, '/card/save/samsung'))" >
                                             저장
@@ -203,28 +202,42 @@ const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, e
                 <v-row>
                     <CustomSearchChecksForm :formFields="statFormFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
-                            <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                <v-btn color="primary" flat @click="onSearchStats(validateForm)">조회</v-btn>
-                            </div>
+                            <v-btn color="primary" flat @click="onSearchStats(validateForm)">조회</v-btn>
                         </template>
                     </CustomSearchChecksForm>
                 </v-row>
                 <v-row>
-                    <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md">
-                        <template #item="{ item }">
-                            <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
-                            </tr>
-                        </template>
-                    </v-data-table>
+                    <div class="table-scroll-wrapper">
+                        <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md">
+                            <template #item="{ item }">
+                                <tr :style="item.title === '합계' ? 'font-weight: 700; color: #1D4ED8;' : ''">
+                                    <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
+                                    <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
+                                    <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
+                                    <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
+                                    <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
+                                </tr>
+                            </template>
+                        </v-data-table>
+                    </div>
                 </v-row>
             </UiParentCard>
         </v-col>
     </v-row>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 통계 테이블처럼 <template #item>을 완전히 커스텀 렌더링하는 경우
+   mobile-breakpoint가 자동 적용되지 않으므로, 가로 스크롤로 대응 */
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* 모바일에서 버튼 폭을 화면에 맞게 늘려 터치하기 쉽게 */
+@media (max-width: 600px) {
+    .v-btn {
+        min-width: 0;
+    }
+}
+</style>

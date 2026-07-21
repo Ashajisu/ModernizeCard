@@ -3,6 +3,8 @@ import type { DateRange, FormField } from '@/types/custom/InputTypes';
 import { type ComponentPublicInstance, computed, getCurrentInstance, ref } from 'vue';
 import CustomDialog from '@/components/custom/dialog/CustomSearchsDialog.vue';
 import type { VForm } from 'vuetify/components';
+import { useDisplay } from 'vuetify'
+const { mobile } = useDisplay()
 
 const props = defineProps<{
     formFields: FormField[];
@@ -49,12 +51,12 @@ defineExpose({
 });
 
 // 반응형 폭
-const colSettings: Record<number, { sm: number; md: number; lg: number }> = {
-    1: { sm: 12, md: 12, lg: 12 },
-    2: { sm: 12, md: 6, lg: 6 },
-    3: { sm: 12, md: 6, lg: 4 },
-    4: { sm: 12, md: 6, lg: 3 },
-    5: { sm: 12, md: 6, lg: 2 }
+const colSettings: Record<number, { xs: number; sm: number; md: number; lg: number }> = {
+    1: { xs: 12, sm: 12, md: 12, lg: 12 },
+    2: { xs: 12, sm: 12, md: 6, lg: 6 },
+    3: { xs: 12, sm: 12, md: 6, lg: 4 },
+    4: { xs: 12, sm: 12, md: 6, lg: 3 },
+    5: { xs: 12, sm: 12, md: 6, lg: 2 }
 };
 function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }) {
     const colSetting = colSettings[props.colsPerRow] || colSettings[1];
@@ -62,15 +64,16 @@ function useButtonColSpan(props: { formFields: FormField[]; colsPerRow: number }
     const visibleFieldCount = computed(() => props.formFields.filter((f) => f.type !== 'hidden').length);
 
     return computed(() => {
-        const result = { sm: 12, md: 12, lg: 12 }; // 기본값은 줄바꿈
+        const result = { xs:12, sm: 12, md: 12, lg: 12 }; // 기본값은 줄바꿈
         const fields = visibleFieldCount.value;
 
-        const calcRemaining = (size: 'sm' | 'md' | 'lg') => {
+        const calcRemaining = (size: 'xs' | 'sm' | 'md' | 'lg') => {
             const used = fields * colSetting[size];
             const remaining = 12 - used;
             return remaining > 0 ? remaining : 12;
         };
 
+        result.xs = calcRemaining('xs');
         result.sm = calcRemaining('sm');
         result.md = calcRemaining('md');
         result.lg = calcRemaining('lg');
@@ -87,10 +90,10 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
 <!-- colsPerRow 값은 한줄에 나열하고 싶은 필드의 갯수 기준, btn은 포함하지 않음. -->
 <!-- LineBtn 은 내부 버튼을 자동 정렬하므로 추가 <div>는 불필요함. -->
 <template>
-    <v-container>
+    <v-container fluid class="pa-2 pa-sm-4">
         <slot name="topBtn" :validateForm="validateForm" />
         <v-form ref="formRef" lazy-validation="false">
-            <v-row class="mb-6 align-center">
+            <v-row dense :class="{ 'd-block align-center': mobile }">
                 <template v-for="field in formFields">
                     <v-col
                         v-bind="colSettings[colsPerRow > 5 ? 5 : colsPerRow]"
@@ -136,6 +139,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                 :hide-details="hideDetails"
                                 @click="openSearchDialog(field)"
                                 persistent-placeholder
+                                density="compact"
                             >
                                 <template v-slot:append-inner>
                                     <v-icon icon="mdi-account-search" class="text-right"></v-icon>
@@ -159,6 +163,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            density="compact"
                         >
                             <template v-slot:label>
                                 <span
@@ -178,6 +183,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            density="compact"
                         >
                             <template v-slot:label>
                                 <span
@@ -187,7 +193,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             </template>
                         </v-text-field>
                         <v-row v-else-if="field.type === 'due'">
-                            <v-col cols="6">
+                            <v-col cols="12" sm="6">
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).startDate"
@@ -197,10 +203,11 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                     :readonly="!isEditable || field.disabled"
                                     :hide-details="hideDetails"
                                     persistent-placeholder
+                                    density="compact"
                                 />
                             </v-col>
 
-                            <v-col cols="6">
+                            <v-col cols="12" sm="6">
                                 <v-text-field
                                     type="date"
                                     v-model="(field.value as DateRange).endDate"
@@ -210,6 +217,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                                     :readonly="!isEditable || field.disabled"
                                     :hide-details="hideDetails"
                                     persistent-placeholder
+                                    density="compact"
                                 />
                             </v-col>
                         </v-row>
@@ -224,6 +232,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            density="compact"
                         >
                             <template v-slot:label>
                                 <span
@@ -243,7 +252,8 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
                             persistent-placeholder
-                            style="min-width: 200px"
+                            class="w-100"
+                            density="compact"
                         >
                             <template v-slot:label>
                                 <span
@@ -301,6 +311,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                             :readonly="!isEditable || field.disabled"
                             :hide-details="hideDetails"
                             persistent-placeholder
+                            density="compact"
                         >
                             <template v-slot:label>
                                 <span
@@ -319,7 +330,7 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
                 </template>
                 <!--          한줄 버튼 슬롯 : 줄 맞춤을 위한 col 폭 반응형-->
                 <v-col v-bind="useButtonColSpan">
-                    <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                    <div class="d-flex gap-2 justify-end flex-column flex-sm-row fill-height align-stretch w-100">
                         <slot name="lineBtn" :validateForm="validateForm" />
                     </div>
                 </v-col>
@@ -346,5 +357,13 @@ const rules = [(v: string) => !!v || '필수 입력 항목입니다.'];
     padding: 5px;
     display: flex; /* 가로로 나열 */
     flex-wrap: wrap; /* 공간이 부족하면 자동 줄바꿈 */
+}
+@media (max-width:600px){
+    .outlined-checkbox{
+        flex-direction:column;
+    }
+}
+:deep(.v-field-label){
+    white-space:normal;
 }
 </style>
