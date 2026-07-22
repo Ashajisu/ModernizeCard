@@ -60,6 +60,7 @@ const stats = ref<StatsItem[]>([]); // 집계 데이터를 저장할 변수
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
+        // 프론트: 기본 파라미터 없이 호출하면 최근 1개월, 필요시 쿼리 파라미터로 확장
         const response = await apiClient.get('/card/list/usage');
         setUsers(response.list);
         if (response.list) {

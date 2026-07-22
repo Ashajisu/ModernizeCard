@@ -1,5 +1,6 @@
 package com.test.zoom.repository.card;
 
+import com.test.zoom.entity.card.CardTransaction;
 import com.test.zoom.entity.card.NHCardTransaction;
 import com.test.zoom.entity.StatsProcedure;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,4 +28,6 @@ public interface NHCardRepository extends JpaRepository<NHCardTransaction, Long>
     List<StatsProcedure> getNHUsageTypeCurrencyStats(LocalDate startDate, LocalDate endDate, LocalDate payDate);
 
     List<NHCardTransaction> findAllByDeletedFalseOrderByIdDesc();
+
+    List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
 }
