@@ -40,7 +40,7 @@ public class SettlementBatchService {
             String cardCompanyCode = mapping.getCardCompanyCode();
             Account liabilityAccount = resolveLiabilityAccount(cardCompanyCode);
 
-            boolean alreadySettled = journalEntryRepository.existsBySourceAndSourceCardCompanyAndEntryDate(
+            boolean alreadySettled = journalEntryRepository.existsBySourceAndSourceCardCompanyAndEntryDateAndDeletedFalse(
                     JournalEntry.Source.SETTLEMENT, cardCompanyCode, today);
             if (alreadySettled) continue;
 

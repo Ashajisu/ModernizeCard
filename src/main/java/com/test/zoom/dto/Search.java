@@ -22,4 +22,13 @@ public class Search {
     @JsonDeserialize(using = MultiDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate payDate; //결제일
+
+
+    public void normalizeLastMonth(){
+        // 기본: 이번 달 포함 최근 1개월
+        if(startDate == null || endDate == null){
+            setStartDate(LocalDate.now().minusMonths(1).withDayOfMonth(1));
+            setEndDate(LocalDate.now());
+        }
+    }
 }

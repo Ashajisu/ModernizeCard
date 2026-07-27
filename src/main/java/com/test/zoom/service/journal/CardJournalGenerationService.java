@@ -59,7 +59,7 @@ public class CardJournalGenerationService {
                 if (tx.isDeleted()) continue;
 
                 boolean alreadyExists = journalEntryRepository
-                        .findBySourceCardCompanyAndSourceRefIdAndSource(
+                        .findBySourceCardCompanyAndSourceRefIdAndSourceAndDeletedFalse(
                                 cardCompanyCode, tx.getId(), JournalEntry.Source.CARD_IMPORT)
                         .isPresent();
                 if (alreadyExists) continue;

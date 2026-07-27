@@ -187,5 +187,42 @@ public class JournalAssembler {
             throw new IllegalArgumentException("차변합계와 대변합계가 일치하지 않습니다.");
         }
     }
+    
+    /**
+     * 전표 헤더 필드 갱신 (수정 시 사용)
+     */
+    public void updateHeader(
+            JournalEntry entry,
+            java.time.LocalDate entryDate,
+            String description,
+            String vendor,
+            String memberTag
+    ) {
+        entry.setEntryDate(entryDate);
+        entry.setDescription(description);
+        entry.setVendor(vendor);
+        entry.setMemberTag(memberTag);
+    }
+
+    /**
+     * 기존 분개라인을 전부 제거하고 새 라인으로 교체 (수정 시 사용).
+     * JournalEntry.lines가 orphanRemoval=true이므로 clear() 시 기존 라인은 DB에서 삭제된다.
+     */
+    public void replaceLines(JournalEntry entry, java.util.List<JournalLineRequest> newLines) {
+        entry.getLines().clear();
+
+        for (JournalLineRequest line : newLines) {
+            addLine(
+                    entry,
+                    line.getAccountId(),
+                    line.getDebitAmount(),
+                    line.getCreditAmount(),
+                    line.getMemo()
+            );
+        }
+
+        validateBalance(entry);
+    }
+
 
 }

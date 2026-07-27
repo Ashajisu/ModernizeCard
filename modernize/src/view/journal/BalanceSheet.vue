@@ -30,6 +30,8 @@ const summary = ref({
 });
 
 const fetchBalanceSheet = async (asOfDate: string) => {
+    const test = await apiClient.post('/journal/search', {});
+    console.log('test journal search response: ', test);
     const response = await apiClient.get('/journal/balance-sheet', { asOfDate });
     assets.value = response.assets;
     liabilities.value = response.liabilities;
@@ -95,7 +97,13 @@ const nameStyle = (item: AccountBalanceItem) => ({
 
                     <v-col cols="12" md="6">
                         <h3 class="mb-2">부채</h3>
-                        <v-data-table :headers="headers" :items="liabilities" hide-default-footer items-per-page="-1" class="border rounded-md">
+                        <v-data-table
+                            :headers="headers"
+                            :items="liabilities"
+                            hide-default-footer
+                            items-per-page="-1"
+                            class="border rounded-md"
+                        >
                             <template #item.name="{ item }">
                                 <span :style="nameStyle(item)">{{ item.name }}</span>
                             </template>

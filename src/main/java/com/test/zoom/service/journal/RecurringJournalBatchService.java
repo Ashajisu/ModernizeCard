@@ -66,7 +66,7 @@ public class RecurringJournalBatchService {
             from = ym.atDay(1);
             to = ym.atEndOfMonth();
         }
-        return journalEntryRepository.existsBySourceAndSourceRefIdAndEntryDateBetween(
+        return journalEntryRepository.existsBySourceAndSourceRefIdAndEntryDateBetweenAndDeletedFalse(
                 JournalEntry.Source.RECURRING, rule.getId(), from, to);
     }
 
