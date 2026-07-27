@@ -16,7 +16,7 @@ import java.util.Set;
 public class ShinhanCardTransactionProvider implements CardTransactionProvider {
 
     // '예정'(정산 전), '정산'(정산 완료) 중 확정 거래로 볼 상태만 포함
-    private static final Set<String> CONFIRMED_PURCHASE_TYPES = Set.of("결제확정", "정산");
+    private static final Set<String> CONFIRMED_PURCHASE_TYPES = Set.of("결제확정");
 //    private static final Map<String, String> USAGE_TYPE_CORRECTIONS = Map.of(
 //            "엄지수", "차량"
 //    );
