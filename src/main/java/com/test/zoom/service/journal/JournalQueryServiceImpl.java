@@ -10,26 +10,31 @@ import com.test.zoom.entity.journal.Account;
 import com.test.zoom.entity.journal.JournalEntry;
 import com.test.zoom.entity.journal.JournalLine;
 import com.test.zoom.repository.journal.JournalEntryRepository;
+import com.test.zoom.repository.journal.JournalLineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class JournalQueryServiceImpl implements JournalQueryService {
 
     private final JournalEntryRepository journalEntryRepository;
+    private final JournalLineRepository journalLineRepository;
 
     @Override
     public List<JournalEntry> searchTest(Search search) {
-        List<JournalEntry> list = journalEntryRepository.findByEntryDateBetweenAndDeletedFalse(search.getStartDate(), search.getEndDate());
-        return list;
+        return List.of();
     }
 
     @Override
@@ -54,12 +59,21 @@ public class JournalQueryServiceImpl implements JournalQueryService {
                 Sort.by(Sort.Direction.DESC, "entryDate"));
 
         Page<JournalEntry> page = journalEntryRepository.findAll(spec, pageRequest);
-        return page.map(this::toResponse);
+
+        List<Long> entryIds = page.getContent().stream().map(JournalEntry::getId).toList();
+        Map<Long, BigDecimal> amountByEntryId = entryIds.isEmpty()
+                ? Map.of()
+                : journalLineRepository.sumDebitByEntryIds(entryIds).stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (BigDecimal) row[1]));
+
+        return page.map(entry -> toResponse(entry, amountByEntryId.getOrDefault(entry.getId(), BigDecimal.ZERO)));
     }
 
     @Override
     public JournalDetailResponse getDetail(Long id) {
-        JournalEntry entry = journalEntryRepository.findById(id)
+        JournalEntry entry = journalEntryRepository.findWithLinesById(id)
                 .orElseThrow(() -> new IllegalArgumentException("전표가 존재하지 않습니다. id=" + id));
 
         List<JournalLineResponse> lineResponses = entry.getLines().stream()
@@ -91,12 +105,7 @@ public class JournalQueryServiceImpl implements JournalQueryService {
         return response;
     }
 
-    private JournalResponse toResponse(JournalEntry entry) {
-        BigDecimal amount = entry.getLines().stream()
-                .map(JournalLine::getDebitAmount)
-                .filter(d -> d != null && d.signum() > 0)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
+    private JournalResponse toResponse(JournalEntry entry, BigDecimal amount) {
         return new JournalResponse(
                 entry.getId(),
                 entry.getEntryDate(),
@@ -122,5 +131,4 @@ public class JournalQueryServiceImpl implements JournalQueryService {
                 line.getMemo()
         );
     }
-
 }

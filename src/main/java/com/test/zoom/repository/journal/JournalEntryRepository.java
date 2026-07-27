@@ -1,6 +1,7 @@
 package com.test.zoom.repository.journal;
 
 import com.test.zoom.entity.journal.JournalEntry;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -25,4 +26,11 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
 
     boolean existsBySourceAndSourceCardCompanyAndEntryDateAndDeletedFalse(
             JournalEntry.Source source, String sourceCardCompany, LocalDate entryDate);
+
+    /**
+     * 상세조회용 — lines(분개라인)를 즉시 로딩하여 반환.
+     * 트랜잭션 경계와 무관하게 LazyInitializationException을 방지한다 (getDetail()에서 사용).
+     */
+    @EntityGraph(attributePaths = "lines")
+    Optional<JournalEntry> findWithLinesById(Long id);
 }

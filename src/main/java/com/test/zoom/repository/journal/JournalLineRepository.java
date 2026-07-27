@@ -17,11 +17,11 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
      * (일반결제로 늘어난 부채) − (포인트결제로 이미 상계된 부채) = 이번 결제일에 실제로 계좌에서 빠져나가야 할 금액
      */
     @Query("SELECT COALESCE(SUM(l.creditAmount), 0) - COALESCE(SUM(l.debitAmount), 0) " +
-           "FROM JournalLine l " +
-           "WHERE l.account = :liabilityAccount " +
-           "AND l.journalEntry.source = :source " +
-           "AND l.journalEntry.paymentDate = :paymentDate " +
-           "AND l.journalEntry.deleted = false")
+            "FROM JournalLine l " +
+            "WHERE l.account = :liabilityAccount " +
+            "AND l.journalEntry.source = :source " +
+            "AND l.journalEntry.paymentDate = :paymentDate " +
+            "AND l.journalEntry.deleted = false")
     BigDecimal sumNetLiabilityByAccountAndPaymentDate(
             @Param("liabilityAccount") Account liabilityAccount,
             @Param("paymentDate") LocalDate paymentDate,
@@ -33,9 +33,9 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
      * 결과 배열: [accountId, confirmed(Boolean), sumDebit, sumCredit]
      */
     @Query("SELECT l.account.id, l.journalEntry.confirmed, COALESCE(SUM(l.debitAmount),0), COALESCE(SUM(l.creditAmount),0) " +
-           "FROM JournalLine l " +
-           "WHERE l.journalEntry.entryDate <= :asOfDate AND l.journalEntry.deleted = false " +
-           "GROUP BY l.account.id, l.journalEntry.confirmed")
+            "FROM JournalLine l " +
+            "WHERE l.journalEntry.entryDate <= :asOfDate AND l.journalEntry.deleted = false " +
+            "GROUP BY l.account.id, l.journalEntry.confirmed")
     List<Object[]> aggregateBalancesAsOf(@Param("asOfDate") LocalDate asOfDate);
 
     /**
@@ -44,8 +44,20 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
      * 결과 배열: [accountId, sumDebit, sumCredit]
      */
     @Query("SELECT l.account.id, COALESCE(SUM(l.debitAmount),0), COALESCE(SUM(l.creditAmount),0) " +
-           "FROM JournalLine l " +
-           "WHERE l.journalEntry.entryDate BETWEEN :from AND :to AND l.journalEntry.deleted = false " +
-           "GROUP BY l.account.id")
+            "FROM JournalLine l " +
+            "WHERE l.journalEntry.entryDate BETWEEN :from AND :to AND l.journalEntry.deleted = false " +
+            "GROUP BY l.account.id")
     List<Object[]> aggregateBalancesBetween(@Param("from") LocalDate from, @Param("to") LocalDate to);
+
+    /**
+     * 전표 ID 목록에 대해 각 전표의 대표 금액(차변 합계, 0보다 큰 것만)을 한번에 집계.
+     * 전표조회(목록) 화면에서 entry.getLines() 지연로딩에 의존하지 않기 위해 사용
+     * — N+1 문제와 트랜잭션 경계 밖 LazyInitializationException을 동시에 방지한다.
+     * 결과 배열: [journalEntryId, sumDebitAmount]
+     */
+    @Query("SELECT l.journalEntry.id, COALESCE(SUM(l.debitAmount), 0) " +
+            "FROM JournalLine l " +
+            "WHERE l.journalEntry.id IN :entryIds AND l.debitAmount > 0 " +
+            "GROUP BY l.journalEntry.id")
+    List<Object[]> sumDebitByEntryIds(@Param("entryIds") List<Long> entryIds);
 }

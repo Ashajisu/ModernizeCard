@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/journal")
+@RequestMapping("/journal/entries")
 @RequiredArgsConstructor
 public class JournalController {
     
