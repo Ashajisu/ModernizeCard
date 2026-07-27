@@ -4,6 +4,14 @@ import {
     CreditCardIcon,
     PlusMinusIcon
 } from 'vue-tabler-icons';
+import { 
+    IconBrandLinkedin,
+    IconChevronRight,
+    IconMenu2,
+    IconLayoutDashboard,
+    IconListDetails
+} from '@tabler/icons-vue';
+
 
 export interface menu {
     header?: string;
@@ -62,6 +70,38 @@ const sidebarItem: menu[] = [
         title: '지출전체',
         icon: PlusMinusIcon,
         to: '/user/usage'
+    },
+    
+    { header: '복식부기' },
+    {
+        title: '대차대조표',
+        icon: PlusMinusIcon,
+        to: '/journal/balancesheet'
+    },
+    {
+        title: '손익계산서',
+        icon: IconBrandLinkedin,
+        to: '/journal/incomestatement'
+    },
+    {
+        title: '전표 수기입력',
+        icon: IconChevronRight,
+        to: '/journal/manualentry'
+    },
+    {
+        title: '전표조회',
+        icon: IconMenu2,
+        to: '/journal/list'
+    },
+    {
+        title: '계정별 잔액',
+        icon: IconLayoutDashboard,
+        to: '/journal/accountbalance'
+    },
+    {
+        title: '월별 예산/지출통계',
+        icon: IconListDetails,
+        to: '/journal/budgetstats'
     }
 ];
 

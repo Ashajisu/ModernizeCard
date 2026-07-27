@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "woori_card")
+@Table(name = "card_woori")
 public class WOCardTransaction extends CardTransaction {
 
     @Embedded
