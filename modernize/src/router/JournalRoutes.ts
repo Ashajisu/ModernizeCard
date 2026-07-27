@@ -21,17 +21,17 @@ const JournalRoutes: RouteRecordRaw = {
             component: () => import('@/view/journal/IncomeStatement.vue')
         }
 
+        ,{
+            name: '전표 수기입력',
+            path: 'manualentry',
+            component: () => import('@/view/journal/ManualEntry.vue')
+        }
+        ,{
+            name: '전표조회',
+            path: 'list',
+            component: () => import('@/view/journal/JournalList.vue')
+        }
         // 아래는 추후 구현 예정 화면 (컴포넌트 작성 후 주석 해제)
-        // ,{
-        //     name: '전표 수기입력',
-        //     path: 'manualentry',
-        //     component: () => import('@/view/journal/ManualEntry.vue')
-        // }
-        // ,{
-        //     name: '전표조회',
-        //     path: 'list',
-        //     component: () => import('@/view/journal/JournalList.vue')
-        // }
         // ,{
         //     name: '계정별 잔액',
         //     path: 'accountbalance',
