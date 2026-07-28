@@ -223,6 +223,18 @@ public class JournalAssembler {
 
         validateBalance(entry);
     }
+    
+    /**
+     * 개시잔액(초기 잔액 등록) 전표 헤더 생성.
+     */
+    public JournalEntry createOpeningBalanceEntry(java.time.LocalDate asOfDate, String description) {
+        return createEntry(asOfDate, description, null, null, JournalEntry.Source.OPENING);
+    }
 
-
+    /**
+     * 외부(OpeningBalanceService 등)에서 라인 추가를 마친 뒤 차변=대변 검증을 수행하기 위한 공개 래퍼.
+     */
+    public void finalizeBalance(JournalEntry entry) {
+        validateBalance(entry);
+    }
 }

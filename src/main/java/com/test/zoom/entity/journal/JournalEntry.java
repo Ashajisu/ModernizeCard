@@ -66,7 +66,7 @@ public class JournalEntry {
     private List<JournalLine> lines = new ArrayList<>();
 
     public enum Source {
-        MANUAL, CARD_IMPORT, SETTLEMENT, RECURRING
+        MANUAL, CARD_IMPORT, SETTLEMENT, RECURRING, OPENING
     }
 
     /** 분개 라인 추가 헬퍼 — 차변/대변 둘 중 하나에만 값이 들어감 */

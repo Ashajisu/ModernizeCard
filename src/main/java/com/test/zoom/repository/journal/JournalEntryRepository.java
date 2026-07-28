@@ -33,4 +33,7 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
      */
     @EntityGraph(attributePaths = "lines")
     Optional<JournalEntry> findWithLinesById(Long id);
+
+    /** 기존 개시잔액 전표 조회 (재업로드 시 기존 것을 대체하기 위함) */
+    List<JournalEntry> findBySourceAndDeletedFalse(JournalEntry.Source source);
 }

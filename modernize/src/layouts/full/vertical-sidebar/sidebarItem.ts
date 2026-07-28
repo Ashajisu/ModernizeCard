@@ -9,7 +9,8 @@ import {
     IconChevronRight,
     IconMenu2,
     IconLayoutDashboard,
-    IconListDetails
+    IconListDetails,
+    IconPinInvoke
 } from '@tabler/icons-vue';
 
 
@@ -82,6 +83,11 @@ const sidebarItem: menu[] = [
         title: '손익계산서',
         icon: IconBrandLinkedin,
         to: '/journal/incomestatement'
+    },
+    {
+        title: '초기잔액등록',
+        icon: IconPinInvoke,
+        to: '/journal/openingbalance'
     },
     {
         title: '전표 수기입력',

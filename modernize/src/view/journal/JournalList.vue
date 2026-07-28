@@ -13,7 +13,7 @@ const router = useRouter();
 // 계정과목 목록 (필터용 + 이름→ID 역변환용)
 const accounts = ref<AccountOption[]>([]);
 
-const sourceOptions = ['MANUAL', 'CARD_IMPORT', 'SETTLEMENT', 'RECURRING'];
+const sourceOptions = ['MANUAL', 'CARD_IMPORT', 'SETTLEMENT', 'RECURRING', 'OPENING'];
 const confirmedOptions = ['전체', '확정', '미확인'];
 
 const formFields = ref<FormField[]>([
@@ -127,7 +127,8 @@ const sourceLabel = (source: string) => {
         MANUAL: '수기입력',
         CARD_IMPORT: '카드거래',
         SETTLEMENT: '계좌정산',
-        RECURRING: '정기분개'
+        RECURRING: '정기분개',
+        OPENING: '개시잔액'
     };
     return map[source] ?? source;
 };
