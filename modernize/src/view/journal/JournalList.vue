@@ -110,7 +110,7 @@ const goToEdit = (id: number) => {
 };
 
 const onConfirm = async (id: number) => {
-    await apiClient.patch(`/journal/entries/${id}/confirm`);
+    await apiClient.patch(`/journal/entries/${id}/confirm`, id);
     detailDialog.value = false;
     await fetchList();
 };
