@@ -60,4 +60,7 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
             "WHERE l.journalEntry.id IN :entryIds AND l.debitAmount > 0 " +
             "GROUP BY l.journalEntry.id")
     List<Object[]> sumDebitByEntryIds(@Param("entryIds") List<Long> entryIds);
+
+    /** 이 계정을 참조하는 분개라인이 하나라도 있는지 — 계정과목 카테고리 변경 가능 여부 판단용 */
+    boolean existsByAccount_Id(Long accountId);
 }

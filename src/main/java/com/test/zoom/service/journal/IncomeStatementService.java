@@ -1,6 +1,6 @@
 package com.test.zoom.service.journal;
 
-import com.test.zoom.dto.journal.AccountBalanceDto;
+import com.test.zoom.dto.journal.response.AccountBalanceDto;
 import com.test.zoom.dto.journal.IncomeStatementResponse;
 import com.test.zoom.entity.journal.Account;
 import com.test.zoom.repository.journal.AccountRepository;

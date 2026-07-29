@@ -1,4 +1,4 @@
-package com.test.zoom.dto.journal;
+package com.test.zoom.dto.journal.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

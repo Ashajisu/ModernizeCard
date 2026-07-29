@@ -2,6 +2,8 @@ package com.test.zoom.controller;
 
 import com.test.zoom.dto.journal.BalanceSheetResponse;
 import com.test.zoom.dto.journal.IncomeStatementResponse;
+import com.test.zoom.dto.journal.response.AccountBalanceResponse;
+import com.test.zoom.service.journal.AccountBalanceService;
 import com.test.zoom.service.journal.BalanceSheetService;
 import com.test.zoom.service.journal.IncomeStatementService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class FinancialStatementController {
 
     private final BalanceSheetService balanceSheetService;
     private final IncomeStatementService incomeStatementService;
+    private final AccountBalanceService accountBalanceService;
 
     /** GET /journal/balance-sheet?asOfDate=2026-07-31 (생략 시 오늘 기준) */
     @GetMapping("/balance-sheet")
@@ -44,5 +47,13 @@ public class FinancialStatementController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
         return incomeStatementService.generate(from, to);
+    }
+
+    /** GET /journal/account-balance?asOfDate=2026-07-31 (생략 시 오늘 기준) — 5개 분류 전체 계정 잔액 */
+    @GetMapping("/account-balance")
+    public AccountBalanceResponse accountBalance(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate asOfDate) {
+        LocalDate target = asOfDate != null ? asOfDate : LocalDate.now();
+        return accountBalanceService.generate(target);
     }
 }

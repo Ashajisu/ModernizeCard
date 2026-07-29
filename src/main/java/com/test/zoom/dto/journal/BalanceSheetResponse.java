@@ -1,5 +1,6 @@
 package com.test.zoom.dto.journal;
 
+import com.test.zoom.dto.journal.response.AccountBalanceDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

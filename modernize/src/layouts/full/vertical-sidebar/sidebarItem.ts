@@ -8,9 +8,12 @@ import {
     IconBrandLinkedin,
     IconChevronRight,
     IconMenu2,
+    IconFocusAuto,
     IconLayoutDashboard,
     IconListDetails,
-    IconPinInvoke
+    IconPinInvoke,
+    IconCircuitCellPlus,
+    IconWashDryA
 } from '@tabler/icons-vue';
 
 
@@ -76,7 +79,7 @@ const sidebarItem: menu[] = [
     { header: '복식부기' },
     {
         title: '대차대조표',
-        icon: PlusMinusIcon,
+        icon: IconCircuitCellPlus,
         to: '/journal/balancesheet'
     },
     {
@@ -100,8 +103,13 @@ const sidebarItem: menu[] = [
         to: '/journal/list'
     },
     {
+        title: '계정과목관리',
+        icon: IconWashDryA,
+        to: '/journal/accountmanagement'
+    },
+    {
         title: '계정별 잔액',
-        icon: IconLayoutDashboard,
+        icon: IconFocusAuto,
         to: '/journal/accountbalance'
     },
     {
