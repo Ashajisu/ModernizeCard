@@ -123,7 +123,7 @@ const onSave = async () => {
 const onToggleActive = async (item: AccountItem) => {
     try {
         const action = item.active ? 'deactivate' : 'activate';
-        await apiClient.patch(`/journal/accounts/${item.id}/${action}`);
+        await apiClient.patch(`/journal/accounts/${item.id}/${action}`, item.id);
         await fetchAccounts();
     } catch (e: any) {
         alert(e?.response?.data?.message || '처리 중 오류가 발생했습니다.');
