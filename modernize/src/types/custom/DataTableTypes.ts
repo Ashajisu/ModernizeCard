@@ -5,7 +5,7 @@ type searchDialogType = {
 
 export type usageChart = {
     label: string;
-    cost: string;
+    cost: number;
     ratio: string;
 };
 

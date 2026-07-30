@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { getPrimary, getSecondary, getLightPrimary, getLightSecondary, getLightError, getLightWarning } from '@/utils/UpdateColors';
 import { format } from 'date-fns';
 import { formatMoney } from '@/utils/common';
@@ -13,13 +13,22 @@ const select = ref(month_before);
 
 const statsData = ref<Record<string, usageChart[]>>({});
 const currentData = computed<usageChart[]>(() => statsData.value[select.value] ?? []);
-const label = computed(() => currentData.value.map((item: any) => item.label)?? []);
-const cost = computed(() => currentData.value.map((item: any) => item.cost)?? []);
-const totalCost = computed(() => {
-    return formatMoney(currentData.value.reduce((sum: number, item: any) => sum + item.cost, 0));
-});
+
+const selectedLabels = ref<string[]>([]);
+const filteredData = computed(() =>
+    currentData.value.filter(item => selectedLabels.value.includes(item.label))
+);
+const label = computed(() => filteredData.value.map(item => item.label));
+const cost = computed(() => filteredData.value.map(item => item.cost));
+const totalCost = computed(() =>
+    formatMoney(filteredData.value.reduce((sum, item) => sum + item.cost, 0))
+);
 
 const items = computed(() => Object.keys(statsData.value));
+
+watch(currentData, (list) => {
+    selectedLabels.value = list.map(item => item.label);
+}, { immediate: true });
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
@@ -33,14 +42,6 @@ onMounted(async () => {
 });
 
 /* Chart */
-const colorText = [
-    'bg-lightsecondary text-secondary',
-    'bg-lightprimary text-primary',
-    'bg-secondary text-secondary',
-    'bg-lighterror text-error',
-    'bg-lightsecondary text-secondary',
-    'bg-lightwarning text-warning'
-];
 const chartOptions = computed(() => {
     return {
         labels: label.value,
@@ -75,7 +76,7 @@ const chartOptions = computed(() => {
                         },
                         value: {
                             show: true,
-                            formatter: (val: number, opts: any) => {
+                            formatter: (val: number) => {
                                 return formatMoney(val);
                             }
                         },
@@ -119,11 +120,9 @@ const chartOptions = computed(() => {
             </div>
             <apexchart class="mt-6" type="donut" height="275" :options="chartOptions" :series="cost"> </apexchart>
             <v-row class="mt-5">
-                <v-col cols="4" v-for="(item, index) in currentData">
+                <v-col cols="4" v-for="(item) in currentData">
                     <div class="d-flex align-center mt-md-6 mt-3">
-                        <v-avatar :class="'rounded-md ' + colorText[index % colorText.length]">
-                            <GridDotsIcon size="22" />
-                        </v-avatar>
+                        <v-checkbox v-model="selectedLabels" :value="item.label" density="compact" hide-details color="primary"/>
                         <div class="pl-4">
                             <h3 class="text-h6">{{ formatMoney(item.cost) }}</h3>
                             <h6 class="text-subtitle-1 textSecondary">{{ item.label }}</h6>
