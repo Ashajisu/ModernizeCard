@@ -10,5 +10,6 @@ public enum JournalSource {
     CARD_IMPORT,
     SETTLEMENT,
     RECURRING,
-    OPENING
+    OPENING,
+    BANK_IMPORT
 }

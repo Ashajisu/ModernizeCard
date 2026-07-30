@@ -63,4 +63,19 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
 
     /** 이 계정을 참조하는 분개라인이 하나라도 있는지 — 계정과목 카테고리 변경 가능 여부 판단용 */
     boolean existsByAccount_Id(Long accountId);
+
+    /**
+     * 은행거래 중복 검출용 — 같은 계좌, 같은 날짜, 같은 금액(차변 또는 대변)의 분개라인이
+     * 이미 있는지 확인. 적요/거래처가 완전히 같은 경우까지는 요구하지 않고 날짜+금액만으로 1차 판정
+     * (완전 자동 차단이 아니라 "의심" 표시이므로 최종 판단은 사용자가 화면에서 함).
+     */
+    @Query("SELECT COUNT(l) > 0 FROM JournalLine l " +
+            "WHERE l.account.id = :accountId " +
+            "AND l.journalEntry.entryDate = :entryDate " +
+            "AND (l.debitAmount = :amount OR l.creditAmount = :amount) " +
+            "AND l.journalEntry.deleted = false")
+    boolean existsPossibleDuplicate(
+            @Param("accountId") Long accountId,
+            @Param("entryDate") LocalDate entryDate,
+            @Param("amount") BigDecimal amount);
 }

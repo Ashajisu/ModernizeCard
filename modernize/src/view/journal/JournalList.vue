@@ -128,7 +128,8 @@ const sourceLabel = (source: string) => {
         CARD_IMPORT: '카드거래',
         SETTLEMENT: '계좌정산',
         RECURRING: '정기분개',
-        OPENING: '개시잔액'
+        OPENING: '개시잔액',
+        BANK_IMPORT: '은행거래'
     };
     return map[source] ?? source;
 };

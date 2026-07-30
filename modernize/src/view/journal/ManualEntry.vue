@@ -5,6 +5,7 @@ import type { AccountOption, JournalLineForm } from '@/types/custom/JournalTypes
 import { apiClient } from '@/data/Axios';
 import { format } from 'date-fns';
 import { useRoute, useRouter } from 'vue-router';
+import { parseExcel } from '@/common/excel/excelService'; // 기존 프로젝트 경로에 맞게 조정
 
 const route = useRoute();
 const router = useRouter();
@@ -13,6 +14,7 @@ const editId = computed(() => (route.query.id ? Number(route.query.id) : null));
 
 const accounts = ref<AccountOption[]>([]);
 const leafAccounts = computed(() => accounts.value.filter((a) => a.leaf));
+const assetLeafAccounts = computed(() => leafAccounts.value.filter((a) => a.category === 'ASSET'));
 
 const entryDate = ref(format(new Date(), 'yyyy-MM-dd'));
 const description = ref('');
@@ -136,6 +138,100 @@ const onReset = () => {
     lines.value = [emptyLine(), emptyLine()];
     errorMessage.value = '';
 };
+
+// ────────────────────────────────────────────────────────────
+// 은행 거래내역 엑셀 업로드 (미리보기 → 계정수정 → 일괄저장)
+// ────────────────────────────────────────────────────────────
+interface BankImportRowUi extends Record<string, any> {
+    transactionDate: string;
+    description: string;
+    deposit: number | null;
+    withdrawal: number | null;
+    rawAccountInfo?: string;
+    accountCode?: string; // 엑셀에서 미리 지정한 상대계정 코드 (선택) — 있으면 리졸버보다 우선 적용됨
+    accountId: number | null;
+    accountName?: string;
+    duplicate: boolean;
+    skip: boolean;
+}
+
+const showBankImport = ref(false);
+const targetAccountId = ref<number | null>(null);
+const bankImportFile = ref<File | null>(null);
+const previewRows = ref<BankImportRowUi[]>([]);
+const previewing = ref(false);
+const bankSaving = ref(false);
+const bankErrorMessage = ref('');
+const bankResultMessage = ref('');
+
+const previewHeaders = ref<any[]>([
+    { title: '거래일자', align: 'start', key: 'transactionDate' },
+    { title: '적요', align: 'start', key: 'description' },
+    { title: '입금', align: 'end', key: 'deposit' },
+    { title: '출금', align: 'end', key: 'withdrawal' },
+    { title: '상대계정', align: 'start', key: 'accountId' },
+    { title: '중복', align: 'center', key: 'duplicate' },
+    { title: '제외', align: 'center', key: 'skip' }
+]);
+
+const onBankFileChange = (files: File[] | File | null) => {
+    bankImportFile.value = Array.isArray(files) ? (files[0] ?? null) : files;
+};
+
+const onPreview = async () => {
+    bankErrorMessage.value = '';
+    bankResultMessage.value = '';
+
+    if (!targetAccountId.value) {
+        bankErrorMessage.value = '대상 계좌(예: 국민은행, 신한은행)를 먼저 선택해주세요.';
+        return;
+    }
+    if (!bankImportFile.value) {
+        bankErrorMessage.value = '엑셀 파일을 선택해주세요.';
+        return;
+    }
+
+    previewing.value = true;
+    try {
+        const parsed = await parseExcel<BankImportRowUi>(bankImportFile.value);
+        const response = await apiClient.post('/journal/entries/bank-import/preview', {
+            targetAccountId: targetAccountId.value,
+            rows: parsed
+        });
+        previewRows.value = response;
+    } catch (e: any) {
+        bankErrorMessage.value = e?.response?.data?.message || '미리보기 처리 중 오류가 발생했습니다.';
+    } finally {
+        previewing.value = false;
+    }
+};
+
+const onBankSave = async () => {
+    bankErrorMessage.value = '';
+    bankResultMessage.value = '';
+
+    // 저장 전 화면단 검증: 계정 미선택 행이 있는지
+    const missing = previewRows.value.filter((r) => !r.skip && !r.accountId);
+    if (missing.length > 0) {
+        bankErrorMessage.value = `상대계정이 선택되지 않은 행이 ${missing.length}건 있습니다. 확인해주세요.`;
+        return;
+    }
+
+    bankSaving.value = true;
+    try {
+        const result = await apiClient.post('/journal/entries/bank-import/save', {
+            targetAccountId: targetAccountId.value,
+            rows: previewRows.value
+        });
+        bankResultMessage.value = `${result.savedCount}건 저장, ${result.skippedCount}건 제외 완료.`;
+        previewRows.value = [];
+        bankImportFile.value = null;
+    } catch (e: any) {
+        bankErrorMessage.value = e?.response?.data?.message || '저장 중 오류가 발생했습니다.';
+    } finally {
+        bankSaving.value = false;
+    }
+};
 </script>
 
 <template>
@@ -170,47 +266,47 @@ const onReset = () => {
 
                         <v-table density="compact">
                             <thead>
-                                <tr>
-                                    <th style="width: 30%">계정과목</th>
-                                    <th style="width: 18%" class="text-end">차변</th>
-                                    <th style="width: 18%" class="text-end">대변</th>
-                                    <th style="width: 24%">메모</th>
-                                    <th style="width: 10%"></th>
-                                </tr>
+                            <tr>
+                                <th style="width: 30%">계정과목</th>
+                                <th style="width: 18%" class="text-end">차변</th>
+                                <th style="width: 18%" class="text-end">대변</th>
+                                <th style="width: 24%">메모</th>
+                                <th style="width: 10%"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(line, idx) in lines" :key="idx">
-                                    <td>
-                                        <v-select
-                                            v-model="line.accountId"
-                                            :items="leafAccounts"
-                                            item-title="name"
-                                            item-value="id"
-                                            density="compact"
-                                            hide-details
-                                        />
-                                    </td>
-                                    <td>
-                                        <v-text-field v-model.number="line.debitAmount" type="number" density="compact" hide-details />
-                                    </td>
-                                    <td>
-                                        <v-text-field v-model.number="line.creditAmount" type="number" density="compact" hide-details />
-                                    </td>
-                                    <td>
-                                        <v-text-field v-model="line.memo" density="compact" hide-details />
-                                    </td>
-                                    <td>
-                                        <v-btn icon size="small" variant="text" color="error" @click="removeLine(idx)">
-                                            <v-icon>mdi-close</v-icon>
-                                        </v-btn>
-                                    </td>
-                                </tr>
-                                <tr class="font-weight-bold">
-                                    <td>합계</td>
-                                    <td class="text-end" :class="{ 'text-error': !isBalanced }">{{ totalDebit }}</td>
-                                    <td class="text-end" :class="{ 'text-error': !isBalanced }">{{ totalCredit }}</td>
-                                    <td colspan="2"></td>
-                                </tr>
+                            <tr v-for="(line, idx) in lines" :key="idx">
+                                <td>
+                                    <v-select
+                                        v-model="line.accountId"
+                                        :items="leafAccounts"
+                                        item-title="name"
+                                        item-value="id"
+                                        density="compact"
+                                        hide-details
+                                    />
+                                </td>
+                                <td>
+                                    <v-text-field v-model.number="line.debitAmount" type="number" density="compact" hide-details />
+                                </td>
+                                <td>
+                                    <v-text-field v-model.number="line.creditAmount" type="number" density="compact" hide-details />
+                                </td>
+                                <td>
+                                    <v-text-field v-model="line.memo" density="compact" hide-details />
+                                </td>
+                                <td>
+                                    <v-btn icon size="small" variant="text" color="error" @click="removeLine(idx)">
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td>합계</td>
+                                <td class="text-end" :class="{ 'text-error': !isBalanced }">{{ totalDebit }}</td>
+                                <td class="text-end" :class="{ 'text-error': !isBalanced }">{{ totalCredit }}</td>
+                                <td colspan="2"></td>
+                            </tr>
                             </tbody>
                         </v-table>
                     </v-col>
@@ -222,6 +318,82 @@ const onReset = () => {
                         <v-btn color="primary" :loading="saving" @click="onSubmit">저장</v-btn>
                     </v-col>
                 </v-row>
+            </UiParentCard>
+        </v-col>
+
+        <!-- 은행 거래내역 엑셀 업로드 -->
+        <v-col cols="12">
+            <UiParentCard title="은행 거래내역 엑셀 업로드">
+                <v-row>
+                    <v-col cols="12">
+                        <v-btn variant="text" @click="showBankImport = !showBankImport">
+                            {{ showBankImport ? '접기' : '펼치기' }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
+
+                <template v-if="showBankImport">
+                    <v-alert v-if="bankErrorMessage" type="error" variant="tonal" density="compact" class="mb-3" style="white-space: pre-line">
+                        {{ bankErrorMessage }}
+                    </v-alert>
+                    <v-alert v-if="bankResultMessage" type="success" variant="tonal" density="compact" class="mb-3">
+                        {{ bankResultMessage }}
+                    </v-alert>
+
+                    <v-row>
+                        <v-col cols="12" md="3">
+                            <v-select
+                                v-model="targetAccountId"
+                                :items="assetLeafAccounts"
+                                item-title="name"
+                                item-value="id"
+                                label="대상 계좌 (예: kb입출금)"
+                                density="compact"
+                            />
+                        </v-col>
+                        <v-col cols="12" md="5">
+                            <v-file-input
+                                label="은행 거래내역 엑셀"
+                                accept=".xlsx,.xls"
+                                density="compact"
+                                prepend-icon="mdi-file-excel"
+                                @update:model-value="onBankFileChange"
+                            />
+                        </v-col>
+                        <v-col cols="12" md="2" class="d-flex align-center">
+                            <v-btn color="primary" :loading="previewing" @click="onPreview">미리보기</v-btn>
+                        </v-col>
+                    </v-row>
+
+                    <v-row v-if="previewRows.length > 0">
+                        <v-col cols="12">
+                            <v-data-table :headers="previewHeaders" :items="previewRows" items-per-page="-1" hide-default-footer class="border rounded-md">
+                                <template #item.deposit="{ item }">{{ item.deposit ? item.deposit.toLocaleString() : '' }}</template>
+                                <template #item.withdrawal="{ item }">{{ item.withdrawal ? item.withdrawal.toLocaleString() : '' }}</template>
+                                <template #item.accountId="{ item }">
+                                    <v-select
+                                        v-model="item.accountId"
+                                        :items="leafAccounts"
+                                        item-title="name"
+                                        item-value="id"
+                                        density="compact"
+                                        hide-details
+                                    />
+                                </template>
+                                <template #item.duplicate="{ item }">
+                                    <v-chip v-if="item.duplicate" color="warning" size="small">중복의심</v-chip>
+                                </template>
+                                <template #item.skip="{ item }">
+                                    <v-checkbox v-model="item.skip" density="compact" hide-details />
+                                </template>
+                            </v-data-table>
+
+                            <div class="d-flex justify-end mt-3">
+                                <v-btn color="primary" :loading="bankSaving" @click="onBankSave">일괄저장</v-btn>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </template>
             </UiParentCard>
         </v-col>
     </v-row>

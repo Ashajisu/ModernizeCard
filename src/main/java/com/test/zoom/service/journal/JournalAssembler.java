@@ -237,4 +237,17 @@ public class JournalAssembler {
     public void finalizeBalance(JournalEntry entry) {
         validateBalance(entry);
     }
+
+    /**
+     * 임의의 source로 전표 헤더 생성 (범용). CARD_IMPORT/SETTLEMENT/RECURRING/BANK_IMPORT 등
+     * 자동생성 계열에서 재사용.
+     */
+    public JournalEntry createEntryWithSource(
+            java.time.LocalDate entryDate,
+            String description,
+            String vendor,
+            JournalEntry.Source source
+    ) {
+        return createEntry(entryDate, description, vendor, null, source);
+    }
 }
