@@ -11,4 +11,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> findByParent_Id(Long parentId);
 
-    List<Account> findByActiveTrue();}
+    List<Account> findByActiveTrue();
+
+    List<Account> findByName(String name);
+}
+

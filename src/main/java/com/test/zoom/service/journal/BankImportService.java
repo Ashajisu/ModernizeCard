@@ -63,17 +63,19 @@ public class BankImportService {
     }
 
     /**
-     * 상대계정 결정 우선순위: 엑셀에 지정된 accountCode(유효한 경우) > MerchantCategoryResolver 추천 > 미분류.
+     * 상대계정 결정 우선순위: 엑셀에 지정된 accountName(유효한 경우) > MerchantCategoryResolver 추천 > 미분류.
+     * 사용자 편의를 위해 코드가 아닌 "계정명"으로 지정 가능하게 한다.
      */
     private void resolveCounterAccount(BankImportRow row, Account unclassified) {
-        if (row.getAccountCode() != null && !row.getAccountCode().isBlank()) {
-            Account specified = accountRepository.findByCode(row.getAccountCode().trim()).orElse(null);
+        if (row.getAccountName() != null && !row.getAccountName().isBlank()) {
+            Account specified = accountRepository.findByName(row.getAccountName().trim())
+                    .stream().findFirst().orElse(null);
             if (specified != null) {
                 row.setAccountId(specified.getId());
                 row.setAccountName(specified.getName());
                 return;
             }
-            // 지정된 코드가 유효하지 않으면 리졸버로 폴백
+            // 지정된 계정명을 찾을 수 없으면 리졸버로 폴백
         }
 
         var resolved = categoryResolver.resolve(row.getDescription());

@@ -148,9 +148,8 @@ interface BankImportRowUi extends Record<string, any> {
     deposit: number | null;
     withdrawal: number | null;
     rawAccountInfo?: string;
-    accountCode?: string; // 엑셀에서 미리 지정한 상대계정 코드 (선택) — 있으면 리졸버보다 우선 적용됨
     accountId: number | null;
-    accountName?: string;
+    accountName?: string; // 엑셀에 미리 계정명을 적어두면 우선 매칭됨 (예: "식비"), 응답 시 서버가 최종 계정명으로 덮어씀
     duplicate: boolean;
     skip: boolean;
 }

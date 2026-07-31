@@ -31,16 +31,14 @@ public class BankImportRow {
     /** 원본 거래계좌 표기 (참고용, 서버 로직에서는 사용 안 함) */
     private String rawAccountInfo;
 
-    /**
-     * 엑셀에서 사용자가 미리 지정한 상대계정 코드 (선택 입력).
-     * 우선순위: 이 값(존재+유효) > MerchantCategoryResolver 추천 > 미분류
-     */
-    private String accountCode;
-
     /** 상대계정 — 서버가 추천값을 채워주고, 사용자가 화면에서 수정 가능 */
     private Long accountId;
 
-    /** 상대계정명 (참고 표시용) */
+    /**
+     * 상대계정명 — 입력/출력 겸용.
+     * 업로드 시: 엑셀에 미리 계정명을 적어두면(예: "식비") 이 값으로 계정을 우선 매칭한다 (코드보다 사람이 알아보기 쉬움).
+     * 미리보기 응답 시: 서버가 최종 확정된 계정명으로 덮어써서 화면에 표시한다.
+     */
     private String accountName;
 
     /** 기존 전표와 중복 의심 여부 (미리보기 시 서버가 판정) */
