@@ -12,6 +12,7 @@ import RevenueUpdates from '@/view/home/dashboardComponents/RevenueUpdates.vue';
 import SalesOverview from '@/view/home/dashboardComponents/SalesOverview.vue';
 import PaymentGateways from '@/view/home/dashboardComponents/PaymentGateways.vue';
 import RecentTransactions from '@/view/home/dashboardComponents/RecentTransactions.vue';
+import SalaryDashboardWidget from '@/view/home/dashboardComponents/SalaryDashboardWidget.vue';
 </script>
 <template>
     <!--    <v-row>-->
@@ -59,6 +60,7 @@ import RecentTransactions from '@/view/home/dashboardComponents/RecentTransactio
         <!-- Payment Gateways-->
         <v-col cols="12" lg="4" md="6">
             <PaymentGateways />
+            <SalaryDashboardWidget/>
         </v-col>
         <!-- Sales Overview -->
         <v-col cols="12" lg="6" sm="6">
