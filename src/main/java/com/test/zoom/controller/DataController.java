@@ -1,7 +1,6 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.dto.Search;
-import com.test.zoom.entity.UsageTransaction;
 import com.test.zoom.entity.*;
 
 import com.test.zoom.entity.card.*;
@@ -31,6 +30,7 @@ public class DataController {
 
     private final SHCardRepository ShinHanCardR;
     private final SSCardRepository SamSungCardR;
+    private final HDCardRepository hyunDaiCardR;
     private final KBCardRepository kbCardR;
     private final WOCardRepository woCardR;
     private final NHCardRepository nhCardR;
@@ -127,6 +127,47 @@ public class DataController {
     public ResponseEntity<Map<String,String>> getDashChart1() {
         String stats = totalRepository.getChart1UsageTypeCurrencyStats();
         System.out.println(stats); //json 형태
+        return ResponseEntity.ok(Map.of("list", stats));
+    }
+
+
+    /// hyundai : HD
+    /**사용자의 카드내역을 나열합니다. **/
+    @GetMapping("/list/hyundai")
+    public ResponseEntity<Map <String, List<HDCardTransaction>>> getHDCardTransactionList() {
+        List<HDCardTransaction> list = hyunDaiCardR.findAllByDeletedFalseOrderByIdDesc();
+        return ResponseEntity.ok(Map.of("list", list));
+    }
+
+    /**신규 카드내역을 저장합니다. **/
+    @PostMapping("/save/hyundai")
+    public ResponseEntity<HDCardTransaction> saveHDTransaction(@RequestBody HDCardTransaction dto) {
+        HDCardTransaction saved = hyunDaiCardR.save(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**신규 카드내역을 논리 삭제합니다. **/
+    @PostMapping("/delete/hyundai")
+    public ResponseEntity<HDCardTransaction> deleteHDTransaction(@RequestBody HDCardTransaction dto) {
+        int deletedCnt = hyunDaiCardR.markDeleted(dto.getId());
+        if(deletedCnt > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok().build() ;
+    }
+
+    /**카드내역 목록을 저장합니다. **/
+    @PostMapping("/saveList/hyundai")
+    public ResponseEntity<List<HDCardTransaction>> saveHDTransaction(@RequestBody List<HDCardTransaction> dto) {
+        List<HDCardTransaction> saved = hyunDaiCardR.saveAll(dto);
+        return ResponseEntity.ok(saved);
+    }
+
+    /**이용구분별 통계를 조회합니다. **/
+    @PostMapping("/usageTypeStats/hyundai")
+    public ResponseEntity<Map <String, List<StatsProcedure>>> getHDUsageTypeCurrencyStats(@RequestBody Search search) {
+        List<StatsProcedure> stats = hyunDaiCardR.getHDUsageTypeCurrencyStats(search.getStartDate(), search.getEndDate(), search.getPayDate());
+        System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
     

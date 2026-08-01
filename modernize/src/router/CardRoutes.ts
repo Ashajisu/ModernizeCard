@@ -41,6 +41,11 @@ const CardRoutes: RouteRecordRaw = {
             component: () => import('@/view/card/AddNH.vue')
         },
         {
+            name: '현대카드',
+            path: 'hd',
+            component: () => import('@/view/card/AddHD.vue')
+        },
+        {
             name: '지출전체',
             path: 'usage',
             component: () => import('@/view/card/AddUsage.vue')

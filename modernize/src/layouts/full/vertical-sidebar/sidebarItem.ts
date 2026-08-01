@@ -68,7 +68,11 @@ const sidebarItem: menu[] = [
         icon: CreditCardIcon,
         to: '/user/nh'
     },
-
+    {
+        title: '현대카드',
+        icon: CreditCardIcon,
+        to: '/user/hd'
+    },
     { header: '지출관리' },
     {
         title: '지출전체',

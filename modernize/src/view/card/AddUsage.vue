@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 //검색
 const formFields = ref<FormField[]>([
     { label: '거래월', name: 'transactionDate', type: 'month', value: '', required: false, disabled: false },
-    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI','NONGHYUP'], required: false, disabled: false },
+    { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI','NONGHYUP', 'HYUNDAI'], required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
     { label: '이용구분', name: 'usageType', type: 'text', value: '', required: false, disabled: false }

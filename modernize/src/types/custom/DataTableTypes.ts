@@ -54,6 +54,21 @@ export type SSCardItem = {
     // [key: string]: string;
 };
 
+export type CardTransaction = {
+    id: string;
+    transactionDate: string;
+    paymentDate: string;
+    usageType: string;
+    amount: string;
+    currency: string;
+    //deletedL: boolean;
+    usedCard: string;
+    merchantName: string;
+    benefitType: string;
+    benefitAmount: string;
+    purchaseType: string;
+};
+
 export type SHCardItem = {
     id: string;
     transactionDate: string;

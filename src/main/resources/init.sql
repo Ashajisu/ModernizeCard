@@ -546,100 +546,27 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `getSHUsageTypeCurrencyStats` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`hab2`@`%` PROCEDURE `getSHUsageTypeCurrencyStats`()
-BEGIN
-    SET @rownum := 0;
-    SELECT (@rownum := @rownum + 1) AS id, title,
-           COALESCE(stat1,0) as stat1,
-           COALESCE(stat2,0) as stat2,
-           COALESCE(stat3,0) as stat3,
-           COALESCE(stat4,0) as stat4,
-           COALESCE(stat5,0) as stat5,
-           COALESCE(stat6,0) as stat6
-    FROM (
-             SELECT
-                 usage_type AS title,
-                 SUM(amount) AS stat1,
-                 -(SUM(amount) - SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END)) AS stat2,
-                 SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END) AS stat3,
-                 SUM(CASE WHEN purchase_type = '정산' THEN currency ELSE 0 END) AS stat4,
-                 SUM(CASE WHEN purchase_type = '예정' THEN currency ELSE 0 END) AS stat5,
-                 SUM(currency) AS stat6
-             FROM shinhan_card, (SELECT @rownum := 0) r
-             WHERE usage_type != '승인취소'
-               and deleted = 0
-             GROUP BY usage_type
 
-             UNION ALL
-
-             SELECT
-                 '합계' AS title,
-                 SUM(amount) AS stat1,
-                 -(SUM(amount) - SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END)) AS stat2,
-                 SUM(CASE WHEN purchase_type = '결제확정' THEN currency ELSE 0 END) AS stat3,
-                 SUM(CASE WHEN purchase_type = '정산' THEN currency ELSE 0 END) AS stat4,
-                 SUM(CASE WHEN purchase_type = '예정' THEN currency ELSE 0 END) AS stat5,
-                 SUM(currency) AS stat6
-             FROM shinhan_card
-             WHERE usage_type != '승인취소'
-               and deleted = 0) t
-    ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
-END ;;
-DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `getSSUsageTypeCurrencyStats` */;
+
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`hab2`@`%` PROCEDURE `getSSUsageTypeCurrencyStats`()
-BEGIN
-    SET @rownum := 0;
-    SELECT (@rownum := @rownum + 1) AS id, title,
-           COALESCE(stat1,0) as stat1,
-           COALESCE(stat2,0) as stat2,
-           COALESCE(stat3,0) as stat3,
-           COALESCE(stat4,0) as stat4,
-           0 as stat5,
-           0 as stat6
-    FROM (SELECT usage_type                 AS title,
-                 SUM(amount)                AS stat1, #이용금액
-                 SUM(benefit_amount)        AS stat2, #할인
-                 SUM(currency)              AS stat3, #거래통화
-                 SUM(balance_after_deposit) AS stat4  #정산후
-          FROM samsung_card
-          WHERE usage_type IS NOT NULL
-          GROUP BY usage_type
 
-          UNION ALL
-
-          SELECT
-              '합계'                       AS title,
-              SUM(amount)                AS stat1,
-              SUM(benefit_amount)        AS stat2,
-              SUM(currency)              AS stat3,
-              SUM(balance_after_deposit) AS stat4
-          FROM samsung_card
-          WHERE usage_type IS NOT NULL)t
-    ORDER BY CASE WHEN title = 'TOTAL' THEN 1 ELSE 0 END, title;
-END ;;
-DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
