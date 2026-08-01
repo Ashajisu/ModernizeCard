@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 
 /**controller 어노테이션에 의해 스프링 빈으로 등록 되어야, 컴포넌트 스캔의 대상이 되어 value 어노테이션이 동작한다.**/
@@ -174,15 +175,13 @@ public class DataController {
     //----------- 지출관리 : CardTransaction & provider -----------
 
     /**사용자의 모든 지출내역을 나열합니다. **/
-    @GetMapping("/list/usage") 
-    public ResponseEntity<Map <String, List<ExpenseListItem>>> getAllExpenses(@RequestParam(required = false) LocalDate from,
-                                                                              @RequestParam(required = false) LocalDate to) {
-        LocalDateTime searchFrom = (from != null)
-                ? from.atStartOfDay()
-                : LocalDate.now().minusMonths(1).withDayOfMonth(1).atStartOfDay(); // 기본: 이번 달 포함 최근 1개월
-        LocalDateTime searchTo = (to != null)
-                ? to.atTime(23, 59, 59)
-                : LocalDateTime.now();
+    @PostMapping("/list/usage")
+    public ResponseEntity<Map <String, List<ExpenseListItem>>> getAllExpenses(@RequestBody Search search) {
+        YearMonth searchMonth = search.getTransactionDate() != null
+                ? search.getTransactionDate()
+                : YearMonth.now().minusMonths(1);
+        LocalDateTime searchFrom = searchMonth.atDay(1).atStartOfDay();
+        LocalDateTime searchTo = searchMonth.atEndOfMonth().atTime(23, 59, 59);
         
         List<ExpenseListItem> list = expenseManagementService.findAllExpenses(searchFrom, searchTo);
         return ResponseEntity.ok(Map.of("list", list));

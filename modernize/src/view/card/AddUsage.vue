@@ -7,11 +7,16 @@ import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksF
 import { useTableManager } from '@/common/useTableManager';
 import { apiClient } from '@/data/Axios';
 import { formatMoney } from '@/utils/common';
-import { format } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+
+const months = subMonths(new Date(), 1);
+const minusMonth = format(months, 'yyyy-MM');
+const startDate = format(startOfMonth(months), 'yyyy-MM-dd');
+const endDate = format(endOfMonth(months), 'yyyy-MM-dd');
 
 //검색
 const formFields = ref<FormField[]>([
-    { label: '거래월', name: 'transactionDate', type: 'month', value: '', required: false, disabled: false },
+    { label: '거래월', name: 'transactionDate', type: 'month', value: minusMonth, required: false, disabled: false },
     { label: '이용카드', name: 'cardCompany', type: 'select', value:'',options:['KOOKMIN','SAMSUNG','SHINHAN','WOORI','NONGHYUP', 'HYUNDAI'], required: false, disabled: false },
     { label: '가맹점명', name: 'merchantName', type: 'text', value: '', required: false, disabled: false },
     { label: '매입구분', name: 'purchaseType', type: 'text', value: '', required: false, disabled: false },
@@ -29,8 +34,6 @@ const headers = ref<any[]>([
 ]);
 
 //집계 검색
-const startDate = format(new Date().setDate(1), 'yyyy-MM-dd');
-const endDate = format(new Date().setDate(31), 'yyyy-MM-dd');
 const statFormFields = ref<FormField[]>([
     { label: '거래시작일', name: 'startDate', type: 'date', value: startDate, required: false, disabled: false },
     { label: '거래종료일', name: 'endDate', type: 'date', value: endDate, required: false, disabled: false }
@@ -61,7 +64,7 @@ onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
         // 프론트: 기본 파라미터 없이 호출하면 최근 1개월, 필요시 쿼리 파라미터로 확장
-        const response = await apiClient.get('/card/list/usage');
+        const response = await apiClient.post('/card/list/usage', { minusMonth });
         setUsers(response.list);
         if (response.list) {
             const response = await apiClient.post('/card/usageTypeStats/usage', { startDate, endDate });
@@ -89,15 +92,31 @@ const identifierField: string = 'id';
 const { onSearch, resetSearch, filteredList, selectedEmpId, onSelectionChange, onNew, onDelete, onExcelSave } =
     useTableManager<UsageItem>(users, formFields, null, identifierField);
 
-
 const getSummaryClass = (item:any) => {
-    if (item.title === '합계') {
+    if (!item){
+        return '';
+    }
+    if (item?.title === '합계') {
         return 'totalSum';
     }
     if (item.title === '개인합계') {
         return 'personalSum';
     }
     return '';
+};
+
+const onSearchDate = async (validateForm: any) => {
+    const formData = await validateForm();
+    //빈문자열 제거
+    for (const key in formData) {
+        if (formData[key] === '') {
+            delete formData[key];
+        }
+    }
+    console.log('onSearchDate',formData);
+    const response = await apiClient.post('/card/list/usage', formData);
+    setUsers(response.list);
+    await onSearch(validateForm);
 };
 </script>
 <!-- 행이 아닌 체크박스만 동작함 -->
@@ -109,7 +128,7 @@ const getSummaryClass = (item:any) => {
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
                             <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
+                                <v-btn color="primary" flat @click="onSearchDate(validateForm)">조회</v-btn>
                                 <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                             </div>
                         </template>

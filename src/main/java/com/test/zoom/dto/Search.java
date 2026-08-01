@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 /** 검색조건 **/
 @Getter
@@ -23,6 +24,8 @@ public class Search {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate payDate; //결제일
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
+    private YearMonth transactionDate; //지출월
 
     public void normalizeLastMonth(){
         // 기본: 이번 달 포함 최근 1개월
