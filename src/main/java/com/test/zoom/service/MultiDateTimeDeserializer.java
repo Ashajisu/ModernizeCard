@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -40,11 +42,28 @@ public class MultiDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getText().trim();
 
+        // 문자열 날짜
         for (DateTimeFormatter formatter : FORMATTERS) {
             try {
                 return LocalDateTime.parse(value, formatter);
             } catch (DateTimeParseException ignored) {}
         }
+        // 엑셀 날짜(serial number)
+        if (value.matches("\\d+(\\.\\d+)?")) {
+            double serial = Double.parseDouble(value);
+            return excelSerialToLocalDateTime(serial);
+        }
+
         throw new RuntimeException("지원하지 않는 날짜 형식: " + value);
+    }
+
+    private LocalDateTime excelSerialToLocalDateTime(double serial) {
+        LocalDate base = LocalDate.of(1899, 12, 30);
+        long days = (long) serial;
+        double fraction = serial - days;
+        LocalTime time = LocalTime.ofSecondOfDay(
+                Math.round(fraction * 24 * 60 * 60)
+        );
+        return LocalDateTime.of(base.plusDays(days), time);
     }
 }
