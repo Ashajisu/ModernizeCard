@@ -78,6 +78,8 @@ public class DashboardItemService {
         Map<Long, BigDecimal> map = new HashMap<>();
         for (AccountBalanceDto dto : balances.getAssets()) map.put(dto.getAccountId(), dto.getTotalAmount());
         for (AccountBalanceDto dto : balances.getLiabilities()) map.put(dto.getAccountId(), dto.getTotalAmount());
+        for (AccountBalanceDto dto : balances.getExpenses()) map.put(dto.getAccountId(), dto.getTotalAmount());
+        for (AccountBalanceDto dto : balances.getEquity()) map.put(dto.getAccountId(), dto.getTotalAmount());
         return map;
     }
 

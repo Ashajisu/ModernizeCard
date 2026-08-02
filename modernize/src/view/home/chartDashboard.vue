@@ -8,9 +8,9 @@
 // import WeeklyStats from '@/views/dashboard/dashboardComponents/modern/WeeklyStats.vue';
 // import YearlySales from '@/views/dashboard/dashboardComponents/ecommerce/YearlySales.vue';
 // import ProductPerformance from '@/views/dashboard/dashboardComponents/ecommerce/ProductPerformance.vue';
+//import PaymentGateways from '@/view/home/dashboardComponents/PaymentGateways.vue';
 import RevenueUpdates from '@/view/home/dashboardComponents/RevenueUpdates.vue';
 import SalesOverview from '@/view/home/dashboardComponents/SalesOverview.vue';
-import PaymentGateways from '@/view/home/dashboardComponents/PaymentGateways.vue';
 import RecentTransactions from '@/view/home/dashboardComponents/RecentTransactions.vue';
 import SalaryDashboardWidget from '@/view/home/dashboardComponents/SalaryDashboardWidget.vue';
 </script>
@@ -59,7 +59,6 @@ import SalaryDashboardWidget from '@/view/home/dashboardComponents/SalaryDashboa
         <!--        </v-col>-->
         <!-- Payment Gateways-->
         <v-col cols="12" lg="4" md="6">
-            <PaymentGateways />
             <SalaryDashboardWidget/>
         </v-col>
         <!-- Sales Overview -->

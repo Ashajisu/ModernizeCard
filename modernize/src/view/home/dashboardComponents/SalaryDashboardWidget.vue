@@ -5,31 +5,33 @@ import icon3 from '@/assets/images/svgs/icon-master-card.svg';
 import icon4 from '@/assets/images/svgs/icon-pie.svg';
 import { computed, onMounted, ref } from 'vue';
 import { apiClient } from '@/data/Axios';
+import { formatMoney } from "@/utils/common";
 
-export type IconKey = 'icon1' | 'icon2' | 'icon3' | 'icon4';
-const ICON_MAP: Record<IconKey, string> = { icon1, icon2, icon3, icon4 };
+//export type IconKey = 'icon1' | 'icon2' | 'icon3' | 'icon4';
+//const ICON_MAP: Record<IconKey, string> = { icon1, icon2, icon3, icon4 };
+//const colorOptions = ['primary', 'secondary', 'success', 'warning', 'error', 'info'];
 const iconOptions = [
-    { title: 'PayPal 스타일', value: 'icon1' },
-    { title: '가방', value: 'icon2' },
-    { title: '카드', value: 'icon3' },
-    { title: '파이차트', value: 'icon4' }
+    { title: 'PayPal', value: icon1, color: 'primary', category: 'EXPENSE' },
+    { title: 'Wallet', value: icon2, color: 'success', category: 'ASSET'  },
+    { title: 'Card', value: icon3, color: 'warning', category: 'LIABILITY'  },
+    { title: 'Refund', value: icon4, color: 'error', category: 'EQUITY'  }
 ];
-const colorOptions = ['primary', 'secondary', 'success', 'warning', 'error', 'info'];
 
 function getIconByKey(key?: string | null): string {
-    if (!key) return icon1;
-    return ICON_MAP[key as IconKey] ?? icon1;
+    return iconOptions.find(item => item.category === key)?.value ?? icon1;
+}
+function getColorByKey(key?: string | null): string {
+    return iconOptions.find(item => item.category === key)?.color ?? 'primary';
 }
 
 interface DashboardItem {
     title: string;
     subtitle: string;
-    rank: string;
-    bgcolor: string;
-    disable: string | null;
-    img: string;
+    amount: string;
+    negative: boolean;
     accountCode: string;
     sortOrder: number;
+    category: string;
 }
 
 interface SettingItem {
@@ -38,8 +40,6 @@ interface SettingItem {
     category: 'ASSET' | 'LIABILITY';
     dashboardTag: string;
     checked: boolean;
-    img: string | null;
-    bgcolor: string;
 }
 
 const DEFAULT_TABS = ['급여', '비상금', '미지정'];
@@ -103,9 +103,7 @@ const onSaveSettings = async () => {
             items: allSettings.value.map((s) => ({
                 accountCode: s.accountCode,
                 dashboardTag: s.dashboardTag,
-                checked: s.checked,
-                img: s.img,
-                bgcolor: s.bgcolor
+                checked: s.checked
             }))
         });
         dialog.value = false;
@@ -129,15 +127,15 @@ const onSaveSettings = async () => {
 
             <div class="mt-sm-10 mt-5">
                 <div class="d-flex align-center mt-6" v-for="item in items" :key="item.accountCode">
-                    <v-avatar :class="'rounded-md bg-light' + item.bgcolor" size="40">
-                        <img :src="getIconByKey(item.img)" :alt="item.img" width="25" />
+                    <v-avatar :class="'rounded-md bg-light' + getColorByKey(item.category)" size="40">
+                        <img :src="getIconByKey(item.category)" :alt="getIconByKey(item.category)" width="25" />
                     </v-avatar>
                     <div class="pl-4 mt-n1">
                         <h5 class="text-h6">{{ item.title }}</h5>
                         <h6 class="text-subtitle-1 textSecondary mt-1">{{ item.subtitle }}</h6>
                     </div>
-                    <div :class="'ml-auto font-weight-bold text-subtitle-1' + (item.disable ? ' text-medium-emphasis' : '')">
-                        {{ item.rank }}
+                    <div :class="'ml-auto font-weight-bold text-subtitle-1' + (item.negative ? ' text-medium-emphasis' : '')">
+                        {{ formatMoney(item.amount) }}
                     </div>
                 </div>
 
@@ -169,36 +167,15 @@ const onSaveSettings = async () => {
                                     <v-checkbox v-model="item.checked" density="compact" hide-details />
                                 </template>
                                 <v-row align="center" no-gutters>
-                                    <v-col cols="3">
+                                    <v-col cols="6">
                                         <v-list-item-title>{{ item.accountName }}</v-list-item-title>
                                     </v-col>
-                                    <v-col cols="3">
+                                    <v-col cols="6">
                                         <v-select
                                             v-model="item.dashboardTag"
                                             :items="tabs"
-                                            label="태그"
                                             density="compact"
                                             hide-details
-                                        />
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-select
-                                            v-model="item.img"
-                                            :items="iconOptions"
-                                            label="아이콘"
-                                            density="compact"
-                                            hide-details
-                                            :disabled="!item.checked"
-                                        />
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-select
-                                            v-model="item.bgcolor"
-                                            :items="colorOptions"
-                                            label="색상"
-                                            density="compact"
-                                            hide-details
-                                            :disabled="!item.checked"
                                         />
                                     </v-col>
                                 </v-row>
