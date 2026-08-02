@@ -33,7 +33,8 @@ public class CardJournalGenerationService {
             "SAMSUNG", "2001",
             "SHINHAN", "2002",
             "WOORI", "2003",
-            "NONGHYUP", "2004"
+            "NONGHYUP", "2004",
+            "HYUNDAI", "2005"
     );
 
     private static final String UNCLASSIFIED_ACCOUNT_CODE = "9999";
@@ -73,9 +74,8 @@ public class CardJournalGenerationService {
     }
 
     private void generateOne(String cardCompanyCode, CardTransaction tx) {
-        // 할인 반영 실청구액 (요구사항: amount - benefit_amount = currency)
-        BigDecimal currency = BigDecimal.valueOf(
-                tx.getAmount() - (tx.getBenefitAmount() != null ? tx.getBenefitAmount() : 0L));
+        // 할인 반영 실청구액 (요구사항: amount - benefit_amount = currency) //이미 테이블에 currency 있음.
+        BigDecimal currency = BigDecimal.valueOf(tx.getCurrency() != null ? tx.getCurrency() : 0L);
 
         Account liabilityAccount = accountRepository.findByCode(LIABILITY_ACCOUNT_CODE.get(cardCompanyCode))
                 .orElseThrow(() -> new IllegalStateException("카드미지급금 계정 없음: " + cardCompanyCode));

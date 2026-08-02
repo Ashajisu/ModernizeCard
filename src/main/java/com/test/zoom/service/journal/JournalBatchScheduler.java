@@ -22,8 +22,9 @@ public class JournalBatchScheduler {
     private final SettlementBatchService settlementBatchService;
     private final RecurringJournalBatchService recurringJournalBatchService;
 
+    //카드 화면에서 수동으로 호출하도록 수정할 예정
     /** 매일 04:00 실행 — cron: 초 분 시 일 월 요일 */
-    @Scheduled(cron = "0 0 4 * * *")
+//    @Scheduled(cron = "0 9 13 * * *")
     public void runDailyBatch() {
         LocalDate today = LocalDate.now();
         log.info("=== 일일 자동분개 배치 시작: {} ===", today);
