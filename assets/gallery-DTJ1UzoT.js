@@ -1,1 +1,0 @@
-import{a_ as a,b0 as r}from"./index-DomQY7AK.js";const l=a({id:"Gallery",state:()=>({gallery:[]}),getters:{},actions:{async fetchGallery(){try{const e=await r.get("/api/gallery/list");this.gallery=e.data.gallery}catch(e){alert(e),console.log(e)}}}});export{l as u};
