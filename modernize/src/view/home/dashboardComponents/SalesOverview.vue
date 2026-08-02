@@ -25,16 +25,13 @@ const totalCost = computed(() =>
 );
 
 const items = computed(() => Object.keys(statsData.value));
-
 watch(currentData, (list) => {
     selectedLabels.value = list.map(item => item.label);
 }, { immediate: true });
 onMounted(async () => {
     // 초기화 또는 초기 작업 수행
     try {
-        const response = await apiClient.get('/card/dash/chart1');
-        statsData.value = response.list;
-        statsData.value = JSON.parse(response.list);
+        statsData.value = await apiClient.get('/dashboard/items/expense');
         console.log(statsData.value);
     } catch (e) {
         console.error('데이터 로드 중 오류 발생:', e);
@@ -120,10 +117,10 @@ const chartOptions = computed(() => {
             </div>
             <apexchart class="mt-6" type="donut" height="275" :options="chartOptions" :series="cost"> </apexchart>
             <v-row class="mt-5">
-                <v-col cols="4" v-for="(item) in currentData">
+                <v-col cols="6" sm="4" md="3" v-for="(item) in currentData">
                     <div class="d-flex align-center mt-md-6 mt-3">
                         <v-checkbox v-model="selectedLabels" :value="item.label" density="compact" hide-details color="primary"/>
-                        <div class="pl-4">
+                        <div class="pl-1">
                             <h3 class="text-h6">{{ formatMoney(item.cost) }}</h3>
                             <h6 class="text-subtitle-1 textSecondary">{{ item.label }}</h6>
                         </div>

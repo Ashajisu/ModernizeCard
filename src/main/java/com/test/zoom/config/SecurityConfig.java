@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/guest/**").hasAnyRole("GUEST", "USER", "ADMIN")
                         .requestMatchers("/card/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/journal/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/dashboard/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
         //B. rest 방식 : id/pw 로그인 후 JWT 반환 필터 & 로그인을 제외한 모든 요청에서 JWT 검증하는 필터 & 세션 미사용 :

@@ -1,15 +1,11 @@
 package com.test.zoom.service.dashboard;
 
-import com.test.zoom.dto.dashboard.DashboardItem;
-import com.test.zoom.dto.dashboard.DashboardItemResponse;
-import com.test.zoom.dto.dashboard.DashboardSettingItemResponse;
-import com.test.zoom.dto.dashboard.DashboardSettingUpdateRequest;
+import com.test.zoom.dto.dashboard.*;
 import com.test.zoom.dto.journal.response.AccountBalanceDto;
 import com.test.zoom.dto.journal.response.AccountBalanceResponse;
 import com.test.zoom.entity.journal.Account;
 import com.test.zoom.entity.journal.AccountPurposeTag;
 import com.test.zoom.repository.AccountPurposeTagRepository;
-import com.test.zoom.repository.journal.AccountRepository;
 import com.test.zoom.repository.journal.DashboardItemRepository;
 import com.test.zoom.service.journal.AccountBalanceService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,12 +35,56 @@ public class DashboardItemService {
     private final AccountPurposeTagRepository accountPurposeTagRepository;
     private final AccountBalanceService accountBalanceService;
 
+    //loadBalanceMap 를 현월, 전월, 전전월, 전년도동월 기준으로 조회하도록 수정해야함.
+    public Map<String, List<ExpenseChartItemResponse>> getExpenseItems() {
+        List<DashboardItem> items = dashboardItemRepository.findByChartVisibleTrueAndAccountCategory(Account.AccountCategory.EXPENSE);
+        if (items.isEmpty()) return Map.of();
+
+        //조회기준일 4가지
+        LocalDate now = LocalDate.now();
+        Map<String, LocalDate> targets = new LinkedHashMap<>();
+        targets.put(formatKey(now), now.with(TemporalAdjusters.lastDayOfMonth()));
+        targets.put(formatKey(now.minusMonths(1)), now.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+        targets.put(formatKey(now.minusMonths(2)), now.minusMonths(2).with(TemporalAdjusters.lastDayOfMonth()));
+        targets.put(formatKey(now.minusYears(1)), now.minusYears(1).with(TemporalAdjusters.lastDayOfMonth()));
+
+        //데이터 생성
+        Map<String, List<ExpenseChartItemResponse>> result = new LinkedHashMap<>();
+        for (Map.Entry<String, LocalDate> target : targets.entrySet()) {
+            Map<Long, BigDecimal> balanceMap = loadBalanceExpenseMap(target.getValue());
+            List<ExpenseChartItemResponse> list =
+                    items.stream()
+                            .map(item -> new ExpenseChartItemResponse(
+                                    item.getAccount().getName(),
+                                    balanceMap.getOrDefault(
+                                            item.getAccount().getId(),
+                                            BigDecimal.ZERO
+                                    )
+                            ))
+                            .toList();
+            result.put(target.getKey(), list);
+        }
+        return result;
+    }
+    private String formatKey(LocalDate date) {
+        return date.format(
+                DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+        );
+    }
+
+    private Map<Long, BigDecimal> loadBalanceExpenseMap(LocalDate localDate) {
+        AccountBalanceResponse balances = accountBalanceService.generate(localDate);
+        Map<Long, BigDecimal> map = new HashMap<>();
+        for (AccountBalanceDto dto : balances.getExpenses()) map.put(dto.getAccountId(), dto.getTotalAmount());
+        return map;
+    }
+
     @Transactional(readOnly = true)
     public List<DashboardItemResponse> getVisibleItems() {
         List<DashboardItem> items = dashboardItemRepository.findByVisibleTrueOrderBySortOrder();
         if (items.isEmpty()) return List.of();
         
-        Map<Long, BigDecimal> balanceByAccountId = loadBalanceMap();
+        Map<Long, BigDecimal> balanceByAccountId = loadBalanceMap(LocalDate.now());
         Map<Long, String> tagMap = accountPurposeTagRepository.findByAccountIdIn(
                 items.stream().map(item -> item.getAccount().getId()).toList()
         ).stream().collect(Collectors.toMap(
@@ -73,8 +114,8 @@ public class DashboardItemService {
                 .toList();
     }
 
-    private Map<Long, BigDecimal> loadBalanceMap() {
-        AccountBalanceResponse balances = accountBalanceService.generate(LocalDate.now());
+    private Map<Long, BigDecimal> loadBalanceMap(LocalDate localDate) {
+        AccountBalanceResponse balances = accountBalanceService.generate(localDate);
         Map<Long, BigDecimal> map = new HashMap<>();
         for (AccountBalanceDto dto : balances.getAssets()) map.put(dto.getAccountId(), dto.getTotalAmount());
         for (AccountBalanceDto dto : balances.getLiabilities()) map.put(dto.getAccountId(), dto.getTotalAmount());

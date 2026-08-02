@@ -29,4 +29,8 @@ public class DashboardItem {
     @Column(name = "sort_order")
     @ColumnDefault("0")
     private Integer sortOrder = 0;
+
+    @Column(name = "chart_visible")
+    @ColumnDefault("1")
+    private boolean chartVisible = true; // 차트
 }
