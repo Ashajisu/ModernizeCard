@@ -1,12 +1,13 @@
 package com.test.zoom.entity.card;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ExpenseListItem(
         String cardCompany,
         Long id,
         LocalDateTime transactionDate,
-        LocalDateTime paymentDate,
+        LocalDate paymentDate,
         String usageType,
         Long amount,
         String usedCard,

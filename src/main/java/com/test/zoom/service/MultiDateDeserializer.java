@@ -23,6 +23,11 @@ public class MultiDateDeserializer extends JsonDeserializer<LocalDate> {
     public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getText().trim();
 
+        //시간 자르기
+        if (value.length() >= 10) {
+            value = value.substring(0, 10);
+        }
+
         for (DateTimeFormatter formatter : FORMATTERS) {
             try {
                 return LocalDate.parse(value, formatter);

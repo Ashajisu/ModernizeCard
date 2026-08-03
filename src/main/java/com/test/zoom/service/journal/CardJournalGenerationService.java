@@ -84,7 +84,7 @@ public class CardJournalGenerationService {
 
         JournalEntry entry = new JournalEntry();
         entry.setEntryDate(tx.getTransactionDate().toLocalDate());
-        entry.setPaymentDate(tx.getPaymentDate() != null ? tx.getPaymentDate().toLocalDate() : null);
+        entry.setPaymentDate(tx.getPaymentDate() != null ? tx.getPaymentDate() : null);
         entry.setVendor(tx.getMerchantName());
         entry.setSource(JournalEntry.Source.CARD_IMPORT);
         entry.setSourceCardCompany(cardCompanyCode);

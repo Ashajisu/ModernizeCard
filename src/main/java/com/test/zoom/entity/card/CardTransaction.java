@@ -1,9 +1,12 @@
 package com.test.zoom.entity.card;
 
+import com.test.zoom.service.MultiDateDeserializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,9 +28,9 @@ public abstract class CardTransaction implements BaseCardTransaction {
     private LocalDateTime transactionDate;
 
     @Column(name = "payment_date", nullable = false)
-    @JsonDeserialize(using = MultiDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime paymentDate;
+    @JsonDeserialize(using = MultiDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate paymentDate; //LocalDate 로 변경하면 좋음.
 
     @Column(name = "usage_type")
     private String usageType;
