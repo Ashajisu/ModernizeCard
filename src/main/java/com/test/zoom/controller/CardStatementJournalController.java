@@ -26,7 +26,7 @@ public class CardStatementJournalController {
      */
     @PostMapping("/regenerate")
     public CardStatementRegenerateResponse regenerate(
-            @RequestParam String 경,
+            @RequestParam String companyCode,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate paymentDate,
             @RequestParam(defaultValue = "false") boolean confirmCascade) {
         return cardStatementJournalService.regenerate(companyCode, paymentDate, confirmCascade);
