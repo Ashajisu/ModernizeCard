@@ -36,4 +36,15 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
 
     /** 기존 개시잔액 전표 조회 (재업로드 시 기존 것을 대체하기 위함) */
     List<JournalEntry> findBySourceAndDeletedFalse(JournalEntry.Source source);
+
+    /** 카드사+월 집계전표 재생성 시, 해당 기간의 기존 CARD_IMPORT 전표(건별/집계 모두) 조회 */
+    List<JournalEntry> findBySourceAndSourceCardCompanyAndEntryDateBetweenAndDeletedFalse(
+            JournalEntry.Source source, String sourceCardCompany, LocalDate from, LocalDate to);
+
+    /**
+     * 특정 카드사+결제일에 대해 이미 생성된 SETTLEMENT(2단계 계좌출금) 전표 조회.
+     * CARD_IMPORT 재생성 전, 이 결제일 기준으로 정산된 후속 전표가 있는지 확인하기 위함.
+     */
+    List<JournalEntry> findBySourceAndSourceCardCompanyAndPaymentDateAndDeletedFalse(
+            JournalEntry.Source source, String sourceCardCompany, LocalDate paymentDate);
 }

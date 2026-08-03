@@ -6,6 +6,7 @@ import com.test.zoom.repository.card.SHCardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,11 @@ public class ShinhanCardTransactionProvider implements CardTransactionProvider {
                 .filter(tx -> CONFIRMED_PURCHASE_TYPES.contains(tx.getPurchaseType()))
 //                .map(this::withCorrectedUsageType)
                 .toList();
+    }
+    
+    @Override
+    public List<? extends CardTransaction> findConfirmedTransactionsByPaymentDate(LocalDate paymentDate) {
+        return repository.findByPaymentDateAndDeletedFalse(paymentDate);
     }
 
     @Override

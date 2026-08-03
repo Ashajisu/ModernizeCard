@@ -31,4 +31,6 @@ public interface HDCardRepository extends JpaRepository<HDCardTransaction, Long>
     List<HDCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 
     List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
+    
+    List<? extends CardTransaction> findByPaymentDateAndDeletedFalse(LocalDate paymentDate);
 }

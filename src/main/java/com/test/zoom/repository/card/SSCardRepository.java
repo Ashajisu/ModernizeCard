@@ -29,6 +29,8 @@ public interface SSCardRepository extends JpaRepository<SSCardTransaction, Long>
     List<StatsProcedure> getSSUsageTypeCurrencyStats(LocalDate startDate, LocalDate endDate, LocalDate payDate);
 
     List<SSCardTransaction> findAllByDeletedFalseOrderByIdDesc();
+    
+    List<? extends CardTransaction> findByPaymentDateAndDeletedFalse(LocalDate paymentDate);
 
     List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
 }

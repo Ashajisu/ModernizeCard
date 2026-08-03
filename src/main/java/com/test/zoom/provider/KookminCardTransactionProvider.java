@@ -5,6 +5,7 @@ import com.test.zoom.repository.card.KBCardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public class KookminCardTransactionProvider implements CardTransactionProvider {
         // 모든 거래가 곧 확정 거래 — 별도 필터 없음
     }
 
+    @Override
+    public List<? extends CardTransaction> findConfirmedTransactionsByPaymentDate(LocalDate paymentDate) {
+        return repository.findByPaymentDateAndDeletedFalse(paymentDate);
+    }
     @Override
     public String getCardCompanyCode() {
         return "KOOKMIN";

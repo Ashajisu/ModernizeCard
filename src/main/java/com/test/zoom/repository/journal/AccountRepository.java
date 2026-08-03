@@ -14,5 +14,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByActiveTrue();
 
     List<Account> findByName(String name);
+
+    /** usageType == Account.name 매핑 조회용 (usage_type_account_map 대체) */
+    Optional<Account> findByCategoryAndName(Account.AccountCategory category, String name);
 }
 

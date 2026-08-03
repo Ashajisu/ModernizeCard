@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -30,4 +31,6 @@ public interface SHCardRepository extends JpaRepository<SHCardTransaction, Long>
     List<SHCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 
     List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
+    
+    List<? extends CardTransaction> findByPaymentDateAndDeletedFalse(LocalDate paymentDate);
 }

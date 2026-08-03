@@ -31,4 +31,6 @@ public interface WOCardRepository extends JpaRepository<WOCardTransaction, Long>
     List<WOCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 
     List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
+
+    List<? extends CardTransaction> findByPaymentDateAndDeletedFalse(LocalDate paymentDate);
 }

@@ -31,4 +31,6 @@ public interface KBCardRepository extends JpaRepository<KBCardTransaction, Long>
     List<KBCardTransaction> findAllByDeletedFalseOrderByIdDesc();
 
     List<? extends CardTransaction> findByDeletedFalseAndTransactionDateBetween(LocalDateTime from, LocalDateTime to);
+    
+    List<? extends CardTransaction> findByPaymentDateAndDeletedFalse(LocalDate paymentDate);
 }
