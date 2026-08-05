@@ -1,12 +1,12 @@
 package com.test.zoom.controller;
 
 import com.test.zoom.dto.Search;
+import com.test.zoom.dto.journal.response.CardOptionResponse;
 import com.test.zoom.entity.*;
 
 import com.test.zoom.entity.card.*;
 import com.test.zoom.repository.*;
 import com.test.zoom.repository.card.*;
-import com.test.zoom.service.CardTransactionAggregationService;
 import com.test.zoom.service.ExpenseManagementService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,6 @@ public class DataController {
     private final NHCardRepository nhCardR;
     private final UsageRepository usageR;
 
-    private final CardTransactionAggregationService cardTransactionAggregationService;
     private final ExpenseManagementService expenseManagementService;
     
     /// shinhan : SH
@@ -173,6 +172,12 @@ public class DataController {
     }
     
     //----------- 지출관리 : CardTransaction & provider -----------
+    
+    /** "이용카드" select 옵션 목록 (카드사 이름, 코드 조합) */
+    @GetMapping("/company/code")
+    public List<CardOptionResponse> getCardOptions() {
+        return expenseManagementService.getCardOptions();
+    }
 
     /**사용자의 모든 지출내역을 나열합니다. **/
     @PostMapping("/list/usage")
@@ -342,5 +347,5 @@ public class DataController {
         System.out.println(stats);
         return ResponseEntity.ok(Map.of("list", stats));
     }
-
+    
 }

@@ -21,6 +21,11 @@ export type StatsItem = {
     [key: string]: string;
 };
 
+export type CardOption = {
+    cardCompanyCode: string;
+    label: string;
+}
+
 export type UsageItem = {
     id: string;
     cardCompany: string;

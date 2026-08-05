@@ -8,6 +8,7 @@ import { useTableManager } from '@/common/useTableManager';
 import { apiClient } from '@/data/Axios';
 import { formatMoney } from '@/utils/common';
 import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import CardStatementGenerateButton from '@/view/journal/CardStatementGenerateButton.vue';
 
 const months = subMonths(new Date(), 1);
 const minusMonth = format(months, 'yyyy-MM');
@@ -66,6 +67,7 @@ onMounted(async () => {
         // 프론트: 기본 파라미터 없이 호출하면 최근 1개월, 필요시 쿼리 파라미터로 확장
         const response = await apiClient.post('/card/list/usage', { minusMonth });
         setUsers(response.list);
+        
         if (response.list) {
             const response = await apiClient.post('/card/usageTypeStats/usage', { startDate, endDate });
             setStats(response.list);
@@ -137,6 +139,7 @@ const onSearchDate = async (validateForm: any) => {
                 <v-row>
                     <v-col>
                         <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
+                            <CardStatementGenerateButton/>
                             <v-btn color="grey" variant="outlined" @click="">엑셀 다운로드</v-btn>
                         </div>
                     </v-col>
@@ -179,13 +182,13 @@ const onSearchDate = async (validateForm: any) => {
                     <v-data-table hide-default-footer :headers="statHeaders" :items="stats" class="border rounded-md" items-per-page="20">
                         <template #item="{ item }">
                             <tr :class="getSummaryClass(item)">
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ item.title }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat1) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat2) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat3) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat4) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat5) }}</td>
-                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item.stat6) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ item?.title }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat1) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat2) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat3) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat4) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat5) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat6) }}</td>
                             </tr>
                         </template>
                     </v-data-table>

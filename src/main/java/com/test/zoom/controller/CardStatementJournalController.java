@@ -4,10 +4,7 @@ import com.test.zoom.dto.journal.response.CardStatementRegenerateResponse;
 import com.test.zoom.service.journal.CardStatementJournalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -26,9 +23,9 @@ public class CardStatementJournalController {
      */
     @PostMapping("/regenerate")
     public CardStatementRegenerateResponse regenerate(
-            @RequestParam String companyCode,
+            @RequestParam String cardCompanyCode,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate paymentDate,
             @RequestParam(defaultValue = "false") boolean confirmCascade) {
-        return cardStatementJournalService.regenerate(companyCode, paymentDate, confirmCascade);
+        return cardStatementJournalService.regenerate(cardCompanyCode, paymentDate, confirmCascade);
     }
 }
