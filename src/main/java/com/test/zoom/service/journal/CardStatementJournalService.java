@@ -72,7 +72,7 @@ public class CardStatementJournalService {
 
         if (transactions.isEmpty()) {
             throw new IllegalArgumentException(
-                    cardCompanyCode + " 의 결제일 " + paymentDate + " 카드내역을 찾을 수 없습니다.");
+                    cardCompanyCode + " 카드의 결제일 " + paymentDate + " 카드내역을 찾을 수 없습니다.");
         }
 
         // 3. 같은 결제일 기준 기존 CARD_IMPORT 전표 조회
@@ -98,13 +98,13 @@ public class CardStatementJournalService {
         log.info("{} 결제일 {} 재생성: 기존 CARD_IMPORT {}건, 연계 SETTLEMENT {}건 소프트삭제",
                 cardCompanyCode, paymentDate, existingCardImports.size(), relatedSettlements.size());
 
-        // 6. usageType별 집계
+        // 6. usageType별 집계 (currency)
         Map<String, BigDecimal> sumByUsageType = new LinkedHashMap<>();
         for (CardTransaction tx : transactions) {
             String usageType = (tx.getUsageType() != null && !tx.getUsageType().isBlank())
                     ? tx.getUsageType() : DEFAULT_USAGE_TYPE;
-            BigDecimal currency = BigDecimal.valueOf(tx.getCurrency() != null ? tx.getCurrency() : 0L);
-            sumByUsageType.merge(usageType, currency, BigDecimal::add);
+            BigDecimal amount = BigDecimal.valueOf(tx.getCurrency() != null ? tx.getBenefitAmount() : 0L);
+            sumByUsageType.merge(usageType, amount, BigDecimal::add);
         }
 
         Account liabilityAccount = accountRepository.findByCode(LIABILITY_ACCOUNT_CODE.get(cardCompanyCode))
@@ -121,6 +121,7 @@ public class CardStatementJournalService {
 
         BigDecimal totalExpenseDebit = BigDecimal.ZERO;
         BigDecimal totalAssetCredit = BigDecimal.ZERO;
+        BigDecimal totalRevenueCredit = BigDecimal.ZERO;
 
         for (Map.Entry<String, BigDecimal> e : sumByUsageType.entrySet()) {
             String usageType = e.getKey();
@@ -133,36 +134,41 @@ public class CardStatementJournalService {
             if (mapped != null && mapped.getCategory() == Account.AccountCategory.EXPENSE) {
                 journalAssembler.addLine(entry, mapped, amount, null, "카드명세서 집계(" + usageType + ")");
                 totalExpenseDebit = totalExpenseDebit.add(amount);
+            } else if (mapped != null && mapped.getCategory() == Account.AccountCategory.REVENUE) {
+                // 수익 계정(급여/이자수익/앱테크/포인트 등) — 카드내역에는 보통 음수로 찍히므로 절대값으로 대변 처리
+                BigDecimal absAmount = amount.abs();
+                journalAssembler.addLine(entry, mapped, null, absAmount, "카드명세서 집계-수익(" + usageType + ")");
+                totalRevenueCredit = totalRevenueCredit.add(absAmount);
             } else if (mapped != null && mapped.getCategory() == Account.AccountCategory.ASSET) {
                 // 예: '카드포인트' — 비용이 아니라 자산 감소(대변)로 상계
                 journalAssembler.addLine(entry, mapped, null, amount, "카드명세서 집계-자산상계(" + usageType + ")");
                 totalAssetCredit = totalAssetCredit.add(amount);
             } else {
-                // 일치하는 계정이 없거나 EXPENSE/ASSET 외 분류인 경우 — 미분류로 폴백
+                // 일치하는 계정이 없거나 EXPENSE/ASSET/REVENUE 외 분류인 경우 — 미분류로 폴백
                 journalAssembler.addLine(entry, unclassified, amount, null, "카드명세서 집계-미분류(" + usageType + ")");
                 totalExpenseDebit = totalExpenseDebit.add(amount);
             }
         }
 
-        BigDecimal liabilityCredit = totalExpenseDebit.subtract(totalAssetCredit);
+        BigDecimal liabilityCredit = totalExpenseDebit.subtract(totalAssetCredit).subtract(totalRevenueCredit);
         if (liabilityCredit.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("집계 결과 카드대금이 0 이하입니다. 데이터를 확인해주세요. (비용합계=" +
-                    totalExpenseDebit + ", 자산상계=" + totalAssetCredit + ")");
+                    totalExpenseDebit + ", 자산상계=" + totalAssetCredit + ", 수익상계=" + totalRevenueCredit + ")");
         }
         journalAssembler.addLine(entry, liabilityAccount, null, liabilityCredit, "카드대금 집계");
 
         journalAssembler.finalizeBalance(entry);
         journalEntryRepository.save(entry);
 
-        log.info("{} 결제일 {} 집계전표 생성 완료: 거래 {}건, 비용합계 {}, 자산상계 {}, 카드대금 {}",
-                cardCompanyCode, paymentDate, transactions.size(), totalExpenseDebit, totalAssetCredit, liabilityCredit);
+        log.info("{} 결제일 {} 집계전표 생성 완료: 거래 {}건, 비용합계 {}, 자산상계 {}, 수익상계 {}, 카드대금 {}",
+                cardCompanyCode, paymentDate, transactions.size(), totalExpenseDebit, totalAssetCredit, totalRevenueCredit, liabilityCredit);
 
         return new CardStatementRegenerateResponse(entry.getId(), cardCompanyCode, List.of(paymentDate));
     }
-
+    
     /**
      * usageType == Account.name 으로 계정을 조회한다 (category 제한 없음).
-     * 동일 이름이 여러 category에 존재할 가능성에 대비해 EXPENSE를 우선하고, 없으면 ASSET을 본다.
+     * 동일 이름이 여러 category에 존재할 가능성에 대비해 EXPENSE → ASSET → REVENUE 우선순위로 본다.
      */
     private Account resolveAccountByUsageType(String usageType) {
         List<Account> candidates = accountRepository.findByName(usageType);
@@ -173,6 +179,9 @@ public class CardStatementJournalService {
                 .findFirst()
                 .or(() -> candidates.stream()
                         .filter(a -> a.getCategory() == Account.AccountCategory.ASSET)
+                        .findFirst())
+                .or(() -> candidates.stream()
+                        .filter(a -> a.getCategory() == Account.AccountCategory.REVENUE)
                         .findFirst())
                 .orElse(null);
     }
