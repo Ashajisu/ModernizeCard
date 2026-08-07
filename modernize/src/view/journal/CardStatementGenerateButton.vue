@@ -24,9 +24,9 @@ const confirmDialog = ref(false);
 const confirmMessage = ref('');
 
 // 결과 스낵바
-const snackbar = ref(true);
+const snackbar = ref(false);
 const snackbarColor = ref<'success' | 'error'>('success');
-const snackbarMessage = ref('error');
+const snackbarMessage = ref('');
 
 const showSnackbar = (message: string, color: 'success' | 'error') => {
     snackbarMessage.value = message;
@@ -109,9 +109,12 @@ const onSuccess = (result: any) => {
         <v-card>
             <UiParentCard :title="'카드명세서 집계전표 생성'" style="height: 100%">
                 <div>
-                    <v-alert type="info" variant="tonal" density="compact" class="mb-4">
+                    <v-alert v-if="!snackbar" type="info" variant="tonal" density="compact" class="mb-4">
                         이용카드와 실제 카드대금 결제일을 선택하면 해당 카드내역을 usageType 기준으로 집계합니다. 카드내역 화면에서 usageType
                         검토/확정을 먼저 마친 뒤 실행하세요.
+                    </v-alert>
+                    <v-alert v-if="snackbar" :type="snackbarColor" variant="tonal" density="compact" class="mb-3">
+                        {{ snackbarMessage }}
                     </v-alert>
     
                     <v-select
