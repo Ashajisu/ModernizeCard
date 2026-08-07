@@ -98,12 +98,12 @@ public class CardStatementJournalService {
         log.info("{} 결제일 {} 재생성: 기존 CARD_IMPORT {}건, 연계 SETTLEMENT {}건 소프트삭제",
                 cardCompanyCode, paymentDate, existingCardImports.size(), relatedSettlements.size());
 
-        // 6. usageType별 집계 (currency)
+        // 6. usageType별 집계 — 금액은 currency 필드를 그대로 사용 (amount-benefitAmount 재계산 안 함)
         Map<String, BigDecimal> sumByUsageType = new LinkedHashMap<>();
         for (CardTransaction tx : transactions) {
             String usageType = (tx.getUsageType() != null && !tx.getUsageType().isBlank())
                     ? tx.getUsageType() : DEFAULT_USAGE_TYPE;
-            BigDecimal amount = BigDecimal.valueOf(tx.getCurrency() != null ? tx.getBenefitAmount() : 0L);
+            BigDecimal amount = BigDecimal.valueOf(tx.getCurrency());
             sumByUsageType.merge(usageType, amount, BigDecimal::add);
         }
 
@@ -117,7 +117,7 @@ public class CardStatementJournalService {
                 cardCompanyCode, JournalEntry.Source.CARD_IMPORT);
         entry.setSourceCardCompany(cardCompanyCode);
         entry.setPaymentDate(paymentDate);
-        entry.setConfirmed(true);
+        entry.setConfirmed(false);
 
         BigDecimal totalExpenseDebit = BigDecimal.ZERO;
         BigDecimal totalAssetCredit = BigDecimal.ZERO;
