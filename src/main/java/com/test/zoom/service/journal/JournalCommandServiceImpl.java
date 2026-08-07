@@ -33,9 +33,9 @@ public class JournalCommandServiceImpl implements JournalCommandService {
     public void update(Long id, JournalUpdateRequest request) {
         JournalEntry entry = findActive(id);
 
-        if (entry.getSource() != JournalEntry.Source.MANUAL) {
-            throw new IllegalStateException("수기입력(MANUAL) 전표만 수정할 수 있습니다. id=" + id);
-        }
+//        if (entry.getSource() != JournalEntry.Source.MANUAL) {
+//            throw new IllegalStateException("수기입력(MANUAL) 전표만 수정할 수 있습니다. id=" + id);
+//        }
 
         journalAssembler.updateHeader(
                 entry,
