@@ -13,7 +13,7 @@ public interface JournalQueryService {
 
     /** 조건 검색 (월별/계정별/금액별/날짜별/거래처별) */
     List<JournalEntry> searchTest(Search search);
-    Page<JournalResponse> search(JournalSearchRequest request);
+    List<JournalResponse> search(JournalSearchRequest request);
 
     /** 단건 상세 (분개라인 포함) */
     JournalDetailResponse getDetail(Long id);

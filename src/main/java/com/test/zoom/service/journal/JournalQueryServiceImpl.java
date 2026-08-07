@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,7 +40,7 @@ public class JournalQueryServiceImpl implements JournalQueryService {
     }
 
     @Override
-    public Page<JournalResponse> search(JournalSearchRequest request) {
+    public List<JournalResponse> search(JournalSearchRequest request) {
         JournalEntry.Source entitySource = request.getSource() != null
                 ? JournalEntry.Source.valueOf(request.getSource().name())
                 : null;
@@ -52,15 +54,10 @@ public class JournalQueryServiceImpl implements JournalQueryService {
                 .and(JournalEntrySpecifications.confirmedEquals(request.getConfirmed()))
                 .and(JournalEntrySpecifications.accountIdEquals(request.getAccountId()))
                 .and(JournalEntrySpecifications.amountBetween(request.getMinAmount(), request.getMaxAmount()));
+        
+        List<JournalEntry> entries = journalEntryRepository.findAll(spec, Sort.by(DESC, "entryDate"));
 
-        PageRequest pageRequest = PageRequest.of(
-                request.getPage() != null ? request.getPage() : 0,
-                request.getSize() != null ? request.getSize() : 20,
-                Sort.by(Sort.Direction.DESC, "entryDate"));
-
-        Page<JournalEntry> page = journalEntryRepository.findAll(spec, pageRequest);
-
-        List<Long> entryIds = page.getContent().stream().map(JournalEntry::getId).toList();
+        List<Long> entryIds = entries.stream().map(JournalEntry::getId).toList();
         Map<Long, BigDecimal> amountByEntryId = entryIds.isEmpty()
                 ? Map.of()
                 : journalLineRepository.sumDebitByEntryIds(entryIds).stream()
@@ -68,7 +65,8 @@ public class JournalQueryServiceImpl implements JournalQueryService {
                         row -> (Long) row[0],
                         row -> (BigDecimal) row[1]));
 
-        return page.map(entry -> toResponse(entry, amountByEntryId.getOrDefault(entry.getId(), BigDecimal.ZERO)));
+        return entries.stream().map(entry -> toResponse(entry,
+                        amountByEntryId.getOrDefault(entry.getId(), BigDecimal.ZERO))).toList();
     }
 
     @Override

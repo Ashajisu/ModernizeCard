@@ -7,32 +7,30 @@ import type { AccountOption, JournalDetail, JournalListItem, PageResponse } from
 import { apiClient } from '@/data/Axios';
 import { formatMoney } from '@/utils/common';
 import { useRouter } from 'vue-router';
+import { startOfMonth, endOfMonth, format } from 'date-fns';
+import { useTableManager } from '@/common/useTableManager';
 
 const router = useRouter();
 
 // 계정과목 목록 (필터용 + 이름→ID 역변환용)
 const accounts = ref<AccountOption[]>([]);
 
-const sourceOptions = ['MANUAL', 'CARD_IMPORT', 'SETTLEMENT', 'RECURRING', 'OPENING'];
+const sourceOptions = ['MANUAL', 'CARD_IMPORT', 'SETTLEMENT', 'RECURRING', 'OPENING', 'BANK_IMPORT'];
 const confirmedOptions = ['전체', '확정', '미확인'];
 
 const formFields = ref<FormField[]>([
-    { label: '조회시작일', name: 'fromDate', type: 'date', value: '', required: false, disabled: false },
-    { label: '조회종료일', name: 'toDate', type: 'date', value: '', required: false, disabled: false },
-    { label: '계정과목', name: 'accountName', type: 'select', value: '', options: [], required: false, disabled: false },
+    { label: '조회시작일', name: 'fromDate', type: 'date', value: format(startOfMonth(new Date()), 'yyyy-MM-dd'), required: false, disabled: false },
+    { label: '조회종료일', name: 'toDate', type: 'date', value: format(endOfMonth(new Date()), 'yyyy-MM-dd'), required: false, disabled: false },
     { label: '거래처', name: 'vendor', type: 'text', value: '', required: false, disabled: false },
-    { label: '가족태그', name: 'memberTag', type: 'text', value: '', required: false, disabled: false },
     { label: '출처', name: 'source', type: 'select', value: '', options: sourceOptions, required: false, disabled: false },
     { label: '확정여부', name: 'confirmedLabel', type: 'select', value: '전체', options: confirmedOptions, required: false, disabled: false },
-    { label: '최소금액', name: 'minAmount', type: 'number', value: '', required: false, disabled: false },
-    { label: '최대금액', name: 'maxAmount', type: 'number', value: '', required: false, disabled: false }
+    { label: '확정', name: 'confirmed', type: 'hidden', value: '', required: false, disabled: false },
 ]);
 
 const headers = ref<any[]>([
     { title: '전표일자', align: 'start', key: 'entryDate' },
     { title: '적요', align: 'start', key: 'description' },
     { title: '거래처', align: 'start', key: 'vendor' },
-    { title: '가족태그', align: 'center', key: 'memberTag' },
     { title: '출처', align: 'center', key: 'source' },
     { title: '확정여부', align: 'center', key: 'confirmed' },
     { title: '금액', align: 'end', key: 'amount' },
@@ -40,9 +38,13 @@ const headers = ref<any[]>([
 ]);
 
 const list = ref<JournalListItem[]>([]);
-const totalElements = ref(0);
-const page = ref(0);
-const size = ref(20);
+const fromDate = ref<String | null>(null);
+const toDate = ref<String | null>(null);
+// `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
+//모듈 호출 : 기존코드 동일
+const identifierField: string = 'id';
+const { search, resetSearch, filteredList, selectedEmpId, onSelectionChange } =
+    useTableManager<any>(list, formFields, null, identifierField);
 
 const detailDialog = ref(false);
 const detail = ref<JournalDetail | null>(null);
@@ -56,37 +58,8 @@ const loadAccounts = async () => {
     }
 };
 
-const buildSearchParams = (formData: any) => {
-    const params: any = {
-        fromDate: formData.fromDate || undefined,
-        toDate: formData.toDate || undefined,
-        vendor: formData.vendor || undefined,
-        memberTag: formData.memberTag || undefined,
-        source: formData.source || undefined,
-        minAmount: formData.minAmount || undefined,
-        maxAmount: formData.maxAmount || undefined,
-        page: page.value,
-        size: size.value
-    };
-
-    // 계정과목명 → accountId 역변환
-    if (formData.accountName) {
-        const matched = accounts.value.find((a) => a.name === formData.accountName);
-        if (matched) params.accountId = matched.id;
-    }
-
-    // 확정여부 라벨 → boolean 역변환
-    if (formData.confirmedLabel === '확정') params.confirmed = true;
-    else if (formData.confirmedLabel === '미확인') params.confirmed = false;
-
-    return params;
-};
-
-const fetchList = async (params: any = { page: 0, size: size.value }) => {
-    const response: PageResponse<JournalListItem> = await apiClient.get('/journal/entries', params);
-    list.value = response.content;
-    totalElements.value = response.totalElements;
-    page.value = response.number;
+const fetchList = async (param?:any) => {
+    list.value = await apiClient.get('/journal/entries', param);
 };
 
 onMounted(async () => {
@@ -94,11 +67,29 @@ onMounted(async () => {
     await fetchList();
 });
 
-const onSearch = async (validateForm: any) => {
+const onSearchFetch = async (validateForm: any) => {
     const formData = await validateForm();
-    page.value = 0;
-    await fetchList(buildSearchParams(formData));
+    const dateParam = {
+        fromDate: formData.fromDate,
+        toDate: formData.toDate
+    };
+    if (isChanged(dateParam)){
+        fromDate.value = formData.fromDate;
+        toDate.value = formData.toDate;
+        await fetchList(dateParam);
+    }
+    search.value = {
+        vendor: formData.vendor,
+        memberTag: formData.memberTag,
+        source: formData.source,
+        confirmed: formData.confirmedLabel=='확정'? true : formData.confirmedLabel=='전체'? null : false
+    }
+    console.log('search: ',search.value);
 };
+
+function isChanged(dateParam: any) {
+    return dateParam.fromDate !== fromDate.value || dateParam.toDate !== toDate.value;
+}
 
 const openDetail = async (item: JournalListItem) => {
     detail.value = await apiClient.get(`/journal/entries/${item.id}`);
@@ -115,7 +106,7 @@ const onConfirm = async (id: number) => {
     await fetchList();
 };
 
-const onDelete = async (id: number) => {
+const onDeleteFetch = async (id: number) => {
     if (!confirm('이 전표를 삭제하시겠습니까?')) return;
     await apiClient.delete(`/journal/entries/${id}`);
     detailDialog.value = false;
@@ -142,15 +133,24 @@ const sourceLabel = (source: string) => {
                 <v-row>
                     <CustomSearchChecksForm :formFields="formFields" :colsPerRow="5" :edit="true" :hide-details="true">
                         <template v-slot:lineBtn="{ validateForm }">
-                            <div class="d-flex gap-3 justify-end flex-column flex-wrap flex-xl-nowrap flex-sm-row fill-height">
-                                <v-btn color="primary" flat @click="onSearch(validateForm)">조회</v-btn>
-                            </div>
+                            <v-btn color="primary" flat @click="onSearchFetch(validateForm)">조회</v-btn>
+                            <v-btn color="primary" variant="outlined" @click="resetSearch">초기화</v-btn>
                         </template>
                     </CustomSearchChecksForm>
                 </v-row>
 
                 <v-row>
-                    <v-data-table :headers="headers" :items="list" hide-default-footer class="border rounded-md">
+                    <v-data-table
+                        items-per-page="20"
+                        :headers="headers"
+                        :items="filteredList"
+                        select-strategy="single"
+                        show-select
+                        class="border rounded-md"
+                        v-model="selectedEmpId"
+                        :item-value="identifierField"
+                        @update:model-value="onSelectionChange"
+                        mobile-breakpoint="sm">
                         <!-- 날짜 컬럼 -->
                         <template #item.entryDate="{ item }">
                             {{ item.entryDate }}
@@ -180,16 +180,6 @@ const sourceLabel = (source: string) => {
                             <v-btn size="small" variant="text" color="primary" @click="openDetail(item)">상세</v-btn>
                         </template>
                     </v-data-table>
-                </v-row>
-
-                <v-row class="mt-2">
-                    <v-col class="d-flex justify-center">
-                        <v-pagination
-                            v-model="page"
-                            :length="Math.ceil(totalElements / size)"
-                            @update:model-value="(p: number) => fetchList({ page: p - 1, size })"
-                        />
-                    </v-col>
                 </v-row>
             </UiParentCard>
         </v-col>
@@ -240,7 +230,7 @@ const sourceLabel = (source: string) => {
                 <v-btn color="primary" variant="text" @click="goToEdit(detail.id)">수정</v-btn>
                 <v-btn v-if="!detail.confirmed" color="success" variant="text" @click="onConfirm(detail.id)">확정처리</v-btn>
                 <v-spacer />
-                <v-btn color="error" variant="text" @click="onDelete(detail.id)">삭제</v-btn>
+                <v-btn color="error" variant="text" @click="onDeleteFetch(detail.id)">삭제</v-btn>
                 <v-btn variant="text" @click="detailDialog = false">닫기</v-btn>
             </v-card-actions>
         </v-card>

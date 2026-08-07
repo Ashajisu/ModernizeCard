@@ -13,10 +13,11 @@ import com.test.zoom.service.journal.JournalQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,17 @@ public class JournalController {
 
     /** 전표 조회 (월별/계정별/금액별/날짜별/거래처별 — JournalSearchRequest 쿼리파라미터) */
     @GetMapping
-    public Page<JournalResponse> search(JournalSearchRequest request) {
+    public List<JournalResponse> search(JournalSearchRequest request) {
+        LocalDate from = request.getFromDate() != null
+                ? request.getFromDate()
+                : LocalDate.now().withDayOfMonth(1);
+        request.setFromDate(from);
+
+        LocalDate to = request.getToDate() != null
+                ? request.getToDate()
+                : LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        request.setToDate(to);
+        
         return journalQueryService.search(request);
     }
 
