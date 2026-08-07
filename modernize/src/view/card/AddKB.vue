@@ -44,7 +44,7 @@ const userFields = ref<FormField[]>([
     { label: '이용혜택', name: 'benefitType', type: 'text', value: '', placeholder: '사용자명 입력', required: false, disabled: false },
     { label: '혜택금액', name: 'benefitAmount', type: 'text', value: '', placeholder: '0,000', required: false, disabled: false },
     { label: '거래통화', name: 'currency', type: 'text', value: '', placeholder: '0,000', required: true, disabled: false },
-    { label: '결제일', name: 'paymentDate', type: 'datetime', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
+    { label: '결제일', name: 'paymentDate', type: 'date', value: '', placeholder: 'YYYY-MM-DD', required: false, disabled: false }
 ]);
 
 //집계 검색
