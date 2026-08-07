@@ -48,6 +48,7 @@ const statHeaders = ref<any[]>([
     { title: '신한', align: 'center', key: 'stat4' },
     { title: '우리', align: 'center', key: 'stat5' },
     { title: '농협', align: 'center', key: 'stat6' },
+    { title: '현대', align: 'center', key: 'stat7' },
 ]);
 
 const setUsers = (userList: UsageItem[]) => {
@@ -189,6 +190,7 @@ const onSearchDate = async (validateForm: any) => {
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat4) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat5) }}</td>
                                 <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat6) }}</td>
+                                <td class="v-data-table__td v-data-table-column--align-center">{{ formatMoney(item?.stat7) }}</td>
                             </tr>
                         </template>
                     </v-data-table>

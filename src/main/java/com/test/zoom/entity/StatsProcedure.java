@@ -22,4 +22,5 @@ public class StatsProcedure {
     private String stat4; // 전체 합계
     private String stat5; // 전체 합계
     private String stat6; // 전체 합계
+    private String stat7; // 전체 합계
 }
