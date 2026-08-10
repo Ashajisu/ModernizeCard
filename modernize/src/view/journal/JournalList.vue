@@ -3,7 +3,7 @@ import UiParentCard from '@/components/shared/UiParentCard.vue';
 import CustomSearchChecksForm from '@/components/custom/form/CustomSearchChecksForm.vue';
 import { onMounted, ref } from 'vue';
 import type { FormField } from '@/types/custom/InputTypes';
-import type { AccountOption, JournalDetail, JournalListItem, PageResponse } from '@/types/custom/JournalTypes';
+import type { AccountOption, JournalDetail, JournalListItem } from '@/types/custom/JournalTypes';
 import { apiClient } from '@/data/Axios';
 import { formatMoney } from '@/utils/common';
 import { useRouter } from 'vue-router';
@@ -15,12 +15,15 @@ const router = useRouter();
 // 계정과목 목록 (필터용 + 이름→ID 역변환용)
 const accounts = ref<AccountOption[]>([]);
 
+const accountMap = new Map(accounts.value.map((a) => [a.name, a.id]));
 const sourceOptions = ['MANUAL', 'CARD_IMPORT', 'SETTLEMENT', 'RECURRING', 'OPENING', 'BANK_IMPORT'];
 const confirmedOptions = ['전체', '확정', '미확인'];
 
 const formFields = ref<FormField[]>([
     { label: '조회시작일', name: 'fromDate', type: 'date', value: format(startOfMonth(new Date()), 'yyyy-MM-dd'), required: false, disabled: false },
     { label: '조회종료일', name: 'toDate', type: 'date', value: format(endOfMonth(new Date()), 'yyyy-MM-dd'), required: false, disabled: false },
+    { label: '계정과목', name: 'accountName', type: 'select', value: '', options: [], required: false, disabled: false },
+    
     { label: '거래처', name: 'vendor', type: 'text', value: '', required: false, disabled: false },
     { label: '출처', name: 'source', type: 'select', value: '', options: sourceOptions, required: false, disabled: false },
     { label: '확정여부', name: 'confirmedLabel', type: 'select', value: '전체', options: confirmedOptions, required: false, disabled: false },
@@ -38,8 +41,6 @@ const headers = ref<any[]>([
 ]);
 
 const list = ref<JournalListItem[]>([]);
-const fromDate = ref<String | null>(null);
-const toDate = ref<String | null>(null);
 // `users` 값을 동적으로 반영하도록 useTableManager 를 수정하였습니다.
 //모듈 호출 : 기존코드 동일
 const identifierField: string = 'id';
@@ -69,15 +70,16 @@ onMounted(async () => {
 
 const onSearchFetch = async (validateForm: any) => {
     const formData = await validateForm();
-    const dateParam = {
+    const matchedAccount = accounts.value.find(
+        (account) => account.name === formData.accountName
+    );
+    const param = {
         fromDate: formData.fromDate,
-        toDate: formData.toDate
+        toDate: formData.toDate,
+        ...(matchedAccount && { accountId: matchedAccount.id }),
     };
-    if (isChanged(dateParam)){
-        fromDate.value = formData.fromDate;
-        toDate.value = formData.toDate;
-        await fetchList(dateParam);
-    }
+    await fetchList(param);
+    
     search.value = {
         vendor: formData.vendor,
         memberTag: formData.memberTag,
@@ -86,10 +88,6 @@ const onSearchFetch = async (validateForm: any) => {
     }
     console.log('search: ',search.value);
 };
-
-function isChanged(dateParam: any) {
-    return dateParam.fromDate !== fromDate.value || dateParam.toDate !== toDate.value;
-}
 
 const openDetail = async (item: JournalListItem) => {
     detail.value = await apiClient.get(`/journal/entries/${item.id}`);
