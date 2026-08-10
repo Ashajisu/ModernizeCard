@@ -50,12 +50,11 @@ const JournalRoutes: RouteRecordRaw = {
             path: 'accountbalance',
             component: () => import('@/view/journal/AccountBalance.vue')
         }
-        // 아래는 추후 구현 예정 화면 (컴포넌트 작성 후 주석 해제)
-        // ,{
-        //     name: '월별 예산/지출통계',
-        //     path: 'budgetstats',
-        //     component: () => import('@/view/journal/BudgetStats.vue')
-        // }
+        ,{
+            name: '월별 예산/지출통계',
+            path: 'budgetstats',
+            component: () => import('@/view/journal/BudgetStats.vue')
+        }
     ]
 };
 

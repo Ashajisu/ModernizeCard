@@ -1,7 +1,6 @@
 package com.test.zoom.provider;
 
 import com.test.zoom.entity.card.CardTransaction;
-import com.test.zoom.entity.card.SHCardTransaction;
 import com.test.zoom.repository.card.SHCardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Component
