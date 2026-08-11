@@ -2,6 +2,7 @@ import {
     //https://tabler.io/icons 는 이미지만 참고
     //이 라이브러리 하위에서 고르기
     ApertureIcon,
+    ArrowsSplit2Icon,
     BrandLinkedinIcon,
     CircuitCellPlusIcon,
     CreditCardIcon,
@@ -117,6 +118,11 @@ const sidebarItem: menu[] = [
         title: '월별 예산/지출통계',
         icon: ListDetailsIcon,
         to: '/journal/budgetstats'
+    },
+    {
+        title: '현금흐름표',
+        icon: ArrowsSplit2Icon,
+        to: '/journal/cashflow'
     }
 ];
 

@@ -8,43 +8,36 @@ const JournalRoutes: RouteRecordRaw = {
     redirect: '/journal/balancesheet',
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
-        // 대차대조표
         {
             name: '대차대조표',
             path: 'balancesheet',
             component: () => import('@/view/journal/BalanceSheet.vue')
         },
-        // 손익계산서
         {
             name: '손익계산서',
             path: 'incomestatement',
             component: () => import('@/view/journal/IncomeStatement.vue')
         },
-        // 전표 수기입력
         {
             name: '전표 수기입력',
             path: 'manualentry',
             component: () => import('@/view/journal/ManualEntry.vue')
         },
-        // 전표조회
         {
             name: '전표조회',
             path: 'list',
             component: () => import('@/view/journal/JournalList.vue')
         },
-        // 초기잔액 등록
         {
             name: '초기잔액등록',
             path: 'openingbalance',
             component: () => import('@/view/journal/OpeningBalanceUpload.vue')
         },
-        // 계정과목 관리
         {
             name: '계정과목관리',
             path: 'accountmanagement',
             component: () => import('@/view/journal/AccountManagement.vue')
         },
-        // 계정별 잔액
         {
             name: '계정별잔액',
             path: 'accountbalance',
@@ -54,6 +47,11 @@ const JournalRoutes: RouteRecordRaw = {
             name: '월별 예산/지출통계',
             path: 'budgetstats',
             component: () => import('@/view/journal/BudgetStats.vue')
+        }
+        ,{
+            name: '현금흐름표',
+            path: 'cashflow',
+            component: () => import('@/view/journal/CashFlow.vue')
         }
     ]
 };

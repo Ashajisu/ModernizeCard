@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public interface JournalLineRepository extends JpaRepository<com.test.zoom.entity.journal.JournalLine, Long> {
@@ -78,4 +79,21 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
             @Param("accountId") Long accountId,
             @Param("entryDate") LocalDate entryDate,
             @Param("amount") BigDecimal amount);
+
+
+    /**
+     * 현금흐름 조회용
+     * **/
+    @Query("""
+    SELECT COALESCE(SUM(l.debitAmount), 0)
+    FROM JournalLine l
+    JOIN l.journalEntry e
+    WHERE l.account.id IN :accountIds
+      AND e.entryDate BETWEEN :from AND :to
+      AND e.deleted = false
+""")
+    BigDecimal sumDebitAmountByAccountIds(
+            @Param("accountIds") Collection<Long> accountIds,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to);
 }

@@ -47,4 +47,12 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
      */
     List<JournalEntry> findBySourceAndSourceCardCompanyAndPaymentDateAndDeletedFalse(
             JournalEntry.Source source, String sourceCardCompany, LocalDate paymentDate);
+
+    /**
+     * 현금흐름 계산용 — 정기분개(적금이체/대출상환) 중 특정 규칙 ID들에 해당하는 전표를 기간으로 조회.
+     * lines를 즉시로딩하여 트랜잭션 경계와 무관하게 안전하게 사용 가능.
+     */
+    @EntityGraph(attributePaths = "lines")
+    List<JournalEntry> findBySourceAndSourceRefIdInAndEntryDateBetweenAndDeletedFalse(
+            JournalEntry.Source source, List<Long> sourceRefIds, LocalDate from, LocalDate to);
 }

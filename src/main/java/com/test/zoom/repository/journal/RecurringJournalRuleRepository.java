@@ -11,4 +11,7 @@ public interface RecurringJournalRuleRepository extends JpaRepository<RecurringJ
 
     List<RecurringJournalRule> findByActiveTrueAndFrequencyAndMonthOfYearAndDayOfMonth(
             RecurringJournalRule.Frequency frequency, Integer monthOfYear, Integer dayOfMonth);
+
+    /** 현금흐름 계산용 — 적금이체/대출상환 등 규칙 유형별 조회 (활성 여부 무관, 과거 데이터 포함) */
+    List<RecurringJournalRule> findByRuleType(RecurringJournalRule.RuleType ruleType);
 }
