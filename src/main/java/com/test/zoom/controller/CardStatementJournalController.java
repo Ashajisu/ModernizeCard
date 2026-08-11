@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 @RestController
 @RequestMapping("/journal/card-statement")
@@ -16,16 +16,15 @@ public class CardStatementJournalController {
     private final CardStatementJournalService cardStatementJournalService;
 
     /**
-     * 카드사(companyCode)+실제 결제일(paymentDate) 기준 집계전표 (재)생성.
-     * 이미 이 결제일 기준으로 SETTLEMENT(계좌출금) 전표가 있으면, confirmCascade=true 없이는
-     * 409(IllegalStateException)로 안내만 하고 아무것도 지우지 않는다.
-     * POST /journal/card-statement/regenerate?companyCode=SAMSUNG&paymentDate=2026-08-12&confirmCascade=false
+     * 카드사(cardCompanyCode) + 대상월(yearMonth) 기준 "비용확정" 집계전표 (재)생성.
+     * transactionDate가 해당 월에 속하는 거래를 전부 모아 집계한다 (결제일과 무관).
+     *
+     * POST /journal/card-statement/regenerate?cardCompanyCode=SHINHAN&yearMonth=2026-08
      */
     @PostMapping("/regenerate")
     public CardStatementRegenerateResponse regenerate(
             @RequestParam String cardCompanyCode,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate paymentDate,
-            @RequestParam(defaultValue = "false") boolean confirmCascade) {
-        return cardStatementJournalService.regenerate(cardCompanyCode, paymentDate, confirmCascade);
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
+        return cardStatementJournalService.regenerate(cardCompanyCode, yearMonth);
     }
 }

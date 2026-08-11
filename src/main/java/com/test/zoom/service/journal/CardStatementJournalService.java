@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.*;
 
 /**
@@ -49,12 +52,11 @@ public class CardStatementJournalService {
 
     /**
      * @param cardCompanyCode 카드사 코드 (프론트에서 명시적으로 전달, 예: "SHINHAN") — 이 값으로 Provider를 특정한다
-     * @param paymentDate     실제 카드대금 결제일 (사용자가 엑셀에서 직접 입력한 값, 예: 2026-08-12) — 정확히 일치하는 거래만 집계
-     * @param confirmCascade  이 결제일에 이미 후속 SETTLEMENT 전표가 있을 때, 함께 삭제할지 여부.
-     *                        false 상태에서 후속 전표가 발견되면 실제 처리 없이 안내 메시지만 던진다.
+     * @param yearMonth       비용을 확정할 대상 월 — transactionDate가 이 월에 속하는 거래를 전부 집계한다
      */
-    public CardStatementRegenerateResponse regenerate(
-            String cardCompanyCode, LocalDate paymentDate, boolean confirmCascade) {
+    public CardStatementRegenerateResponse regenerate(String cardCompanyCode, YearMonth yearMonth) {
+        LocalDate monthStart = yearMonth.atDay(1);
+        LocalDate monthEnd = yearMonth.atEndOfMonth();
 
         // 1. cardCompanyCode로 Provider를 먼저 특정 (순회/추정 없음)
         CardTransactionProvider provider = providers.stream()
@@ -62,9 +64,9 @@ public class CardStatementJournalService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("알 수 없는 카드사 코드: " + cardCompanyCode));
 
-        // 2. 특정된 Provider에게만 usedCard + paymentDate 조건 조회를 위임
+        // 2. transactionDate 기준으로 해당 월 확정거래 조회 (paymentDate 아님)
         List<CardTransaction> transactions = provider
-                .findConfirmedTransactionsByPaymentDate(paymentDate)
+                .findConfirmedTransactions(monthStart.atStartOfDay(), LocalDateTime.of(monthEnd, LocalTime.MAX))
                 .stream()
                 .filter(tx -> !tx.isDeleted())
                 .map(tx -> (CardTransaction) tx)
@@ -72,33 +74,17 @@ public class CardStatementJournalService {
 
         if (transactions.isEmpty()) {
             throw new IllegalArgumentException(
-                    cardCompanyCode + " 카드의 결제일 " + paymentDate + " 카드내역을 찾을 수 없습니다.");
+                    cardCompanyCode + "의 " + yearMonth + " 확정 카드거래를 찾을 수 없습니다.");
         }
 
-        // 3. 같은 결제일 기준 기존 CARD_IMPORT 전표 조회
+        // 3. 같은 대상월(entryDate 기준) 기존 CARD_IMPORT 전표 조회 후 소프트삭제 (재생성 시 대체)
         List<JournalEntry> existingCardImports = journalEntryRepository
-                .findBySourceAndSourceCardCompanyAndPaymentDateAndDeletedFalse(
-                        JournalEntry.Source.CARD_IMPORT, cardCompanyCode, paymentDate);
-
-        // 4. 같은 결제일 기준 이미 생성된 후속 SETTLEMENT 전표 확인
-        List<JournalEntry> relatedSettlements = journalEntryRepository
-                .findBySourceAndSourceCardCompanyAndPaymentDateAndDeletedFalse(
-                        JournalEntry.Source.SETTLEMENT, cardCompanyCode, paymentDate);
-
-        if (!relatedSettlements.isEmpty() && !confirmCascade) {
-            throw new IllegalStateException(
-                    "이 카드명세서(결제일 " + paymentDate + ")를 기준으로 이미 계좌출금 정산 전표(" +
-                            relatedSettlements.size() + "건)가 생성되어 있습니다. " +
-                            "재생성하면 해당 정산 전표도 함께 삭제됩니다. 계속하려면 확인 후 다시 요청해주세요.");
-        }
-
-        // 5. 확인되었거나 관련 SETTLEMENT가 없으면 — 기존 CARD_IMPORT + 관련 SETTLEMENT 모두 소프트삭제
+                .findBySourceAndSourceCardCompanyAndEntryDateBetweenAndDeletedFalse(
+                        JournalEntry.Source.CARD_IMPORT, cardCompanyCode, monthStart, monthEnd);
         existingCardImports.forEach(e -> e.setDeleted(true));
-        relatedSettlements.forEach(e -> e.setDeleted(true));
-        log.info("{} 결제일 {} 재생성: 기존 CARD_IMPORT {}건, 연계 SETTLEMENT {}건 소프트삭제",
-                cardCompanyCode, paymentDate, existingCardImports.size(), relatedSettlements.size());
+        log.info("{} {} 재생성: 기존 CARD_IMPORT {}건 소프트삭제", cardCompanyCode, yearMonth, existingCardImports.size());
 
-        // 6. usageType별 집계 — 금액은 currency 필드를 그대로 사용 (amount-benefitAmount 재계산 안 함)
+        // 4. usageType별 집계 (currency 필드 그대로 사용)
         Map<String, BigDecimal> sumByUsageType = new LinkedHashMap<>();
         for (CardTransaction tx : transactions) {
             String usageType = (tx.getUsageType() != null && !tx.getUsageType().isBlank())
@@ -112,12 +98,12 @@ public class CardStatementJournalService {
         Account unclassified = accountRepository.findByCode(UNCLASSIFIED_CODE)
                 .orElseThrow(() -> new IllegalStateException("미분류 계정 없음"));
 
+        // entryDate = 해당월 말일 고정. paymentDate는 설정하지 않음(이 전표는 비용확정 전용, 정산과 무관)
         JournalEntry entry = journalAssembler.createEntryWithSource(
-                paymentDate, cardCompanyCode + " " + paymentDate + " 카드명세서 집계",
+                monthEnd, cardCompanyCode + " " + yearMonth + " 카드명세서 집계(비용확정)",
                 cardCompanyCode, JournalEntry.Source.CARD_IMPORT);
         entry.setSourceCardCompany(cardCompanyCode);
-        entry.setPaymentDate(paymentDate);
-        entry.setConfirmed(false);
+        entry.setConfirmed(true);
 
         BigDecimal totalExpenseDebit = BigDecimal.ZERO;
         BigDecimal totalAssetCredit = BigDecimal.ZERO;
@@ -128,23 +114,19 @@ public class CardStatementJournalService {
             BigDecimal amount = e.getValue();
             if (amount.compareTo(BigDecimal.ZERO) == 0) continue;
 
-            // usageType == Account.name 으로 직접 조회 (category 무관 — 조회된 계정의 실제 category로 분기)
             Account mapped = resolveAccountByUsageType(usageType);
 
             if (mapped != null && mapped.getCategory() == Account.AccountCategory.EXPENSE) {
                 journalAssembler.addLine(entry, mapped, amount, null, "카드명세서 집계(" + usageType + ")");
                 totalExpenseDebit = totalExpenseDebit.add(amount);
             } else if (mapped != null && mapped.getCategory() == Account.AccountCategory.REVENUE) {
-                // 수익 계정(급여/이자수익/앱테크/포인트 등) — 카드내역에는 보통 음수로 찍히므로 절대값으로 대변 처리
                 BigDecimal absAmount = amount.abs();
                 journalAssembler.addLine(entry, mapped, null, absAmount, "카드명세서 집계-수익(" + usageType + ")");
                 totalRevenueCredit = totalRevenueCredit.add(absAmount);
             } else if (mapped != null && mapped.getCategory() == Account.AccountCategory.ASSET) {
-                // 예: '카드포인트' — 비용이 아니라 자산 감소(대변)로 상계
                 journalAssembler.addLine(entry, mapped, null, amount, "카드명세서 집계-자산상계(" + usageType + ")");
                 totalAssetCredit = totalAssetCredit.add(amount);
             } else {
-                // 일치하는 계정이 없거나 EXPENSE/ASSET/REVENUE 외 분류인 경우 — 미분류로 폴백
                 journalAssembler.addLine(entry, unclassified, amount, null, "카드명세서 집계-미분류(" + usageType + ")");
                 totalExpenseDebit = totalExpenseDebit.add(amount);
             }
@@ -160,12 +142,12 @@ public class CardStatementJournalService {
         journalAssembler.finalizeBalance(entry);
         journalEntryRepository.save(entry);
 
-        log.info("{} 결제일 {} 집계전표 생성 완료: 거래 {}건, 비용합계 {}, 자산상계 {}, 수익상계 {}, 카드대금 {}",
-                cardCompanyCode, paymentDate, transactions.size(), totalExpenseDebit, totalAssetCredit, totalRevenueCredit, liabilityCredit);
+        log.info("{} {} 집계전표 생성 완료: 거래 {}건, 비용합계 {}, 자산상계 {}, 수익상계 {}, 카드대금 {}",
+                cardCompanyCode, yearMonth, transactions.size(), totalExpenseDebit, totalAssetCredit, totalRevenueCredit, liabilityCredit);
 
-        return new CardStatementRegenerateResponse(entry.getId(), cardCompanyCode, List.of(paymentDate));
+        return new CardStatementRegenerateResponse(entry.getId(), cardCompanyCode);
     }
-    
+
     /**
      * usageType == Account.name 으로 계정을 조회한다 (category 제한 없음).
      * 동일 이름이 여러 category에 존재할 가능성에 대비해 EXPENSE → ASSET → REVENUE 우선순위로 본다.
