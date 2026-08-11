@@ -89,7 +89,7 @@ public class DashboardItemService {
                 items.stream().map(item -> item.getAccount().getId()).toList()
         ).stream().collect(Collectors.toMap(
                 tag -> tag.getAccount().getId(),
-                AccountPurposeTag::getTagName
+                AccountPurposeTag::getFundSource
         ));
 
         return items.stream()
@@ -129,7 +129,7 @@ public class DashboardItemService {
         List<Long> accountIds = items.stream().map(item -> item.getAccount().getId()).toList();
 
         Map<Long, String> tagMap = accountPurposeTagRepository.findByAccountIdIn(accountIds)
-                .stream().collect(Collectors.toMap(tag -> tag.getAccount().getId(), AccountPurposeTag::getTagName));
+                .stream().collect(Collectors.toMap(tag -> tag.getAccount().getId(), AccountPurposeTag::getFundSource));
 
         return items.stream().map(item -> {
             Account account = item.getAccount();
@@ -165,7 +165,7 @@ public class DashboardItemService {
                         return newTag;
                     });
 
-            tag.setTagName(row.getDashboardTag());
+            tag.setFundSource(row.getDashboardTag());
             accountPurposeTagRepository.save(tag);
         });
     }
