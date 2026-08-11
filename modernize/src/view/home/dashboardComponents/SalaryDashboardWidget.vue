@@ -7,9 +7,6 @@ import { computed, onMounted, ref } from 'vue';
 import { apiClient } from '@/data/Axios';
 import { formatMoney } from "@/utils/common";
 
-//export type IconKey = 'icon1' | 'icon2' | 'icon3' | 'icon4';
-//const ICON_MAP: Record<IconKey, string> = { icon1, icon2, icon3, icon4 };
-//const colorOptions = ['primary', 'secondary', 'success', 'warning', 'error', 'info'];
 const iconOptions = [
     { title: 'PayPal', value: icon1, color: 'primary', category: 'EXPENSE' },
     { title: 'Wallet', value: icon2, color: 'success', category: 'ASSET'  },

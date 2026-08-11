@@ -8,7 +8,6 @@
 // import WeeklyStats from '@/views/dashboard/dashboardComponents/modern/WeeklyStats.vue';
 // import YearlySales from '@/views/dashboard/dashboardComponents/ecommerce/YearlySales.vue';
 // import ProductPerformance from '@/views/dashboard/dashboardComponents/ecommerce/ProductPerformance.vue';
-//import PaymentGateways from '@/view/home/dashboardComponents/PaymentGateways.vue';
 import RevenueUpdates from '@/view/home/dashboardComponents/RevenueUpdates.vue';
 import SalesOverview from '@/view/home/dashboardComponents/SalesOverview.vue';
 import RecentTransactions from '@/view/home/dashboardComponents/RecentTransactions.vue';

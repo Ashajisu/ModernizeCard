@@ -19,7 +19,7 @@ public class DashboardItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_code", referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
     private Account account;
 
     @Column(name = "visible")
