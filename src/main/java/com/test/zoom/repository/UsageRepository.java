@@ -15,6 +15,4 @@ public interface UsageRepository extends JpaRepository<UsageTransaction, Long> {
 
     @Query(value = "CALL getAllUsageTypeCurrencyStatsDate(:startDate, :endDate)", nativeQuery = true)
     List<StatsProcedure> getAllUsageTypeCurrencyStatsDate(LocalDate startDate, LocalDate endDate);
-
-    List<UsageTransaction> findAllByOrderByCardCompanyAscIdDesc();
 }

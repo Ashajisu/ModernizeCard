@@ -105,12 +105,8 @@ const onSearch = () => fetchCashFlow(yearMonth.value);
                     <span>{{ formatMoney(salaryFlow.savingsOutflow) }}</span>
                 </div>
                 <div class="d-flex justify-space-between">
-                    <span>대출 원금상환</span>
+                    <span>대출 원리금</span>
                     <span>{{ formatMoney(salaryFlow.loanPrincipalOutflow) }}</span>
-                </div>
-                <div class="d-flex justify-space-between">
-                    <span>대출 이자</span>
-                    <span>{{ formatMoney(salaryFlow.loanInterestOutflow) }}</span>
                 </div>
 
                 <v-divider class="my-3" />

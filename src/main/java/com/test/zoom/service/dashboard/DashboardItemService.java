@@ -5,7 +5,7 @@ import com.test.zoom.dto.journal.response.AccountBalanceDto;
 import com.test.zoom.dto.journal.response.AccountBalanceResponse;
 import com.test.zoom.entity.journal.Account;
 import com.test.zoom.entity.journal.AccountPurposeTag;
-import com.test.zoom.repository.AccountPurposeTagRepository;
+import com.test.zoom.repository.journal.AccountPurposeTagRepository;
 import com.test.zoom.repository.journal.DashboardItemRepository;
 import com.test.zoom.service.journal.AccountBalanceService;
 import lombok.RequiredArgsConstructor;

@@ -81,19 +81,33 @@ public interface JournalLineRepository extends JpaRepository<com.test.zoom.entit
             @Param("amount") BigDecimal amount);
 
 
-    /**
-     * 현금흐름 조회용
-     * **/
-    @Query("""
-    SELECT COALESCE(SUM(l.debitAmount), 0)
-    FROM JournalLine l
-    JOIN l.journalEntry e
-    WHERE l.account.id IN :accountIds
-      AND e.entryDate BETWEEN :from AND :to
-      AND e.deleted = false
-""")
+    /** 현금흐름(AccountPurposeTag 기반) 집계용 — 지정 계정ID 목록의 기간 내 차변 합계 */
+    @Query("SELECT COALESCE(SUM(l.debitAmount), 0) FROM JournalLine l " +
+            "WHERE l.account.id IN :accountIds " +
+            "AND l.journalEntry.entryDate BETWEEN :from AND :to " +
+            "AND l.journalEntry.deleted = false")
     BigDecimal sumDebitAmountByAccountIds(
-            @Param("accountIds") Collection<Long> accountIds,
+            @Param("accountIds") List<Long> accountIds,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to);
+
+    /** 현금흐름(AccountPurposeTag 기반) 집계용 — 수입/이자수익 등 대변 성격 계정의 기간 내 대변 합계 */
+    @Query("SELECT COALESCE(SUM(l.creditAmount), 0) FROM JournalLine l " +
+            "WHERE l.account.id IN :accountIds " +
+            "AND l.journalEntry.entryDate BETWEEN :from AND :to " +
+            "AND l.journalEntry.deleted = false")
+    BigDecimal sumCreditAmountByAccountIds(
+            @Param("accountIds") List<Long> accountIds,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to);
+
+    /** 현금흐름 미지정 흐름의 계정별 상세 내역용 — 특정 계정 하나의 기간 내 차변 합계 */
+    @Query("SELECT COALESCE(SUM(l.debitAmount), 0) FROM JournalLine l " +
+            "WHERE l.account.id = :accountId " +
+            "AND l.journalEntry.entryDate BETWEEN :from AND :to " +
+            "AND l.journalEntry.deleted = false")
+    BigDecimal sumDebitAmountByAccountId(
+            @Param("accountId") Long accountId,
             @Param("from") LocalDate from,
             @Param("to") LocalDate to);
 }
