@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router';
-import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 import { useAuthStore } from '@/stores/auth';
 import CardRoutes from './CardRoutes';
@@ -10,7 +9,6 @@ const routes = [
         path: '/:pathMatch(.*)*',
         component: () => import('@/views/authentication/Error.vue')
     },
-    MainRoutes,
     AuthRoutes, // home 경로 로그인화면 포함
     // 필수: type 지정, redirect 설정, 상대경로 사용, 경로는 소문자+슬래시만 (하이픈/대문자 금지)
     CardRoutes,
